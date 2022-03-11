@@ -6,12 +6,12 @@ const checkLength = (length: number) => {
 
     expect(pending.pending()).to.be.false;
 
-    for (const index of [...Array(length).keys()]) {
+    for (const index of Array.from(Array(length).keys())) {
         pending.invalidate(index);
         expect(pending.pending()).to.be.true;
     }
 
-    for (const index of [...Array(length).keys()]) {
+    for (const index of Array.from(Array(length).keys())) {
         pending.validate(index);
 
         if (index + 1 !== length)
@@ -55,7 +55,7 @@ it('should work for 1 entry', () => {
 })
 
 it('should work for [2..32] entries', () => {
-    for (const length of [...Array(32 + 1).keys()].slice(2))
+    for (const length of Array.from(Array(32 + 1).keys()).slice(2))
         checkLength(length);
 })
 
