@@ -1,0 +1,35 @@
+{
+  "name": "stores-mono",
+  "version": "1.0.0",
+  "description": "Mono repo for stores libraries",
+  "devDependencies": {
+    "@rollup/plugin-node-resolve": "^13.1.3",
+    "@rollup/plugin-typescript": "^8.3.0",
+    "@types/node": "^17.0.13",
+    "c8": "^7.11.0",
+    "chalk": "^5.0.0",
+    "foreach-folder": "^1.1.0",
+    "rollup": "^2.66.1",
+    "rollup-plugin-auto-external": "^2.0.0",
+    "rollup-plugin-dts": "^4.1.0",
+    "tslib": "^2.3.1",
+    "typescript": "^4.4.4",
+    "vite": "^2.7.13",
+    "vitest": "^0.2.7"
+  },
+  "scripts": {
+    "trial": "cd packages && node ../util/foreach-package.mjs \"pnpm run build\"",
+    "build": "cd packages && node ../util/foreach-folder.mjs \"pnpm run build\"",
+    "test": "vitest run",
+    "debug": "vitest run --no-threads --no-isolate",
+    "coverage": "vitest run --coverage",
+    "test:watch": "vitest",
+    "coverage:watch": "vitest --coverage"
+  },
+  "private": true,
+  "mono:packages": [
+    "stores-base-queue",
+    "stores-base",
+    "stores-svelte"
+  ]
+}

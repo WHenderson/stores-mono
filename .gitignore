@@ -1,0 +1,21 @@
+# Node Modules
+/node_modules
+
+# pnpm
+/.pnpm-debug.log
+
+# Coverage
+/coverage
+
+# WebStorm
+/.idea/workspace.xml
+/.idea/usage.statistics.xml
+/.idea/shelf
+/.idea/*.iml
+
+# Packages
+/packages/*/node_modules
+/packages/*/dist
+/packages/*/coverage
+/packages/*/.pnpm-debug.log
+

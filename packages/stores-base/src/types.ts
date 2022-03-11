@@ -1,0 +1,52 @@
+/** Callback to inform of a value updates. */
+export type Subscriber<T> = (value: T) => void;
+
+/** Generic action. */
+export type Action = () => void;
+
+/** Unsubscribes from value updates. */
+export type Unsubscriber = Action;
+
+/** Callback to update a value. */
+export type Updater<T> = (value: T) => T;
+
+/** Callback to inform that a value is undergoing change. Helps solve the diamond dependency problem */
+export type Invalidator = Action;
+
+/** Callback to inform that the last subscriber has unsubscribed */
+export type StopNotifier = Action;
+
+/** Callback to inform that there is now a subscriber */
+export type StartNotifier<T> = (set: Subscriber<T>) => StopNotifier | void;
+
+/** Callback used to determine if a change signal should be emitted */
+export type Trigger<T> = (initial: boolean, new_value: T, old_value?: T) => boolean;
+
+export type SubscribeBasic<T> = (this: void, run: Subscriber<T>) => Unsubscriber;
+export type SubscribeFull<T> = (this: void, run: Subscriber<T>, invalidate?: Invalidator) => Unsubscriber;
+export type Subscribe<T> = SubscribeBasic<T> | SubscribeFull<T>;
+
+/** Readable interface for subscribing. */
+export interface Readable<T> {
+    /**
+     * Subscribe on value changes.
+     * @param run subscription callback - calls are queued
+     * @param invalidate cleanup callback - calls are immediate
+     */
+    subscribe: Subscribe<T>;
+}
+
+/** Writable interface for both updating and subscribing. */
+export interface Writable<T> extends Readable<T> {
+    /**
+     * Set value and inform subscribers.
+     * @param value to set
+     */
+    set(this: void, value: T): void;
+
+    /**
+     * Update value using callback and inform subscribers.
+     * @param updater callback
+     */
+    update(this: void, updater: Updater<T>): void;
+}

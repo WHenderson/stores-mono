@@ -1,0 +1,19 @@
+{
+  "name": "@crikey/stores-svelte",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index",
+  "module": "index.mjs",
+  "types": "index.d.ts",
+  "scripts": {
+    "build": "tsc && vite build && rollup --config rollup.config.ts --configPlugin typescript",
+    "test": "vitest run",
+    "debug": "vitest run --no-threads --no-isolate",
+    "coverage": "vitest run --coverage",
+    "test:watch": "vitest",
+    "coverage:watch": "vitest --coverage"
+  },
+  "dependencies": {
+    "@crikey/stores-base": "^1.0.0"
+  }
+}
