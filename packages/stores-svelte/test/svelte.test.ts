@@ -1,9 +1,9 @@
 import {describe, it} from "vitest";
 import {derived, readable, writable} from "../src";
-//import * as rxstore from '../src/rxjs';
+import * as rxstore from '../../stores-rxjs/src';
 import * as assert from 'assert';
 import {get, Subscriber} from "@crikey/stores-base";
-//import {BehaviorSubject} from "rxjs";
+import {BehaviorSubject} from "rxjs";
 
 describe('store', () => {
     describe('writable', () => {
@@ -390,9 +390,9 @@ describe('store', () => {
             assert.deepEqual(get(c), 'two 2');
         });
 
-        it.skip('works with RxJS-style observables', () => {
-            //const d = derived(rxstore.readable(new BehaviorSubject<number>(42)), _ => _);
-            //assert.equal(get(d), 42);
+        it('works with (converted) RxJS-style observables', () => {
+            const d = derived(rxstore.readable(new BehaviorSubject<number>(42)), _ => _);
+            assert.equal(get(d), 42);
         });
     });
 
@@ -402,8 +402,8 @@ describe('store', () => {
             assert.equal(get(store), 42);
         });
 
-        it.skip('works with RxJS-style observables', () => {
-            //assert.equal(get(rxstore.readable(new BehaviorSubject<number>(42))), 42);
+        it('works with (converted) RxJS-style observables', () => {
+            assert.equal(get(rxstore.readable(new BehaviorSubject<number>(42))), 42);
         });
     });
 });

@@ -15,5 +15,8 @@
   },
   "dependencies": {
     "@crikey/stores-base": "^1.0.0"
+  },
+  "devDependencies": {
+    "rxjs": "^7.5.5"
   }
 }
