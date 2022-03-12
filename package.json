@@ -9,6 +9,7 @@
     "c8": "^7.11.0",
     "chalk": "^5.0.0",
     "foreach-folder": "^1.1.0",
+    "rimraf": "^3.0.2",
     "rollup": "^2.66.1",
     "rollup-plugin-auto-external": "^2.0.0",
     "rollup-plugin-dts": "^4.1.0",
@@ -18,7 +19,9 @@
     "vitest": "^0.2.7"
   },
   "scripts": {
-    "build": "cd packages && node ../util/foreach-package.mjs \"pnpm install && pnpm run build\"",
+    "preinstall": "npx only-allow pnpm",
+    "build": "pnpm run clean && pnpm -r --filter ./packages run build",
+    "clean": "pnpm -r --filter ./packages run clean",
     "test": "vitest run",
     "debug": "vitest run --no-threads --no-isolate",
     "coverage": "vitest run --coverage",

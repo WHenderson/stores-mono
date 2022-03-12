@@ -10,6 +10,7 @@ importers:
       c8: ^7.11.0
       chalk: ^5.0.0
       foreach-folder: ^1.1.0
+      rimraf: ^3.0.2
       rollup: ^2.66.1
       rollup-plugin-auto-external: ^2.0.0
       rollup-plugin-dts: ^4.1.0
@@ -24,6 +25,7 @@ importers:
       c8: 7.11.0
       chalk: 5.0.0
       foreach-folder: 1.1.0
+      rimraf: 3.0.2
       rollup: 2.69.1
       rollup-plugin-auto-external: 2.0.0_rollup@2.69.1
       rollup-plugin-dts: 4.2.0_rollup@2.69.1+typescript@4.6.2
@@ -87,10 +89,12 @@ importers:
     specifiers:
       '@crikey/stores-base': workspace:^1.0.0
       '@crikey/stores-rxjs': workspace:^1.0.0
+      rxjs: ^7.5.5
     dependencies:
       '@crikey/stores-base': link:../stores-base
     devDependencies:
       '@crikey/stores-rxjs': link:../stores-rxjs
+      rxjs: 7.5.5
 
 packages:
 

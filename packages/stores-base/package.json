@@ -10,6 +10,7 @@
   ],
   "scripts": {
     "build": "tsc && vite build && rollup --config rollup.config.ts --configPlugin typescript",
+    "clean": "rimraf dist",
     "test": "vitest run",
     "debug": "vitest run --no-threads --no-isolate",
     "coverage": "vitest run --coverage",
