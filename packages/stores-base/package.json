@@ -2,9 +2,12 @@
   "name": "@crikey/stores-base",
   "version": "1.0.0",
   "description": "",
-  "main": "index",
-  "module": "index.mjs",
-  "types": "index.d.ts",
+  "main": "dist/index",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsc && vite build && rollup --config rollup.config.ts --configPlugin typescript",
     "test": "vitest run",
@@ -13,7 +16,10 @@
     "test:watch": "vitest",
     "coverage:watch": "vitest --coverage"
   },
+  "devDependencies": {
+    "@crikey/stores-base-queue": "workspace:^1.0.0"
+  },
   "peerDependencies": {
-    "@crikey/stores-base-queue": "^1.0.0"
+    "@crikey/stores-base-queue": "workspace:^1.0.0"
   }
 }

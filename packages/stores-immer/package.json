@@ -2,9 +2,12 @@
   "name": "@crikey/stores-immer",
   "version": "1.0.0",
   "description": "",
-  "main": "index",
-  "module": "index.mjs",
-  "types": "index.d.ts",
+  "main": "dist/index",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsc && vite build && rollup --config rollup.config.ts --configPlugin typescript",
     "test": "vitest run",
@@ -14,8 +17,8 @@
     "coverage:watch": "vitest --coverage"
   },
   "dependencies": {
-    "@crikey/stores-base": "^1.0.0",
-    "@crikey/stores-strict": "^1.0.0"
+    "@crikey/stores-base": "workspace:^1.0.0",
+    "@crikey/stores-strict": "workspace:^1.0.0"
   },
   "devDependencies": {
     "immer": "^9.0.12"

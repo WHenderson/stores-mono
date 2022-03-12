@@ -1,3 +1,5 @@
+import {Readable} from "@crikey/stores-base";
+
 export enum State {
     Pending = 0,
     Fulfilled = 1,
@@ -29,3 +31,14 @@ export interface StatefulRejected {
 }
 
 export type Stateful<T> = StatefulPending<T> | StatefulFulfilled<T> | StatefulRejected;
+
+type InnerType<S> =
+    S extends StatefulPending<infer T>
+    ? T
+    : S extends StatefulFulfilled<infer T>
+    ? T
+    : never;
+
+export interface ReadablePromise<T> extends Readable<T> {
+    promise: PromiseLike<InnerType<T>>;
+}

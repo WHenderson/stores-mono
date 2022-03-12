@@ -1,34 +1,96 @@
 lockfileVersion: 5.3
 
-specifiers:
-  '@rollup/plugin-node-resolve': ^13.1.3
-  '@rollup/plugin-typescript': ^8.3.0
-  '@types/node': ^17.0.13
-  c8: ^7.11.0
-  chalk: ^5.0.0
-  foreach-folder: ^1.1.0
-  rollup: ^2.66.1
-  rollup-plugin-auto-external: ^2.0.0
-  rollup-plugin-dts: ^4.1.0
-  tslib: ^2.3.1
-  typescript: ^4.4.4
-  vite: ^2.7.13
-  vitest: ^0.2.7
+importers:
 
-devDependencies:
-  '@rollup/plugin-node-resolve': 13.1.3_rollup@2.69.1
-  '@rollup/plugin-typescript': 8.3.1_bd6ad70955fcb280f5ed65ca9ac148c0
-  '@types/node': 17.0.21
-  c8: 7.11.0
-  chalk: 5.0.0
-  foreach-folder: 1.1.0
-  rollup: 2.69.1
-  rollup-plugin-auto-external: 2.0.0_rollup@2.69.1
-  rollup-plugin-dts: 4.2.0_rollup@2.69.1+typescript@4.6.2
-  tslib: 2.3.1
-  typescript: 4.6.2
-  vite: 2.8.6
-  vitest: 0.2.8_c8@7.11.0
+  .:
+    specifiers:
+      '@rollup/plugin-node-resolve': ^13.1.3
+      '@rollup/plugin-typescript': ^8.3.0
+      '@types/node': ^17.0.13
+      c8: ^7.11.0
+      chalk: ^5.0.0
+      foreach-folder: ^1.1.0
+      rollup: ^2.66.1
+      rollup-plugin-auto-external: ^2.0.0
+      rollup-plugin-dts: ^4.1.0
+      tslib: ^2.3.1
+      typescript: ^4.4.4
+      vite: ^2.7.13
+      vitest: ^0.2.7
+    devDependencies:
+      '@rollup/plugin-node-resolve': 13.1.3_rollup@2.69.1
+      '@rollup/plugin-typescript': 8.3.1_bd6ad70955fcb280f5ed65ca9ac148c0
+      '@types/node': 17.0.21
+      c8: 7.11.0
+      chalk: 5.0.0
+      foreach-folder: 1.1.0
+      rollup: 2.69.1
+      rollup-plugin-auto-external: 2.0.0_rollup@2.69.1
+      rollup-plugin-dts: 4.2.0_rollup@2.69.1+typescript@4.6.2
+      tslib: 2.3.1
+      typescript: 4.6.2
+      vite: 2.8.6
+      vitest: 0.2.8_c8@7.11.0
+
+  packages/stores-base:
+    specifiers:
+      '@crikey/stores-base-queue': workspace:^1.0.0
+    devDependencies:
+      '@crikey/stores-base-queue': link:../stores-base-queue
+
+  packages/stores-base-queue:
+    specifiers: {}
+
+  packages/stores-const:
+    specifiers:
+      '@crikey/stores-base': workspace:^1.0.0
+    dependencies:
+      '@crikey/stores-base': link:../stores-base
+
+  packages/stores-immer:
+    specifiers:
+      '@crikey/stores-base': workspace:^1.0.0
+      '@crikey/stores-strict': workspace:^1.0.0
+      immer: ^9.0.12
+    dependencies:
+      '@crikey/stores-base': link:../stores-base
+      '@crikey/stores-strict': link:../stores-strict
+    devDependencies:
+      immer: 9.0.12
+
+  packages/stores-promise:
+    specifiers:
+      '@crikey/stores-base': workspace:^1.0.0
+      '@crikey/stores-const': workspace:^1.0.0
+      '@crikey/stores-strict': workspace:^1.0.0
+    dependencies:
+      '@crikey/stores-base': link:../stores-base
+      '@crikey/stores-const': link:../stores-const
+      '@crikey/stores-strict': link:../stores-strict
+
+  packages/stores-rxjs:
+    specifiers:
+      '@crikey/stores-base': workspace:^1.0.0
+      rxjs: ^7.5.5
+    dependencies:
+      '@crikey/stores-base': link:../stores-base
+    devDependencies:
+      rxjs: 7.5.5
+
+  packages/stores-strict:
+    specifiers:
+      '@crikey/stores-base': workspace:^1.0.0
+    dependencies:
+      '@crikey/stores-base': link:../stores-base
+
+  packages/stores-svelte:
+    specifiers:
+      '@crikey/stores-base': workspace:^1.0.0
+      '@crikey/stores-rxjs': workspace:^1.0.0
+    dependencies:
+      '@crikey/stores-base': link:../stores-base
+    devDependencies:
+      '@crikey/stores-rxjs': link:../stores-rxjs
 
 packages:
 
@@ -611,6 +673,10 @@ packages:
     resolution: {integrity: sha512-H2iMtd0I4Mt5eYiapRdIDjp+XzelXQ0tFE4JS7YFwFevXXMmOp9myNrUvCg0D6ws8iqkRPBfKHgbwig1SmlLfg==}
     dev: true
 
+  /immer/9.0.12:
+    resolution: {integrity: sha512-lk7UNmSbAukB5B6dh9fnh5D0bJTOFKxVg2cyJWTYrWRfhLrLMBquONcUs3aFq507hNoIZEDDh8lb8UtOizSMhA==}
+    dev: true
+
   /inflight/1.0.6:
     resolution: {integrity: sha1-Sb1jMdfQLQwJvJEKEHW6gWW1bfk=}
     dependencies:
@@ -883,6 +949,12 @@ packages:
     hasBin: true
     optionalDependencies:
       fsevents: 2.3.2
+    dev: true
+
+  /rxjs/7.5.5:
+    resolution: {integrity: sha512-sy+H0pQofO95VDmFLzyaw9xNJU4KTRSwQIGM6+iG3SypAtCiLDzpeG8sJrNCWn2Up9km+KhkvTdbkrdy+yzZdw==}
+    dependencies:
+      tslib: 2.3.1
     dev: true
 
   /safe-buffer/5.1.2:

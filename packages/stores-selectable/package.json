@@ -1,5 +1,5 @@
 {
-  "name": "@crikey/stores-base-queue",
+  "name": "@crikey/stores-selectable",
   "version": "1.0.0",
   "description": "",
   "main": "dist/index",
@@ -15,5 +15,13 @@
     "coverage": "vitest run --coverage",
     "test:watch": "vitest",
     "coverage:watch": "vitest --coverage"
+  },
+  "dependencies": {
+    "@crikey/stores-base": "workspace:^1.0.0"
+  },
+  "devDependencies": {
+    "@crikey/stores-immer": "workspace:^1.0.0",
+    "@crikey/stores-strict": "workspace:^1.0.0",
+    "@crikey/stores-svelte": "workspace:^1.0.0"
   }
 }

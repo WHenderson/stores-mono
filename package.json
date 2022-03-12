@@ -18,8 +18,7 @@
     "vitest": "^0.2.7"
   },
   "scripts": {
-    "trial": "cd packages && node ../util/foreach-package.mjs \"pnpm run build\"",
-    "build": "cd packages && node ../util/foreach-folder.mjs \"pnpm run build\"",
+    "build": "cd packages && node ../util/foreach-package.mjs \"pnpm install && pnpm run build\"",
     "test": "vitest run",
     "debug": "vitest run --no-threads --no-isolate",
     "coverage": "vitest run --coverage",
@@ -30,6 +29,11 @@
   "mono:packages": [
     "stores-base-queue",
     "stores-base",
-    "stores-svelte"
+    "stores-const",
+    "stores-strict",
+    "stores-promise",
+    "stores-rxjs",
+    "stores-svelte",
+    "stores-immer"
   ]
 }
