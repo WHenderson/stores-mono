@@ -22,6 +22,7 @@
     "preinstall": "npx only-allow pnpm",
     "build": "pnpm run clean && pnpm -r --filter ./packages run build",
     "clean": "pnpm -r --filter ./packages run clean",
+    "clean:modules": "rimraf \"./packages/*/node_modules\" && rimraf node_modules",
     "test": "vitest run",
     "debug": "vitest run --no-threads --no-isolate",
     "coverage": "vitest run --coverage",
