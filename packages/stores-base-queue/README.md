@@ -2,11 +2,45 @@
 
 Internal peer package used to solve the diamond dependency problem.
 
-## Table of Contents
+## Installation
 
-1. [Reasoning](#Reasoning)
-   1. [The Diamond Dependency Problem](#The-Diamond-Dependency-Problem)
-   2. [Why a peer dependency?](#Why-a-peer-dependency)
+```bash
+# pnpm
+$ pnpm add --save-peer @crikey/stores-base-queue
+
+# npm
+$ npm add --save-peer @crikey/stores-base-queue
+
+# yarn
+$ yarn add --peer @crikey/stores-base-queue
+```
+
+## Usage
+
+### enqueue_store_signals
+```ts
+function enqueue_store_signals(actions: Action[]): void;
+```
+Enqueue the provided actions using a FIFO queue.
+If the queue is empty, the actions will begin being called (synchronously) immediately until the queue is exhausted.
+If the queue is not empty, the actions will be enqueued and called once any actions ahead in the queue have been
+exhausted.
+
+_Example:_
+```js
+import { enqueue_store_signals } from '@crikey/stores-base-queue';
+
+const action1 = () => { console.log('action a') };
+const action2 = () => { console.log('action b') };
+
+enqueue_store_signals([
+    action1,
+    action2
+]);
+
+// > action a
+// > action b
+```
 
 ## Reasoning
 
