@@ -1,9 +1,2 @@
 packages:
-  - packages/stores-base-queue
-  - packages/stores-base
-  - packages/stores-const
-  - packages/stores-strict
-  - packages/stores-promise
-  - packages/stores-rxjs
-  - packages/stores-svelte
-  - packages/stores-immer
+  - packages/*

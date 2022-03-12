@@ -79,6 +79,19 @@ importers:
     devDependencies:
       rxjs: 7.5.5
 
+  packages/stores-selectable:
+    specifiers:
+      '@crikey/stores-base': workspace:^1.0.0
+      '@crikey/stores-immer': workspace:^1.0.0
+      '@crikey/stores-strict': workspace:^1.0.0
+      '@crikey/stores-svelte': workspace:^1.0.0
+    dependencies:
+      '@crikey/stores-base': link:../stores-base
+    devDependencies:
+      '@crikey/stores-immer': link:../stores-immer
+      '@crikey/stores-strict': link:../stores-strict
+      '@crikey/stores-svelte': link:../stores-svelte
+
   packages/stores-strict:
     specifiers:
       '@crikey/stores-base': workspace:^1.0.0

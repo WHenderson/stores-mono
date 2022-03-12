@@ -1,7 +1,8 @@
 import {expect, it} from 'vitest'
 import {derive, readable, writable} from "@crikey/stores-strict";
-import {selectable, SelectableDelete} from "../src";
+import {create_path_proxy, PathProxy, selectable, SelectableDelete, sym_path} from "../src";
 import {get, Readable, Writable} from "@crikey/stores-base";
+import {traverse_delete, traverse_get, traverse_update} from "../dist";
 
 function isWritable<T>(store: Readable<T> | Writable<T>): store is Writable<T> {
     return ('set' in store && 'update' in store);
@@ -136,4 +137,95 @@ it('path selection methods should be equivalent', () => {
     expect(store.select(root => root.a.b[1]).path).to.deep.equal(['a','b', 1]);
     expect(store.select(root => root.a).select(root => root.b[1]).path).to.deep.equal(['a','b', 1]);
     expect(store.select('a').select('b').select(1).path).to.deep.equal(['a','b', 1]);
-})
+});
+
+it('should allow for custom traversal', () => {
+    function traverse_get_map(
+        root: Map<PropertyKey, any>,
+        path: readonly PropertyKey[]
+    ) : any {
+        if (path.length === 0)
+            return root;
+
+        return traverse_get(root.get(path[0]), path.slice(1));
+    }
+
+    function traverse_update_map<U>(
+        root: Map<PropertyKey, any>,
+        path: readonly PropertyKey[],
+        update: (old_value: any) => U // returns new value
+    ): Map<PropertyKey, any> {
+        if (path.length === 0)
+            return <Map<PropertyKey, any>><any>update(root);
+
+        root.set(path[0], traverse_update(root.get(path[0]), path.slice(1), update));
+        return root;
+    }
+
+    function traverse_delete_map(
+        root: Map<PropertyKey, any>,
+        path: readonly PropertyKey[]
+    ): Map<PropertyKey, any> {
+        if (path.length === 0)
+            return new Map<PropertyKey, any>();
+
+        if (path.length === 1) {
+            root.delete(path[0]);
+            return root;
+        }
+
+        traverse_delete(root.get(path[0]), path.slice(1));
+        return root;
+    }
+
+    function resolve_selector_map<T, R>(selector: (root: T) => R): PropertyKey[] {
+        const proxy_map = <PathProxy<T>><unknown>new Proxy(
+            { [sym_path]: [], get(_arg: any) {} },
+            {
+                get: function(_target: never, p: string | symbol, _receiver: never) {
+                    if (p === sym_path)
+                        return [];
+
+                    if (p === 'get') {
+                        return <PathProxy<T>><unknown>new Proxy(
+                            () => {
+                            },
+                            {
+                                get: function (_target: never, p: string | symbol, _receiver: never) {
+                                    if (p === sym_path)
+                                        return [];
+
+                                    return Reflect.get(_target, p, _receiver);
+                                },
+                                apply: function (_target: never, _this: never, args: any[]) {
+                                    if (args.length !== 1)
+                                        throw new TypeError('expected single argument to get');
+
+                                    return create_path_proxy([args[0]]);
+                                }
+                            }
+                        );
+                    }
+
+                    return Reflect.get(_target, p, _receiver);
+                }
+            }
+        );
+
+        return (<PathProxy<never>>selector(<T>proxy_map))[sym_path];
+    }
+
+    const store = selectable(writable(new Map<PropertyKey, any>()), derive, {
+        traverse_get: traverse_get_map,
+        traverse_update: traverse_update_map,
+        traverse_delete: traverse_delete_map,
+        resolve_selector: resolve_selector_map
+    });
+
+    expect(get(store.select(r => r))).to.be.instanceOf(Map);
+    expect(get(store.select(r => r.get('x')))).to.be.undefined;
+    store.select(r => r.get('x')).set(1);
+    expect(get(store.select(r => r.get('x')))).to.equal(1);
+    store.select(r => r.get('x')).delete();
+    expect(get(store.select(r => r.get('x')))).to.be.undefined;
+});

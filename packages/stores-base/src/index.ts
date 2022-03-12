@@ -5,3 +5,4 @@ export * from './read-only';
 export * from './readable';
 export * from './derive';
 export * from './get';
+export * from './create-pending';

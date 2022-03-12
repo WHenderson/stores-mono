@@ -1,5 +1,5 @@
 import {Readable, Trigger, Unsubscriber} from "./types";
-import {create_pending} from "@crikey/stores-base-queue";
+import {create_pending} from "./create-pending";
 import {noop} from "./noop";
 import {readable} from "./readable";
 

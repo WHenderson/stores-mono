@@ -1,6 +1,6 @@
 import {noop, StartNotifier, Updater, Writable} from "@crikey/stores-base";
 import {writable as strictWritable} from "@crikey/stores-strict";
-import produce, {Draft, nothing} from "immer";
+import {produce, Draft, nothing} from "immer";
 
 /**
  * Create a writable store using immer to provide copy-on-write semantics during updates

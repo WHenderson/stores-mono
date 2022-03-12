@@ -1,6 +1,6 @@
 import {describe, it} from "vitest";
-import {derived, readable, writable} from "../src";
-import * as rxstore from '../../stores-rxjs/src';
+import {derive as derived2, derived, readable, writable} from "../src";
+import * as rxstore from '@crikey/stores-rxjs';
 import * as assert from 'assert';
 import {get, Subscriber} from "@crikey/stores-base";
 import {BehaviorSubject} from "rxjs";
@@ -160,6 +160,10 @@ describe('store', () => {
     });
 
     describe('derived', () => {
+        it('should be the same function', () => {
+            assert.equal(derived, derived2);
+        });
+
         it('maps a single store', () => {
             const a = writable(1);
             const b = derived(a, n => n * 2);
