@@ -14,13 +14,16 @@
     "rollup-plugin-auto-external": "^2.0.0",
     "rollup-plugin-dts": "^4.1.0",
     "tslib": "^2.3.1",
-    "typescript": "^4.4.4",
+    "typedoc": "^0.22.13",
+    "typedoc-plugin-mermaid": "^1.6.0",
+    "typescript": "^4.6.2",
     "vite": "^2.7.13",
     "vitest": "^0.2.7"
   },
   "scripts": {
     "preinstall": "npx only-allow pnpm",
     "build": "pnpm run clean && pnpm -r --filter ./packages run build",
+    "build:docs": "typedoc --out docs --entryPointStrategy packages \"packages/*\" --entryPoints . --entryPoints src/index.ts",
     "clean": "pnpm -r --filter ./packages run clean",
     "clean:modules": "rimraf \"./packages/*/node_modules\" && rimraf node_modules",
     "test": "vitest run",
@@ -30,15 +33,5 @@
     "coverage:watch": "vitest --coverage",
     "publish:packages": "pnpm -r --filter ./packages publish --no-git-checks"
   },
-  "private": true,
-  "mono:packages": [
-    "stores-base-queue",
-    "stores-base",
-    "stores-const",
-    "stores-strict",
-    "stores-promise",
-    "stores-rxjs",
-    "stores-svelte",
-    "stores-immer"
-  ]
+  "private": true
 }
