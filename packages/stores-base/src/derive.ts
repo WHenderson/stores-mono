@@ -60,7 +60,7 @@ export function derive<T>(trigger: Trigger<T>, stores: Stores, fn: Function, ini
 
     const auto = fn.length < 2;
 
-    return readable<T>(trigger, initial_value!, (set) => {
+    return readable<T>(trigger, initial_value!, (set, invalidate) => {
         let initiated = false;
         const values: unknown[] = [];
 
@@ -81,6 +81,7 @@ export function derive<T>(trigger: Trigger<T>, stores: Stores, fn: Function, ini
         };
 
         const unsubscribers = stores_array.map((store, i) => store.subscribe(
+            // changed
             (value: unknown) => {
                 values[i] = value;
                 pending.validate(i);
@@ -88,10 +89,21 @@ export function derive<T>(trigger: Trigger<T>, stores: Stores, fn: Function, ini
                     sync();
                 }
             },
+            // invalidated
             () => {
+                const isPending = pending.pending();
                 pending.invalidate(i);
-            })
-        );
+                if (!isPending)
+                    invalidate();
+            },
+            // revalidated
+            () => {
+                pending.validate(i);
+                if (initiated) {
+                    sync();
+                }
+            }
+        ));
 
         initiated = true;
         sync();
