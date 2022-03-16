@@ -72,47 +72,26 @@ export function create_pending(length: number) : Pending {
             }
         }
     }
-    else
-    if (length <= 1024) {
-        // max 1024 items. divide items into groups and use bitmasks for each group.
-        // use an overall bitmask to track the entire collection.
-
-        let combined = 0;
-        const grouped: number[] = Array((length >> 5) + 1).fill(0);
-        return {
-            validate(index: number): void {
-                grouped[index >> 5] &= ~(1 << (index & 0x1f));
-                combined &= ~((grouped[index >> 5] ? 0 : 1) << (index >> 5));
-            },
-            invalidate(index: number): void{
-                grouped[index >> 5] |= (1 << (index & 0x1f));
-                combined |= (1 << (index >> 5));
-            },
-            pending(): boolean {
-                return !!combined;
-            }
-        }
-    }
     else {
-        // unlimited items. divide items into groups and use bitmasks for each group.
+        // array of pending bitmaps used to track the number of pending items
 
-        const grouped: number[] = Array((length >> 5) + 1).fill(0);
-        let definitely_pending = false;
+        let count = 0;
+        let pending = Array.from(Array(length >> 5), () => 0);
         return {
             validate(index: number): void {
-                grouped[index >> 5] &= ~(1 << (index & 0x1f));
-                definitely_pending = !!grouped[index >> 5];
+                if (pending[index >> 5] & (1 << (index & 0x1F))) {
+                    --count;
+                    pending[index >> 5] &= ~(1 << (index & 0x1F));
+                }
             },
-            invalidate(index: number): void{
-                grouped[index >> 5] |= (1 << (index & 0x1f));
-                definitely_pending = true;
+            invalidate(index: number): void {
+                if (!(pending[index >> 5] & (1 << (index & 0x1F)))) {
+                    ++count;
+                    pending[index >> 5] |= (1 << (index & 0x1F));
+                }
             },
             pending(): boolean {
-                if (definitely_pending)
-                    return true;
-                return definitely_pending = grouped.some(
-                    _ => !!_
-                );
+                return !!count;
             }
         }
     }
