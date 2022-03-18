@@ -2,7 +2,7 @@ import {expect, it} from 'vitest'
 import {derive, readable, writable} from "@crikey/stores-strict";
 import {create_path_proxy, PathProxy, selectable, SelectableDelete, sym_path} from "../src";
 import {get, Readable, Writable} from "@crikey/stores-base";
-import {traverse_delete, traverse_get, traverse_update} from "../dist";
+import {traverse_delete, traverse_get, traverse_update} from "../src";
 
 function isWritable<T>(store: Readable<T> | Writable<T>): store is Writable<T> {
     return ('set' in store && 'update' in store);
