@@ -1,7 +1,7 @@
 import {expect, it} from 'vitest';
 import { trigger_safe_not_equal  } from '../src';
 
-it.skip('should greedily return true for complex types', () => {
+it('should greedily return true for complex types', () => {
     const values = [
         undefined,
         null,

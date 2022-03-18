@@ -280,7 +280,7 @@ describe('store', () => {
             unsubscribe();
         });
 
-        it.only('derived dependency does not update and shared ancestor updates', () => {
+        it('derived dependency does not update and shared ancestor updates', () => {
             const root = writable({ a: 0, b: 0 });
             const values: any[] = [];
             console.log('1');
