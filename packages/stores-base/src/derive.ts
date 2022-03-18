@@ -121,6 +121,6 @@ export function derive<T>(trigger: Trigger<T>, stores: Stores, fn: Function, ini
             throw ex;
         }
 
-        return stop();
+        return stop;
     });
 }
