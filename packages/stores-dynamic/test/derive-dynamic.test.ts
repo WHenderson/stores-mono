@@ -154,7 +154,7 @@ describe('dynamic calculations', () => {
         expect(derived_count).to.equals(dynamic_store_count);
     });
 
-    it.only('complex dynamic calculations should resolve dynamically', () => {
+    it('complex dynamic calculations should resolve dynamically', () => {
         const store1 = writable(2);
         const a = derive(store1, value => value * 10);
         const dynamic_a = to_dynamic(trigger_strict_not_equal, a);
@@ -195,7 +195,7 @@ describe('dynamic calculations', () => {
         derived.subscribe(v => {
             ++derived_count;
             resolved = v;
-            console.log('derived', v.value, '-', [...v.dependencies!.keys()].map(k => names.get(k)).join(','));
+            console.log('derived', (<any>v).value, '-', [...v.dependencies!.keys()].map(k => names.get(k)).join(','));
         });
 
         expect(resolved).toHaveProperty('value', 2*10 + 2*100);
