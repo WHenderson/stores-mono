@@ -32,6 +32,9 @@ export function writable<T>(trigger: Trigger<T>, value?: T, start: StartNotifier
     const subscribers: Set<SubscribeInvalidateTuple<T>> = new Set();
 
     function revalidate() {
+        if (!invalidated)
+            return;
+
         // value unchanged, but store is now valid
         invalidated = false;
 
@@ -112,6 +115,7 @@ export function writable<T>(trigger: Trigger<T>, value?: T, start: StartNotifier
         }
         catch (ex) {
             unsubscribe();
+
             throw ex;
         }
 
