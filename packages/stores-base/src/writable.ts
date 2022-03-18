@@ -47,7 +47,7 @@ export function writable<T>(trigger: Trigger<T>, value?: T, start: StartNotifier
     }
 
     function invalidate(): void {
-        if (!invalidated)
+        if (invalidated)
             return;
 
         if (stop) { // store is ready
