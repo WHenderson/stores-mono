@@ -91,10 +91,8 @@ export function derive<T>(trigger: Trigger<T>, stores: Stores, fn: Function, ini
             },
             // invalidated
             () => {
-                const isPending = pending.pending();
                 pending.invalidate(i);
-                if (!isPending)
-                    invalidate();
+                invalidate();
             },
             // revalidated
             () => {
@@ -105,15 +103,24 @@ export function derive<T>(trigger: Trigger<T>, stores: Stores, fn: Function, ini
             }
         ));
 
-        initiated = true;
-        sync();
-
-        return function stop() {
+        function stop() {
             unsubscribers.forEach(
                 unsubscriber =>
                     unsubscriber()
             );
             cleanup();
-        };
+        }
+
+        initiated = true;
+
+        try {
+            sync();
+        }
+        catch (ex) {
+            stop();
+            throw ex;
+        }
+
+        return stop();
     });
 }
