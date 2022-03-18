@@ -1,12 +1,12 @@
 import {describe, expect, it} from 'vitest'
-import {to_dynamic, derive_dynamic, DynamicResolved} from "../src";
+import {to_dynamic, dynamic, DynamicResolved} from "../src";
 import {trigger_strict_not_equal, writable} from "@crikey/stores-strict";
 import {get} from "@crikey/stores-base";
 import {derive} from "@crikey/stores-strict";
 
 describe('static calculations', () => {
     it('static result should resolve with static values', () => {
-        const derived = derive_dynamic(
+        const derived = dynamic(
             trigger_strict_not_equal,
             () => ({ value: 42 })
         );
@@ -16,7 +16,7 @@ describe('static calculations', () => {
     });
 
     it('static input should resolve with static values', () => {
-        const derived = derive_dynamic(
+        const derived = dynamic(
             trigger_strict_not_equal,
             [ { value: 'x' }, { value: 1 } ],
             (resolve, a, b) => ({ value: resolve(a) + resolve(b) })
@@ -30,7 +30,7 @@ describe('static calculations', () => {
 
 describe('static errors', () => {
     it('static errors should resolve with static errors', () => {
-        const derived = derive_dynamic(
+        const derived = dynamic(
             trigger_strict_not_equal,
             () => ({ error: 42 })
         );
@@ -40,7 +40,7 @@ describe('static errors', () => {
     });
 
     it('static exceptions should resolve to static errors', () => {
-        const derived = derive_dynamic(
+        const derived = dynamic(
             trigger_strict_not_equal,
             () => { throw 42; }
         );
@@ -50,7 +50,7 @@ describe('static errors', () => {
     });
 
     it('input errors should resolve to static errors', () => {
-        const derived = derive_dynamic(
+        const derived = dynamic(
             trigger_strict_not_equal,
             [ { value: 1 }, { value: 2, error: 42 }],
             (resolve, a, b) => ({ value: resolve(a) + resolve(b) })
@@ -68,10 +68,10 @@ describe('dynamic calculations', () => {
         let store_count = 0;
         store.subscribe(_ => ++store_count);
 
-        const derived = derive_dynamic(
+        const derived = dynamic(
             trigger_strict_not_equal,
             (resolve) => {
-                return { value: resolve(false, store) };
+                return { value: resolve(store) };
             }
         );
         let derived_count = 0;
@@ -93,11 +93,11 @@ describe('dynamic calculations', () => {
         let store_count = 0;
         store.subscribe(_ => ++store_count);
 
-        const dynamic_store = to_dynamic(trigger_strict_not_equal, store);
+        const dynamic_store = to_dynamic(store);
         let dynamic_store_count = 0;
         dynamic_store.subscribe(_ => ++dynamic_store_count);
 
-        const derived = derive_dynamic(
+        const derived = dynamic(
             trigger_strict_not_equal,
             [ dynamic_store ],
             (resolve, a) => {
@@ -127,11 +127,11 @@ describe('dynamic calculations', () => {
         let store_count = 0;
         store.subscribe(_ => ++store_count);
 
-        const dynamic_store = to_dynamic(trigger_strict_not_equal, store);
+        const dynamic_store = to_dynamic(store);
         let dynamic_store_count = 0;
         dynamic_store.subscribe(_ => ++dynamic_store_count);
 
-        const derived = derive_dynamic(
+        const derived = dynamic(
             trigger_strict_not_equal,
             () => {
                 return dynamic_store;
@@ -157,11 +157,11 @@ describe('dynamic calculations', () => {
     it('complex dynamic calculations should resolve dynamically', () => {
         const store1 = writable(2);
         const a = derive(store1, value => value * 10);
-        const dynamic_a = to_dynamic(trigger_strict_not_equal, a);
+        const dynamic_a = to_dynamic(a);
         const b = derive(store1, value => value * 100);
-        const dynamic_b = to_dynamic(trigger_strict_not_equal, b);
+        const dynamic_b = to_dynamic(b);
         const c = derive(store1, value => value * 1000);
-        const dynamic_c = to_dynamic(trigger_strict_not_equal, c);
+        const dynamic_c = to_dynamic(c);
         const store2 = writable(0.1);
 
         const set_name = (store: any, name: string) => { store.name = name; };
@@ -178,13 +178,13 @@ describe('dynamic calculations', () => {
         ]);
         names.forEach((name, store) => set_name(store, name));
 
-        const derived = derive_dynamic(
+        const derived = dynamic(
             trigger_strict_not_equal,
             [dynamic_a, dynamic_b, dynamic_c],
             (resolve, a, b, _c) => {
-                const value = (resolve(false, store1) % 2 === 0)
+                const value = (resolve(store1) % 2 === 0)
                     ? resolve(a) + resolve(b)
-                    : resolve(b) + resolve(false, store2)
+                    : resolve(b) + resolve(store2)
 
                 return { value };
             }
@@ -195,7 +195,7 @@ describe('dynamic calculations', () => {
         derived.subscribe(v => {
             ++derived_count;
             resolved = v;
-            console.log('derived', (<any>v).value, '-', [...v.dependencies!.keys()].map(k => names.get(k)).join(','));
+            //console.log('derived', (<any>v).value, '-', [...v.dependencies!.keys()].map(k => names.get(k)).join(','));
         });
 
         expect(resolved).toHaveProperty('value', 2*10 + 2*100);
@@ -203,14 +203,14 @@ describe('dynamic calculations', () => {
         expect([...resolved.dependencies!.keys()]).to.deep.equal([ store1, dynamic_a, dynamic_b]);
         expect(derived_count).toBe(1);
 
-        console.log('-- store1.set(3);');
+        //console.log('-- store1.set(3);');
         store1.set(3);
 
         expect(resolved).toHaveProperty('value', 3*100 + 0.1);
         expect(resolved.dependencies).not.toBeUndefined();
         expect(derived_count).toBe(2);
 
-        console.log('-- store2.set(0.2);');
+        //console.log('-- store2.set(0.2);');
         store2.set(0.2);
 
         expect(resolved).toHaveProperty('value', 3*100 + 0.2);
