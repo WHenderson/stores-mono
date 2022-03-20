@@ -1,5 +1,7 @@
 /**
  * Contract for a Pending state tracker
+ *
+ * @category Pending
  */
 export interface Pending {
     /**
@@ -17,12 +19,21 @@ export interface Pending {
     /**
      * return true iff any items are in the invalid state
      */
-    pending(this: void): boolean;
+    is_dirty(this: void): boolean;
 }
 
 /**
- * Create an efficient system for determining if any of an array of items are pending
+ * Create an efficient system for determining if any of an array of items are pending.
+ *
+ * Used by derived store types to ensure that the derived value is only recalculated once all dependent stores are in
+ * a clean state.
+ *
+ * _Example_:
+ * {@codeblock ../examples/pending.test.ts#example-pending}
+ *
+ * @category Pending
  * @param length maximum number of pending items to keep track of
+ * @returns a pending state tracker which is currently clean
  */
 export function create_pending(length: number) : Pending {
     if (length === 0) {
@@ -33,7 +44,7 @@ export function create_pending(length: number) : Pending {
             },
             invalidate(_index: number): void {
             },
-            pending(): boolean {
+            is_dirty(): boolean {
                 return false;
             }
         }
@@ -50,7 +61,7 @@ export function create_pending(length: number) : Pending {
             invalidate(_index: number): void {
                 pending = true;
             },
-            pending(): boolean {
+            is_dirty(): boolean {
                 return pending;
             }
         }
@@ -67,7 +78,7 @@ export function create_pending(length: number) : Pending {
             invalidate(index: number): void{
                 pending |= (1 << index);
             },
-            pending(): boolean {
+            is_dirty(): boolean {
                 return !!pending;
             }
         }
@@ -90,7 +101,7 @@ export function create_pending(length: number) : Pending {
                     pending[index >> 5] |= (1 << (index & 0x1F));
                 }
             },
-            pending(): boolean {
+            is_dirty(): boolean {
                 return !!count;
             }
         }

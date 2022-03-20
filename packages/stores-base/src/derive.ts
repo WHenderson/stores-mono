@@ -68,7 +68,7 @@ export function derive<T>(trigger: Trigger<T>, stores: Stores, fn: Function, ini
         let cleanup = noop;
 
         const sync = () => {
-            if (pending.pending()) {
+            if (pending.is_dirty()) {
                 return;
             }
             cleanup();
