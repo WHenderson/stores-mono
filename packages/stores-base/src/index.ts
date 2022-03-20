@@ -6,3 +6,4 @@ export * from './readable';
 export * from './derive';
 export * from './get';
 export * from './create-pending';
+export * from './trigger-strict-not-equal';
