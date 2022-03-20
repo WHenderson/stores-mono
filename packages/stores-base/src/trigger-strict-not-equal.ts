@@ -1,5 +1,5 @@
 /**
- * Return true of old and new values are strictly not equal
+ * Return true if old and new values are strictly not equal
  *
  * @category Predefined Triggers
  * @param _initial ignored
