@@ -9,13 +9,16 @@ let queue_aborted = false;
 
 /**
  * Enqueue the provided actions using a FIFO queue.
- * If the queue is empty, the actions will begin being called (synchronously) immediately until the queue is exhausted.
- * If the queue is not empty, the actions will be enqueued and called once any actions ahead in the queue have been
- * exhausted.
+ * If the queue is empty, the actions will begin being called immediately until the queue is exhausted.
+ * Further actions may be added during execution which will be executed once the preceding actions are exhausted.
  *
- * This queuing system ensures that all store subscribes are called in a consistent manner and aids in resolution of
- * the diamond dependency problem.
- * 
+ * _Example:_
+ * {@codeblock ../examples/store-queue.test.ts#example}
+ *
+ * _Example with nesting:_
+ * {@codeblock ../examples/store-queue.test.ts#example-nested}
+ *
+ * @category Core
  * @param actions array of actions to enqueue
  */
 export function enqueue_store_signals(actions: Action[]): void {

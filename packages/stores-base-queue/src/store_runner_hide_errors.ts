@@ -1,7 +1,9 @@
 import {Action} from "./types";
 
 /**
- * Swallow exceptions thrown by action
+ * Swallow exceptions thrown by `action`
+ *
+ * @category Predefined Store Runners
  * @param action
  */
 export function store_runner_hide_errors(action: Action) {

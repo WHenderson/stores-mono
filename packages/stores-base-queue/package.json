@@ -14,6 +14,7 @@
   },
   "scripts": {
     "build": "tsc && vite build && rollup --config rollup.config.ts --configPlugin typescript",
+    "build:docs:watch": "pnpm exec typedoc --watch --out dist/docs src/index.ts",
     "clean": "rimraf dist",
     "test": "vitest run",
     "debug": "vitest run --no-threads --no-isolate",

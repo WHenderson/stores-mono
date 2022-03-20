@@ -3,7 +3,7 @@ import {
     enqueue_store_signals,
     get_store_runner,
     set_store_runner,
-    store_runner_hide_errors, store_runner_log_errors,
+    store_runner_hide_errors, create_store_runner_log_errors,
     store_runner_throw_errors,
     StoreRunner
 } from "../src";
@@ -60,7 +60,7 @@ describe('error handling', () => {
 
     it('should log errors', () => {
         const errorFn = fn();
-        run(store_runner_log_errors(errorFn), () => {
+        run(create_store_runner_log_errors(errorFn), () => {
             let ran = false;
             enqueue_store_signals([
                 () => { throw new Error('example'); },
