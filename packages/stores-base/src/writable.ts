@@ -1,31 +1,77 @@
-import {Invalidator, Revalidator, StartNotifier, Subscriber, Trigger, Unsubscriber, Updater, Writable} from "./types";
+import {Invalidate, Revalidate, StartNotifier, Subscriber, Trigger, Unsubscriber, Updater, Writable} from "./types";
 import {noop} from "./noop";
 import {enqueue_store_signals} from "@crikey/stores-base-queue";
 import {store_runner} from "@crikey/stores-base-queue";
 
-type SubscribeInvalidateTuple<T> = [Subscriber<T>, Invalidator, Revalidator];
+type SubscribeInvalidateTuple<T> = [Subscriber<T>, Invalidate, Revalidate];
 
 /**
- * Create a writable store
+ * Create a writable store with an initial value of `undefined`.
+ *
+ * Writable stores allow the store value to be set and updated by
+ * external code via {@link Writable.set} and {@link Writable.update}.
+ *
+ * Explicitly setting defining the type of store via `writable<Type>` will
+ * result in a store of type `Writable<Type | undefined>` to allow for the default value.
+ * If this is undesired, an alternate default value/type can be provided.
+ *
+ * _Example_:
+ * {@codeblock ../examples/writable.test.ts#example-writable-undefined}
+ *
  * @param trigger callback used to determine if subscribers should be called
  */
 export function writable<T = undefined>(trigger: Trigger<T>): Writable<T | undefined>;
 
 /**
- * Create a writable store
+ * Create a writable store with an initial value of `value`.
+ *
+ * Writable stores allow the store value to be set and updated by
+ * external code via {@link Writable.set} and {@link Writable.update}.
+ *
+ * _Example_:
+ * {@codeblock ../examples/writable.test.ts#example-writable-default}
+ *
+ * If `start` is provided, it will be called when the number of subscribers goes from zero to one (but not from one
+ * to two, etc). Thus, `start` is called whenever the writable store 'starts up'.
+ * `start` may optionally return a function which will be called when the last subscriber unsubscribes.
+ *
+ * _Example_:
+ * {@codeblock ../examples/writable.test.ts#example-writable-start}
+ *
+ * `start` is passed 4 functions - `set`, `update`, `invalidate`, and `validate`.
+ *
+ * #### `start`: `set`
+ * Set the current value of the store (and thus marking the store value as valid).
+ *
+ * _Example_:
+ * {@codeblock ../examples/writable.test.ts#example-writable-start-set}
+ *
+ * #### `start`: `update`
+ * Update the current value of the store (and thus marking the store value as valid).
+ *
+ * _Example_:
+ * {@codeblock ../examples/writable.test.ts#example-writable-start-update}
+ *
+ * #### `start`: `invalidate`
+ * Mark the store (and any dependencies) as dirty.
+ * Only necessary when creating advanced stores such as {@link derive}.
+ *
+ * #### `start`: `validate`
+ * Mark the store (and any dependencies) as valid.
+ * Only necessary when creating advanced stores such as {@link derive}.
+ *
+ * ### invalidate/validate
+ * Usage of `invalidate` and `validate` is only necessary when creating advanced stores such as {@link derive} which are
+ * dependent on other stores but should only be recalculated once all dependent stores are in a valid state.
+ *
  * @param trigger callback used to determine if subscribers should be called
  * @param value initial store value
  * @param start callback called whenever the number of subscribers changes from 0 to 1
  */
 export function writable<T>(trigger: Trigger<T>, value?: T, start?: StartNotifier<T>): Writable<T>;
 
-/**
- * Create a writable store
- * @param trigger callback used to determine if subscribers should be called
- * @param value initial store value
- * @param start callback called whenever the number of subscribers changes from 0 to 1
- */
-export function writable<T>(trigger: Trigger<T>, value?: T, start: StartNotifier<T> = noop): Writable<T | undefined> {
+/* implementation */
+export function writable<T>(trigger: Trigger<T>, value?: T, start: StartNotifier<T | undefined> = noop): Writable<T | undefined> {
     let initial = true;
     let stop: Unsubscriber | undefined;
     let invalidated = false;
@@ -60,10 +106,10 @@ export function writable<T>(trigger: Trigger<T>, value?: T, start: StartNotifier
         }
     }
 
-    function set(new_value: T): void {
+    function set(new_value: T | undefined): void {
         // note: setting the store revalidates the value
 
-        const changed = trigger(initial, new_value, value);
+        const changed = trigger(initial, new_value!, value);
         if (changed) {
             // value changed, store is valid
             invalidated = false;
@@ -78,7 +124,7 @@ export function writable<T>(trigger: Trigger<T>, value?: T, start: StartNotifier
 
                 // queue subscription actions
                 enqueue_store_signals(
-                    local_queue.map(([subscriber]) => () => subscriber(new_value))
+                    local_queue.map(([subscriber]) => () => subscriber(new_value!))
                 );
             }
         }
@@ -87,11 +133,11 @@ export function writable<T>(trigger: Trigger<T>, value?: T, start: StartNotifier
 
     }
 
-    function update(fn: Updater<T>): void {
+    function update(fn: Updater<T | undefined>): void {
         set(fn(value!));
     }
 
-    function subscribe(run: Subscriber<T>, invalidator: Invalidator = noop, revalidator: Revalidator = noop): Unsubscriber {
+    function subscribe(run: Subscriber<T>, invalidator: Invalidate = noop, revalidator: Revalidate = noop): Unsubscriber {
         const subscriber: SubscribeInvalidateTuple<T> = [run, invalidator, revalidator];
         subscribers.add(subscriber);
 
@@ -107,7 +153,7 @@ export function writable<T>(trigger: Trigger<T>, value?: T, start: StartNotifier
             store_runner(
                 () => {
                     if (subscribers.size === 1) {
-                        stop = start(set, invalidate, revalidate) || noop;
+                        stop = start(set, update, invalidate, revalidate) || noop;
                     }
                     run(value!);
                 }

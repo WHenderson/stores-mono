@@ -1,5 +1,5 @@
 import {Readable, StartNotifier, Trigger} from "./types";
-import {read_only} from "./read_only";
+import {read_only} from "./read-only";
 import {writable} from "./writable";
 
 /**

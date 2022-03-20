@@ -60,7 +60,7 @@ export function derive<T>(trigger: Trigger<T>, stores: Stores, fn: Function, ini
 
     const auto = fn.length < 2;
 
-    return readable<T>(trigger, initial_value!, (set, invalidate) => {
+    return readable<T>(trigger, initial_value!, (set, _update, invalidate) => {
         let initiated = false;
         const values: unknown[] = [];
 

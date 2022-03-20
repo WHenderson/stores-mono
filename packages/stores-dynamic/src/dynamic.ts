@@ -40,10 +40,10 @@ export function dynamic<A extends Inputs, R>(
         ? [<unknown[]>[], args_or_calculator, <DynamicResolved<R> | undefined>calculate_or_initial_value]
         : [args_or_calculator, <CalculatorWithArgs<A, R>>calculate_or_initial_value, maybe_initial_value];
 
-    const store = readable<DynamicResolved<R>>(
+    return readable<DynamicResolved<R>>(
         trigger,
         initial_value!,
-        (set, invalidate, revalidate) => {
+        (set, _update, invalidate, revalidate) => {
             type Value = DynamicResolved<unknown>;
             type Subscription = [Unsubscriber, undefined | Value];
             const subscriptions = new Map<Readable<any>, Subscription>();
@@ -176,6 +176,4 @@ export function dynamic<A extends Inputs, R>(
             }
         }
     );
-
-    return store;
 }

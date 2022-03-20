@@ -4,36 +4,44 @@ importers:
 
   .:
     specifiers:
+      '@knodes/typedoc-plugin-code-blocks': ^0.22.2
+      '@knodes/typedoc-plugin-monorepo-readmes': ^0.22.2
+      '@knodes/typedoc-plugin-pages': ^0.22.2
       '@rollup/plugin-node-resolve': ^13.1.3
       '@rollup/plugin-typescript': ^8.3.0
       '@types/node': ^17.0.13
       c8: ^7.11.0
       chalk: ^5.0.0
       foreach-folder: ^1.1.0
+      lodash: ^4.17.21
+      lunr: ^2.3.9
       rimraf: ^3.0.2
       rollup: ^2.66.1
       rollup-plugin-auto-external: ^2.0.0
       rollup-plugin-dts: ^4.1.0
       tslib: ^2.3.1
       typedoc: ^0.22.13
-      typedoc-plugin-mermaid: ^1.6.0
       typescript: ^4.6.2
       vite: ^2.7.13
       vitest: ^0.6.3
     devDependencies:
+      '@knodes/typedoc-plugin-code-blocks': 0.22.2_lodash@4.17.21+typedoc@0.22.13
+      '@knodes/typedoc-plugin-monorepo-readmes': 0.22.2_lodash@4.17.21+typedoc@0.22.13
+      '@knodes/typedoc-plugin-pages': 0.22.2_60939e6596ac615e6dbcf8be987ab9ed
       '@rollup/plugin-node-resolve': 13.1.3_rollup@2.69.1
       '@rollup/plugin-typescript': 8.3.1_bd6ad70955fcb280f5ed65ca9ac148c0
       '@types/node': 17.0.21
       c8: 7.11.0
       chalk: 5.0.0
       foreach-folder: 1.1.0
+      lodash: 4.17.21
+      lunr: 2.3.9
       rimraf: 3.0.2
       rollup: 2.69.1
       rollup-plugin-auto-external: 2.0.0_rollup@2.69.1
       rollup-plugin-dts: 4.2.0_rollup@2.69.1+typescript@4.6.2
       tslib: 2.3.1
       typedoc: 0.22.13_typescript@4.6.2
-      typedoc-plugin-mermaid: 1.6.0_typedoc@0.22.13
       typescript: 4.6.2
       vite: 2.8.6
       vitest: 0.6.3_c8@7.11.0
@@ -156,6 +164,54 @@ packages:
   /@istanbuljs/schema/0.1.3:
     resolution: {integrity: sha512-ZXRY4jNvVgSVQ8DL3LTcakaAtXwTVUxE81hslsyD2AtoXW/wVob10HkOJ1X/pAlcI7D+2YoZKg5do8G/w6RYgA==}
     engines: {node: '>=8'}
+    dev: true
+
+  /@knodes/typedoc-plugin-code-blocks/0.22.2_lodash@4.17.21+typedoc@0.22.13:
+    resolution: {integrity: sha512-lbKv5kZAnKcdFvCewRQZmkUPXLq/L6LGIlSHvSsIjdS2Ww+deQfDKTujlXTMCWnI0ahQfWYT9LCexgf310i9Kw==}
+    peerDependencies:
+      lodash: ^4.17.0
+      typedoc: ^0.22.0
+    dependencies:
+      '@knodes/typedoc-pluginutils': 0.22.2_lodash@4.17.21+typedoc@0.22.13
+      lodash: 4.17.21
+      typedoc: 0.22.13_typescript@4.6.2
+    dev: true
+
+  /@knodes/typedoc-plugin-monorepo-readmes/0.22.2_lodash@4.17.21+typedoc@0.22.13:
+    resolution: {integrity: sha512-SGU0j3t42fHx9lwMWQeaAoYo6Ruvb8dWOephMZezcr9Dx/k9ueZ0yahsGw9G4wvbRAMIQJ4yEdnKcwoOrQU5/Q==}
+    peerDependencies:
+      lodash: ^4.17.0
+      typedoc: ^0.22.0
+    dependencies:
+      '@knodes/typedoc-pluginutils': 0.22.2_lodash@4.17.21+typedoc@0.22.13
+      lodash: 4.17.21
+      pkg-up: 3.1.0
+      typedoc: 0.22.13_typescript@4.6.2
+    dev: true
+
+  /@knodes/typedoc-plugin-pages/0.22.2_60939e6596ac615e6dbcf8be987ab9ed:
+    resolution: {integrity: sha512-C42AcOaBlWw3HUwWtSb34Y3QpVyp2fH9v5MYns9YMCLM8E1xru/prg/lzAKxYAdd1UYxsIqdf+czsf9spQTayQ==}
+    peerDependencies:
+      lodash: ^4.17.0
+      lunr: ^2.3.0
+      typedoc: ^0.22.0
+    dependencies:
+      '@knodes/typedoc-pluginutils': 0.22.2_lodash@4.17.21+typedoc@0.22.13
+      lodash: 4.17.21
+      lunr: 2.3.9
+      typedoc: 0.22.13_typescript@4.6.2
+    dev: true
+
+  /@knodes/typedoc-pluginutils/0.22.2_lodash@4.17.21+typedoc@0.22.13:
+    resolution: {integrity: sha512-pBFu2EYzd+GRjPJs3ArQiaEQISlJtatX1fcgO3DrzUBQB/bTA9VJgaBr72AI3CdPceYapOpP62DzHicCXWnRJA==}
+    peerDependencies:
+      lodash: ^4.17.0
+      typedoc: ^0.22.0
+    dependencies:
+      lodash: 4.17.21
+      pkg-up: 3.1.0
+      semver: 7.3.5
+      typedoc: 0.22.13_typescript@4.6.2
     dev: true
 
   /@rollup/plugin-node-resolve/13.1.3_rollup@2.69.1:
@@ -621,6 +677,13 @@ packages:
     resolution: {integrity: sha512-1fMXF3YP4pZZVozF8j/ZLfvnR8NSIljt56UhbZ5PeeDmmGHpgpdwQt7ITlGvYaQukCvuBRMLEiKiYC+oeIg4cg==}
     dev: true
 
+  /find-up/3.0.0:
+    resolution: {integrity: sha512-1yD6RmLI1XBfxugvORwlck6f75tYL+iR0jqwsOrOxMZyGYqUuDhJ0l4AXdO1iX/FTs9cBAMEk1gWSEx1kSbylg==}
+    engines: {node: '>=6'}
+    dependencies:
+      locate-path: 3.0.0
+    dev: true
+
   /find-up/5.0.0:
     resolution: {integrity: sha512-78/PXT1wlLLDgTzDs7sjq9hzz0vXD+zn+7wypEe4fXQxCmdmqfGsEPQxmiCSQI3ajFV91bVSsvNtrJRiW6nGng==}
     engines: {node: '>=10'}
@@ -707,10 +770,6 @@ packages:
 
   /html-escaper/2.0.2:
     resolution: {integrity: sha512-H2iMtd0I4Mt5eYiapRdIDjp+XzelXQ0tFE4JS7YFwFevXXMmOp9myNrUvCg0D6ws8iqkRPBfKHgbwig1SmlLfg==}
-    dev: true
-
-  /html-escaper/3.0.3:
-    resolution: {integrity: sha512-RuMffC89BOWQoY0WKGpIhn5gX3iI54O6nRA0yC124NYVtzjmFWBIiFd8M0x+ZdX0P9R4lADg1mgP8C7PxGOWuQ==}
     dev: true
 
   /immer/9.0.12:
@@ -801,6 +860,14 @@ packages:
     engines: {node: '>=14'}
     dev: true
 
+  /locate-path/3.0.0:
+    resolution: {integrity: sha512-7AO748wWnIhNqAuaty2ZWHkQHRSNfPVIsPIfwEOWO22AmaoVrWavlOcMR5nzTLNYvp36X220/maaRsrec1G65A==}
+    engines: {node: '>=6'}
+    dependencies:
+      p-locate: 3.0.0
+      path-exists: 3.0.0
+    dev: true
+
   /locate-path/6.0.0:
     resolution: {integrity: sha512-iPZK6eYjbxRu3uB4/WZ3EsEIMJFMqAoopl3R+zuq0UjcAm/MO6KCweDgPfP3elTztoKP3KtnVHxTn2NHBSDVUw==}
     engines: {node: '>=10'}
@@ -808,10 +875,21 @@ packages:
       p-locate: 5.0.0
     dev: true
 
+  /lodash/4.17.21:
+    resolution: {integrity: sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==}
+    dev: true
+
   /loupe/2.3.4:
     resolution: {integrity: sha512-OvKfgCC2Ndby6aSTREl5aCCPTNIzlDfQZvZxNUrBrihDhL3xcrYegTblhmEiCrg2kKQz4XsFIaemE5BF4ybSaQ==}
     dependencies:
       get-func-name: 2.0.0
+    dev: true
+
+  /lru-cache/6.0.0:
+    resolution: {integrity: sha512-Jo6dJ04CmSjuznwJSS3pUeWmd/H0ffTlkXXgwZi+eq1UCmqQwCh+eLsYOYCwY991i2Fah4h1BEMCx4qThGbsiA==}
+    engines: {node: '>=10'}
+    dependencies:
+      yallist: 4.0.0
     dev: true
 
   /lunr/2.3.9:
@@ -872,11 +950,25 @@ packages:
       wrappy: 1.0.2
     dev: true
 
+  /p-limit/2.3.0:
+    resolution: {integrity: sha512-//88mFWSJx8lxCzwdAABTJL2MyWB12+eIY7MDL2SqLmAkeKU9qxRvWuSyTjm3FUmpBEMuFfckAIqEaVGUDxb6w==}
+    engines: {node: '>=6'}
+    dependencies:
+      p-try: 2.2.0
+    dev: true
+
   /p-limit/3.1.0:
     resolution: {integrity: sha512-TYOanM3wGwNGsZN2cVTYPArw454xnXj5qmWF1bEoAc4+cU/ol7GVh7odevjp1FNHduHc3KZMcFduxU5Xc6uJRQ==}
     engines: {node: '>=10'}
     dependencies:
       yocto-queue: 0.1.0
+    dev: true
+
+  /p-locate/3.0.0:
+    resolution: {integrity: sha512-x+12w/To+4GFfgJhBEpiDcLozRJGegY+Ei7/z0tSLkMmxGZNybVMSfWj9aJn8Z5Fc7dBUNJOOVgPv2H7IwulSQ==}
+    engines: {node: '>=6'}
+    dependencies:
+      p-limit: 2.3.0
     dev: true
 
   /p-locate/5.0.0:
@@ -886,12 +978,22 @@ packages:
       p-limit: 3.1.0
     dev: true
 
+  /p-try/2.2.0:
+    resolution: {integrity: sha512-R4nPAVTAU0B9D35/Gk3uJf/7XYbQcyohSKdvAxIRSNghFl4e71hVoGnBNQz9cWaXxO2I10KTC+3jMdvvoKw6dQ==}
+    engines: {node: '>=6'}
+    dev: true
+
   /parse-json/4.0.0:
     resolution: {integrity: sha1-vjX1Qlvh9/bHRxhPmKeIy5lHfuA=}
     engines: {node: '>=4'}
     dependencies:
       error-ex: 1.3.2
       json-parse-better-errors: 1.0.2
+    dev: true
+
+  /path-exists/3.0.0:
+    resolution: {integrity: sha1-zg6+ql94yxiSXqfYENe1mwEP1RU=}
+    engines: {node: '>=4'}
     dev: true
 
   /path-exists/4.0.0:
@@ -936,6 +1038,13 @@ packages:
   /pify/3.0.0:
     resolution: {integrity: sha1-5aSs0sEB/fPZpNB/DbxNtJ3SgXY=}
     engines: {node: '>=4'}
+    dev: true
+
+  /pkg-up/3.1.0:
+    resolution: {integrity: sha512-nDywThFk1i4BQK4twPQ6TA4RT8bDY96yeuCVBWL3ePARCiEKDRSrNGbFIgUJpLp+XeIR65v8ra7WuJOFUBtkMA==}
+    engines: {node: '>=8'}
+    dependencies:
+      find-up: 3.0.0
     dev: true
 
   /postcss/8.4.7:
@@ -1034,6 +1143,14 @@ packages:
   /semver/6.3.0:
     resolution: {integrity: sha512-b39TBaTSfV6yBrapU89p5fKekE2m/NwnDocOVruQFS1/veMgdzuPcnOM34M6CwxW8jH/lxEa5rBoDeUwu5HHTw==}
     hasBin: true
+    dev: true
+
+  /semver/7.3.5:
+    resolution: {integrity: sha512-PoeGJYh8HK4BTO/a9Tf6ZG3veo/A7ZVsYrSA6J8ny9nb3B1VrpkuN+z9OE5wfE5p6H4LchYZsegiQgbJD94ZFQ==}
+    engines: {node: '>=10'}
+    hasBin: true
+    dependencies:
+      lru-cache: 6.0.0
     dev: true
 
   /shebang-command/2.0.0:
@@ -1164,15 +1281,6 @@ packages:
     engines: {node: '>=4'}
     dev: true
 
-  /typedoc-plugin-mermaid/1.6.0_typedoc@0.22.13:
-    resolution: {integrity: sha512-0GdCht4RTYkBpl8syQgtR8jZNoVFXVzRqup/txlpa6TUm9aIK/7DA9EatJYoWx54FpADyXLtgZn20FxhKjP8wA==}
-    peerDependencies:
-      typedoc: '>=0.22.0'
-    dependencies:
-      html-escaper: 3.0.3
-      typedoc: 0.22.13_typescript@4.6.2
-    dev: true
-
   /typedoc/0.22.13_typescript@4.6.2:
     resolution: {integrity: sha512-NHNI7Dr6JHa/I3+c62gdRNXBIyX7P33O9TafGLd07ur3MqzcKgwTvpg18EtvCLHJyfeSthAtCLpM7WkStUmDuQ==}
     engines: {node: '>= 12.10.0'}
@@ -1299,6 +1407,10 @@ packages:
   /y18n/5.0.8:
     resolution: {integrity: sha512-0pfFzegeDWJHJIAmTLRP2DwHjdF5s7jo9tuztdQxAhINCdvS+3nGINqPd00AphqJR/0LhANUS6/+7SCb98YOfA==}
     engines: {node: '>=10'}
+    dev: true
+
+  /yallist/4.0.0:
+    resolution: {integrity: sha512-3wdGidZyq5PB084XLES5TpOSRA3wjXAlIWMhum2kRcv/41Sn2emQ0dycQW4uZXLejwKvg6EsvbdlVL+FYEct7A==}
     dev: true
 
   /yargs-parser/20.2.9:

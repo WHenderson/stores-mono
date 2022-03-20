@@ -1,21 +1,20 @@
-# Node Modules
-/node_modules
-
-# pnpm
-/.pnpm-debug.log
-
-# Coverage
-/coverage
-
 # WebStorm
 /.idea/workspace.xml
 /.idea/usage.statistics.xml
 /.idea/shelf
 /.idea/*.iml
 
+# Mono Repo
+/node_modules
+/dist
+/coverage
+/docs
+/.pnpm-debug.log
+
 # Packages
 /packages/*/node_modules
 /packages/*/dist
 /packages/*/coverage
+/packages/*/docs
 /packages/*/.pnpm-debug.log
 

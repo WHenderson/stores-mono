@@ -1,7 +1,7 @@
 import {writable} from "@crikey/stores-strict";
 import {ReadablePromise, State, Stateful, StatefulFulfilled, StatefulRejected} from "./types";
-import {readOnly} from "@crikey/stores-base";
 import {constant} from "@crikey/stores-const";
+import {read_only} from "@crikey/stores-base";
 
 /**
  * Create a readable store that resolves according to the provided promise
@@ -42,7 +42,7 @@ export function readable<T>(promise: PromiseLike<T>, initial_value?: T): Readabl
     return Object.assign({
             promise
         },
-        readOnly(promise$)
+        read_only(promise$)
     );
 }
 

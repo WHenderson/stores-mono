@@ -283,22 +283,21 @@ describe('store', () => {
         it('derived dependency does not update and shared ancestor updates', () => {
             const root = writable({ a: 0, b: 0 });
             const values: any[] = [];
-            console.log('1');
+
             const a = derived(root, $root => {
                 return 'a' + $root.a;
             });
-            console.log('2');
+
             const b = derived([a, root], ([$a, $root]) => {
                 return 'b' + $root.b + $a;
             });
-            console.log('3');
+
             const unsubscribe = b.subscribe(v => {
                 values.push(v);
             });
-            console.log('4');
+
             assert.deepEqual(values, ['b0a0']);
 
-            console.log('-- trigger --');
             root.set({ a: 0, b: 1 });
             assert.deepEqual(values, ['b0a0', 'b1a0']);
 

@@ -1,9 +1,9 @@
 import { expect, it } from 'vitest'
-import {Invalidator, read_only, Subscriber, Unsubscriber, Updater, Writable} from '../src';
+import {Invalidate, read_only, Subscriber, Unsubscriber, Updater, Writable} from '../src';
 
 it('should remove everything but the subscribe method', () => {
     const store: Writable<number> = {
-        subscribe(run: Subscriber<number>, _invalidate?: Invalidator): Unsubscriber {
+        subscribe(run: Subscriber<number>, _invalidate?: Invalidate): Unsubscriber {
             run(1);
             return () => {};
         },
