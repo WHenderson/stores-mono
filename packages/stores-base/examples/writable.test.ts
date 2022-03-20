@@ -99,7 +99,7 @@ it('example-writable-start-set', async () => {
     // give time for an update
     await new Promise(resolve => {
         setTimeout(resolve, 0);
-    })
+    });
 
     unsubscribe();
 

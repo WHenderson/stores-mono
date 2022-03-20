@@ -11,13 +11,14 @@ type SubscribeInvalidateTuple<T> = [Subscriber<T>, Invalidate, Revalidate];
  * Writable stores allow the store value to be set and updated by
  * external code via {@link Writable.set} and {@link Writable.update}.
  *
- * Explicitly setting defining the type of store via `writable<Type>` will
- * result in a store of type `Writable<Type | undefined>` to allow for the default value.
- * If this is undesired, an alternate default value/type can be provided.
- *
  * _Example_:
  * {@codeblock ../examples/writable.test.ts#example-writable-undefined}
  *
+ * Explicitly defining the type of store via `writable<Type>` will
+ * result in a store of type `Writable<Type | undefined>` to allow for the default value.
+ * If this is undesired, an alternate default value/type can be provided.
+ *
+ * @category Create Store
  * @param trigger callback used to determine if subscribers should be called
  */
 export function writable<T = undefined>(trigger: Trigger<T>): Writable<T | undefined>;
@@ -64,6 +65,7 @@ export function writable<T = undefined>(trigger: Trigger<T>): Writable<T | undef
  * Usage of `invalidate` and `validate` is only necessary when creating advanced stores such as {@link derive} which are
  * dependent on other stores but should only be recalculated once all dependent stores are in a valid state.
  *
+ * @category Create Store
  * @param trigger callback used to determine if subscribers should be called
  * @param value initial store value
  * @param start callback called whenever the number of subscribers changes from 0 to 1
