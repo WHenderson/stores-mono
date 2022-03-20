@@ -1,5 +1,5 @@
 import {Readable, StartNotifier, Trigger} from "./types";
-import {readOnly} from "./read-only";
+import {read_only} from "./read_only";
 import {writable} from "./writable";
 
 /**
@@ -23,5 +23,5 @@ export function readable<T>(trigger: Trigger<T>, value: T, start?: StartNotifier
  * @param start callback which is signaled whenever the number of subscribers changes from 0 to 1
  */
 export function readable<T>(trigger: Trigger<T>, value?: T, start?: StartNotifier<T>): Readable<T | undefined> {
-    return readOnly(writable(trigger, value!, start));
+    return read_only(writable(trigger, value!, start));
 }

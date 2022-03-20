@@ -1,5 +1,5 @@
 import { expect, it } from 'vitest'
-import {Invalidator, readOnly, Subscriber, Unsubscriber, Updater, Writable} from '../src';
+import {Invalidator, read_only, Subscriber, Unsubscriber, Updater, Writable} from '../src';
 
 it('should remove everything but the subscribe method', () => {
     const store: Writable<number> = {
@@ -13,7 +13,7 @@ it('should remove everything but the subscribe method', () => {
         }
     }
 
-    const roStore = readOnly(store);
+    const roStore = read_only(store);
 
     expect(Object.keys(roStore)).to.deep.equal(['subscribe']);
     expect(roStore.subscribe).toBe(store.subscribe);
