@@ -19,8 +19,8 @@ export function writable<T>(value?: T, start?: StartNotifier<T>): Writable<T>;
  * @param value initial store value
  * @param start callback called whenever the number of subscribers changes from 0 to 1
  */
-export function writable<T>(value?: T, start: StartNotifier<T> = noop): Writable<T | undefined> {
-    const store = strictWritable(value, start);
+export function writable<T>(value?: T, start: StartNotifier<T> = noop): Writable<T | undefined> | Writable<T> {
+    const store = strictWritable(value!, start);
 
     function update(fn: Updater<T>): void {
         store.update(

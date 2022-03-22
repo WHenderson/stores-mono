@@ -1,4 +1,4 @@
-import {Invalidator, Readable, Subscriber, Unsubscriber} from '@crikey/stores-base';
+import {Readable, Subscriber, Unsubscriber} from '@crikey/stores-base';
 import {Observable} from "rxjs";
 
 /**
@@ -47,7 +47,7 @@ export function readable<T>(observable: Observable<T>, initial_value?: T): Reada
 
 export function readable<T>(observable: Observable<T>, initial_value?: T): Readable<T | undefined> {
     return {
-        subscribe(run: Subscriber<T | undefined>, _invalidate?: Invalidator): Unsubscriber {
+        subscribe(run: Subscriber<T | undefined>): Unsubscriber {
             let initiated = false;
             const subscribed = observable.subscribe((value) => {
                 initiated = true;

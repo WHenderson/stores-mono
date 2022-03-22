@@ -73,7 +73,7 @@ export function writable<T = undefined>(trigger: Trigger<T>): Writable<T | undef
 export function writable<T>(trigger: Trigger<T>, value?: T, start?: StartNotifier<T>): Writable<T>;
 
 /* implementation */
-export function writable<T>(trigger: Trigger<T>, value?: T, start: StartNotifier<T | undefined> = noop): Writable<T | undefined> {
+export function writable<T>(trigger: Trigger<T>, value?: T, start: StartNotifier<T> = noop): Writable<T | undefined> {
     let initial = true;
     let stop: Unsubscriber | undefined;
     let invalidated = false;
@@ -135,7 +135,7 @@ export function writable<T>(trigger: Trigger<T>, value?: T, start: StartNotifier
 
     }
 
-    function update(fn: Updater<T | undefined>): void {
+    function update(fn: Updater<T> | Updater<T | undefined>): void {
         set(fn(value!));
     }
 

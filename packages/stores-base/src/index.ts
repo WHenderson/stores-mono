@@ -7,3 +7,4 @@ export * from './derive';
 export * from './get';
 export * from './create-pending';
 export * from './trigger-strict-not-equal';
+export * from './trigger-always';

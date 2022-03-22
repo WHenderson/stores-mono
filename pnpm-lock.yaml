@@ -4,9 +4,9 @@ importers:
 
   .:
     specifiers:
-      '@knodes/typedoc-plugin-code-blocks': ^0.22.2
-      '@knodes/typedoc-plugin-monorepo-readmes': ^0.22.2
-      '@knodes/typedoc-plugin-pages': ^0.22.2
+      '@knodes/typedoc-plugin-code-blocks': ^0.22.3
+      '@knodes/typedoc-plugin-monorepo-readmes': ^0.22.3
+      '@knodes/typedoc-plugin-pages': ^0.22.3
       '@rollup/plugin-node-resolve': ^13.1.3
       '@rollup/plugin-typescript': ^8.3.0
       '@types/node': ^17.0.13
@@ -25,9 +25,9 @@ importers:
       vite: ^2.7.13
       vitest: ^0.6.3
     devDependencies:
-      '@knodes/typedoc-plugin-code-blocks': 0.22.2_lodash@4.17.21+typedoc@0.22.13
-      '@knodes/typedoc-plugin-monorepo-readmes': 0.22.2_lodash@4.17.21+typedoc@0.22.13
-      '@knodes/typedoc-plugin-pages': 0.22.2_60939e6596ac615e6dbcf8be987ab9ed
+      '@knodes/typedoc-plugin-code-blocks': 0.22.3_lodash@4.17.21+typedoc@0.22.13
+      '@knodes/typedoc-plugin-monorepo-readmes': 0.22.3_lodash@4.17.21+typedoc@0.22.13
+      '@knodes/typedoc-plugin-pages': 0.22.3_60939e6596ac615e6dbcf8be987ab9ed
       '@rollup/plugin-node-resolve': 13.1.3_rollup@2.69.1
       '@rollup/plugin-typescript': 8.3.1_bd6ad70955fcb280f5ed65ca9ac148c0
       '@types/node': 17.0.21
@@ -176,44 +176,44 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
-  /@knodes/typedoc-plugin-code-blocks/0.22.2_lodash@4.17.21+typedoc@0.22.13:
-    resolution: {integrity: sha512-lbKv5kZAnKcdFvCewRQZmkUPXLq/L6LGIlSHvSsIjdS2Ww+deQfDKTujlXTMCWnI0ahQfWYT9LCexgf310i9Kw==}
+  /@knodes/typedoc-plugin-code-blocks/0.22.3_lodash@4.17.21+typedoc@0.22.13:
+    resolution: {integrity: sha512-3ZV3LqWQELkSMKAnpf0WD1NtFKz++vQpyZ0I9v2nI7LPHnLrCVgCsngep+bFIDitPjN3Xv8mk0BKK9BiPZULiQ==}
     peerDependencies:
       lodash: ^4.17.0
       typedoc: ^0.22.0
     dependencies:
-      '@knodes/typedoc-pluginutils': 0.22.2_lodash@4.17.21+typedoc@0.22.13
+      '@knodes/typedoc-pluginutils': 0.22.3_lodash@4.17.21+typedoc@0.22.13
       lodash: 4.17.21
       typedoc: 0.22.13_typescript@4.6.2
     dev: true
 
-  /@knodes/typedoc-plugin-monorepo-readmes/0.22.2_lodash@4.17.21+typedoc@0.22.13:
-    resolution: {integrity: sha512-SGU0j3t42fHx9lwMWQeaAoYo6Ruvb8dWOephMZezcr9Dx/k9ueZ0yahsGw9G4wvbRAMIQJ4yEdnKcwoOrQU5/Q==}
+  /@knodes/typedoc-plugin-monorepo-readmes/0.22.3_lodash@4.17.21+typedoc@0.22.13:
+    resolution: {integrity: sha512-El92RGX0+pkqkdYlPyOjJHKvUe7tNWPa4Yh8MGVE3TFxd98kUMrHnYmY8itjXmg1hpd5G1qoe4IBixRqu6oe8A==}
     peerDependencies:
       lodash: ^4.17.0
       typedoc: ^0.22.0
     dependencies:
-      '@knodes/typedoc-pluginutils': 0.22.2_lodash@4.17.21+typedoc@0.22.13
+      '@knodes/typedoc-pluginutils': 0.22.3_lodash@4.17.21+typedoc@0.22.13
       lodash: 4.17.21
       pkg-up: 3.1.0
       typedoc: 0.22.13_typescript@4.6.2
     dev: true
 
-  /@knodes/typedoc-plugin-pages/0.22.2_60939e6596ac615e6dbcf8be987ab9ed:
-    resolution: {integrity: sha512-C42AcOaBlWw3HUwWtSb34Y3QpVyp2fH9v5MYns9YMCLM8E1xru/prg/lzAKxYAdd1UYxsIqdf+czsf9spQTayQ==}
+  /@knodes/typedoc-plugin-pages/0.22.3_60939e6596ac615e6dbcf8be987ab9ed:
+    resolution: {integrity: sha512-ezXvKbbUQo8JnymBFu6iAxsmDDQxOmn8QVT/i47R18Jx+hlfrSa6OJ1vugioyTZhmvzPY4ZktsJZxC+jYGOFOg==}
     peerDependencies:
       lodash: ^4.17.0
       lunr: ^2.3.0
       typedoc: ^0.22.0
     dependencies:
-      '@knodes/typedoc-pluginutils': 0.22.2_lodash@4.17.21+typedoc@0.22.13
+      '@knodes/typedoc-pluginutils': 0.22.3_lodash@4.17.21+typedoc@0.22.13
       lodash: 4.17.21
       lunr: 2.3.9
       typedoc: 0.22.13_typescript@4.6.2
     dev: true
 
-  /@knodes/typedoc-pluginutils/0.22.2_lodash@4.17.21+typedoc@0.22.13:
-    resolution: {integrity: sha512-pBFu2EYzd+GRjPJs3ArQiaEQISlJtatX1fcgO3DrzUBQB/bTA9VJgaBr72AI3CdPceYapOpP62DzHicCXWnRJA==}
+  /@knodes/typedoc-pluginutils/0.22.3_lodash@4.17.21+typedoc@0.22.13:
+    resolution: {integrity: sha512-prWSEWShXh1rMBFsAf2VG4Jro9YcIM7DciJduZKWh/U8z8oU9O1JmzqIPpssZObHbcme+YzZon1ev22/8smOrw==}
     peerDependencies:
       lodash: ^4.17.0
       typedoc: ^0.22.0

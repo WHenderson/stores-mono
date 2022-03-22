@@ -1,6 +1,6 @@
 import {DynamicValue} from "./types";
 import {Readable} from "@crikey/stores-base";
-import {Invalidator, Revalidator, Subscriber, Unsubscriber} from "@crikey/stores-base";
+import {Invalidate, Revalidate, Subscriber, Unsubscriber} from "@crikey/stores-base";
 
 /**
  * Creates a dynamic store by wrapping the input stores wrapper.
@@ -11,7 +11,7 @@ import {Invalidator, Revalidator, Subscriber, Unsubscriber} from "@crikey/stores
  */
 export function to_dynamic<T>(store: Readable<T>): Readable<DynamicValue<T>> {
     return {
-        subscribe(this: void, run: Subscriber<DynamicValue<T>>, invalidate?: Invalidator, revalidate?: Revalidator) : Unsubscriber {
+        subscribe(this: void, run: Subscriber<DynamicValue<T>>, invalidate?: Invalidate, revalidate?: Revalidate) : Unsubscriber {
             return store.subscribe(
                 (value) => {
                     run({ value });

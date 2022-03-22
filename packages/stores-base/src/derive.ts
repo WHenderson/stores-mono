@@ -1,4 +1,4 @@
-import {Readable, Set, Trigger, Unsubscriber, Update} from "./types";
+import {Invalidate, Readable, Revalidate, Set, Trigger, Unsubscriber, Update} from "./types";
 import {create_pending} from "./create-pending";
 import {noop} from "./noop";
 import {readable} from "./readable";
@@ -36,7 +36,7 @@ export type StoresValues<T> = T extends Readable<infer U> ? U :
 export function derive<S extends Stores, T>(
     trigger: Trigger<T>,
     stores: S,
-    fn: (values: StoresValues<S>, set: Set<T>, update: Update<T>) => Unsubscriber | void,
+    fn: (values: StoresValues<S>, set: Set<T>, update: Update<T>, invalidate: Invalidate, revalidate: Revalidate) => Unsubscriber | void,
     initial_value?: T
 ): Readable<T>;
 
@@ -77,7 +77,7 @@ export function derive<T>(trigger: Trigger<T>, stores: Stores, fn: Function, ini
 
     const auto = fn.length < 2;
 
-    return readable<T>(trigger, initial_value!, (set, update, invalidate) => {
+    return readable<T>(trigger, initial_value!, (set, update, invalidate, revalidate) => {
         let initiated = false;
         const values: unknown[] = [];
 
@@ -89,7 +89,7 @@ export function derive<T>(trigger: Trigger<T>, stores: Stores, fn: Function, ini
                 return;
             }
             cleanup();
-            const result: unknown = fn(single ? values[0] : values, set, update);
+            const result: unknown = fn(single ? values[0] : values, set, update, invalidate, revalidate);
             if (auto) {
                 set(result as T);
             } else {

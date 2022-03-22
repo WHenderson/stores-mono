@@ -18,6 +18,6 @@ export function readable<T>(value: T, start?: StartNotifier<T>): Readable<T>;
  * @param value initial store value
  * @param start callback which is signaled whenever the number of subscribers changes from 0 to 1
  */
-export function readable<T>(value?: T, start?: StartNotifier<T>): Readable<T | undefined> {
-    return baseReadable(trigger_safe_not_equal, value, start);
+export function readable<T>(value?: T, start?: StartNotifier<T>): Readable<T | undefined> | Readable<T> {
+    return baseReadable(trigger_safe_not_equal, value!, start);
 }
