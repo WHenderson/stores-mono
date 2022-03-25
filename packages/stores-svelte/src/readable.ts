@@ -1,5 +1,5 @@
 import {Readable, readable as baseReadable, StartNotifier} from "@crikey/stores-base";
-import {trigger_safe_not_equal} from "./trigger-safe-not-equal";
+import {trigger_safe_not_equal} from "@crikey/stores-base";
 
 /**
  * Creates a `Readable` store that allows reading by subscription.

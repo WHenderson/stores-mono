@@ -13,6 +13,8 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noImplicitReturns": true,
-    "downlevelIteration": true
+    "downlevelIteration": true,
+    "declaration": true,
+    "declarationMap": true
   }
 }

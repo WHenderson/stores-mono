@@ -32,7 +32,7 @@ export interface StatefulRejected {
 
 export type Stateful<T> = StatefulPending<T> | StatefulFulfilled<T> | StatefulRejected;
 
-type InnerType<S> =
+export type InferInnerType<S> =
     S extends StatefulPending<infer T>
     ? T
     : S extends StatefulFulfilled<infer T>
@@ -40,5 +40,5 @@ type InnerType<S> =
     : never;
 
 export interface ReadablePromise<T> extends Readable<T> {
-    promise: PromiseLike<InnerType<T>>;
+    promise: PromiseLike<InferInnerType<T>>;
 }

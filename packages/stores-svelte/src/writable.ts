@@ -1,5 +1,5 @@
 import {noop, StartNotifier, Writable, writable as baseWritable} from "@crikey/stores-base";
-import {trigger_safe_not_equal} from "./trigger-safe-not-equal";
+import {trigger_safe_not_equal} from "@crikey/stores-base";
 
 /**
  * Create a writable store

@@ -1,4 +1,4 @@
-import {trigger_strict_not_equal, Readable, readable as baseReadable, StartNotifier} from "@crikey/stores-base";
+import {Readable, readable as baseReadable, StartNotifier, trigger_strict_not_equal} from "@crikey/stores-base";
 
 /**
  * Creates a `Readable` store that allows reading by subscription.

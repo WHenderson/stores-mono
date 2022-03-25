@@ -1,5 +1,5 @@
 import {derive as baseDerive, Readable, Stores, StoresValues, Unsubscriber} from "@crikey/stores-base";
-import {trigger_safe_not_equal} from "./trigger-safe-not-equal";
+import {trigger_safe_not_equal} from "@crikey/stores-base";
 
 /**
  * Creates a derived value store by synchronizing one or more readable stores and applying an aggregate function over
