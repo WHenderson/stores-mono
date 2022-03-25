@@ -17,9 +17,15 @@ $ yarn add @crikey/stores-base
 
 ## Usage
 
+This package (aside from its types) is intended for internal use.
+
 ## Differences with Svelte stores 
 
-### Additional functionality
+### Definable trigger semantics
+Svelte ties users to a greedy change detection system, whereby complex types are always considered to have changed.
+@crikey stores allow for user defined comparison functions. 
+
+### Asynchronous `update` as well as `set` 
 
 @crikey stores extend the {@linkcode readable}, {@linkcode writable}, and {@linkcode derive} contracts allowing 
 calculations to asynchronously `update` as well as `set` their values.
@@ -31,6 +37,12 @@ result in more subscriptions being pushed onto the queue, they are added to the 
 continues to be executed in FIFO order.
 
 Svelte does not expose this queue and thus extensions are not able to maintain a pure FIFO order when mixed.
+
+### Limited dependencies
+derived svelte stores with more than 32 dependencies will behave incorrectly due to the internal mechanism used for 
+tracking updates.
+
+Note that this is an implementation detail and as such is likely to be fixed.
 
 ### Premature evaluation
 Ensuring a derived store value is evaluated against up-to-date inputs is non-trivial.

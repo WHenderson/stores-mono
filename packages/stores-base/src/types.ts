@@ -34,8 +34,8 @@ export type Trigger<T> = (initial: boolean, new_value: T, old_value?: T) => bool
 /** Basic subscription signature used by terminal subscriptions */
 export type SubscribeBasic<T> = (this: void, run: Subscriber<T>) => Unsubscriber;
 
-/** Full subscription signature used derived store types */
-export type SubscribeFull<T> = (this: void, run: Subscriber<T>, invalidate?: Invalidate, revalidate?: Revalidate) => Unsubscriber;
+/** Full subscription signature used by derived store types */
+export type SubscribeFull<T> = (this: void, run: Subscriber<T>, invalidate: Invalidate, revalidate: Revalidate) => Unsubscriber;
 
 /** Subscription signature */
 export type Subscribe<T> = SubscribeBasic<T> | SubscribeFull<T>;
