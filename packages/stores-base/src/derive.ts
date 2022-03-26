@@ -1,4 +1,4 @@
-import {Invalidate, Readable, Revalidate, Set, Trigger, Unsubscriber, Update} from "./types";
+import {ComplexSet, Readable, Trigger, Unsubscriber} from "./types";
 import {create_pending} from "./create-pending";
 import {noop} from "./noop";
 import {readable} from "./readable";
@@ -10,6 +10,14 @@ export type Stores = Readable<any> | [Readable<any>, ...Array<Readable<any>>] | 
 /** One or more values from `Readable` stores. */
 export type StoresValues<T> = T extends Readable<infer U> ? U :
     { [K in keyof T]: T[K] extends Readable<infer U> ? U : never };
+
+/** Synchronous callback for deriving a value from resolved input stores */
+export type DeriveFnSync<S extends Stores,T> = (values: StoresValues<S>) => T;
+
+/** Asynchronous callback for deriving a value from resolved input stores */
+export type DeriveFnAsync<S extends Stores,T> =
+    ((values: StoresValues<S>, set: Set<T>) => Unsubscriber | void) |
+    ((values: StoresValues<S>, set: ComplexSet<T>) => Unsubscriber | void);
 
 /**
  * Derives a store from one or more other stores. The store value is calculated on demand and recalculated whenever any of
@@ -33,12 +41,21 @@ export type StoresValues<T> = T extends Readable<infer U> ? U :
  * @param fn callback that aggregates the store values which are passed in as the first argument
  * @param initial_value initial value - useful when the aggregate function initialises the store asynchronously
  */
+
 export function derive<S extends Stores, T>(
     trigger: Trigger<T>,
     stores: S,
-    fn: (values: StoresValues<S>, set: Set<T>, update: Update<T>, invalidate: Invalidate, revalidate: Revalidate) => Unsubscriber | void,
+    fn: ((values: StoresValues<S>, set: ComplexSet<T>) => Unsubscriber | void),
     initial_value?: T
 ): Readable<T>;
+
+export function derive<S extends Stores, T>(
+    trigger: Trigger<T>,
+    stores: S,
+    fn: ((values: StoresValues<S>, set: Set<T>) => Unsubscriber | void),
+    initial_value?: T
+): Readable<T>;
+
 
 /**
  * Derives a store from one or more other stores. The store value is calculated on demand and recalculated whenever any of
@@ -65,9 +82,10 @@ export function derive<S extends Stores, T>(
 export function derive<S extends Stores, T>(
     trigger: Trigger<T>,
     stores: S,
-    fn: (values: StoresValues<S>) => T,
+    fn: DeriveFnSync<S,T>,
     initial_value?: T
 ): Readable<T>;
+
 
 export function derive<T>(trigger: Trigger<T>, stores: Stores, fn: Function, initial_value?: T): Readable<T> {
     const single = !Array.isArray(stores);
@@ -77,7 +95,9 @@ export function derive<T>(trigger: Trigger<T>, stores: Stores, fn: Function, ini
 
     const auto = fn.length < 2;
 
-    return readable<T>(trigger, initial_value!, (set, update, invalidate, revalidate) => {
+    return readable<T>(trigger, initial_value!, (complexSet) => {
+        const {set, invalidate} = complexSet;
+
         let initiated = false;
         const values: unknown[] = [];
 
@@ -89,7 +109,7 @@ export function derive<T>(trigger: Trigger<T>, stores: Stores, fn: Function, ini
                 return;
             }
             cleanup();
-            const result: unknown = fn(single ? values[0] : values, set, update, invalidate, revalidate);
+            const result: unknown = fn(single ? values[0] : values, complexSet);
             if (auto) {
                 set(result as T);
             } else {

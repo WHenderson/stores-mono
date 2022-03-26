@@ -14,7 +14,7 @@ it('example-writable-undefined', () => {
     store.set(1);
 
     // update
-    store.update(value => value + 1);
+    store.update(value => value === undefined ? 0 : value + 1);
 
     // set
     store.set(undefined);
@@ -113,7 +113,7 @@ it('example-writable-start-update', async () => {
     // #region example-writable-start-update
 
     // create a writable store which updates asynchronously
-    const store = writable(trigger_strict_not_equal, 5, (_set, update) => {
+    const store = writable(trigger_strict_not_equal, 5, ({ update }) => {
         const id = setTimeout(
             () => { update(value => value * 1000) },
             0

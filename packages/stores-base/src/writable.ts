@@ -135,6 +135,16 @@ export function writable<T>(trigger: Trigger<T>, value?: T, start: StartNotifier
 
     }
 
+    const complexSet = Object.assign(
+        (new_value: T | undefined) => set(new_value), // avoid cyclic reference
+        {
+            set,
+            update,
+            invalidate,
+            revalidate
+        }
+    );
+
     function update(fn: Updater<T> | Updater<T | undefined>): void {
         set(fn(value!));
     }
@@ -155,7 +165,7 @@ export function writable<T>(trigger: Trigger<T>, value?: T, start: StartNotifier
             store_runner(
                 () => {
                     if (subscribers.size === 1) {
-                        stop = start(set, update, invalidate, revalidate) || noop;
+                        stop = start(complexSet) || noop;
                     }
                     run(value!);
                 }

@@ -43,7 +43,7 @@ export function dynamic<A extends Inputs, R>(
     return readable<DynamicResolved<R>>(
         trigger,
         initial_value!,
-        (set, _update, invalidate, revalidate) => {
+        ({ set, invalidate, revalidate }) => {
             type Value = DynamicResolved<unknown>;
             type Subscription = [Unsubscriber, undefined | Value];
             const subscriptions = new Map<Readable<any>, Subscription>();

@@ -25,8 +25,17 @@ export type Set<T> = (this: void, value: T) => void;
 /** Signature of the {@link Writable.update} function */
 export type Update<T> = (this: void, updater: Updater<T>) => void;
 
+export type ComplexSet<T> =
+    Set<T> &
+    {
+        set: Set<T>,
+        update: Update<T>,
+        invalidate: Invalidate,
+        revalidate: Revalidate
+    };
+
 /** Callback to inform that there is now a subscriber */
-export type StartNotifier<T> = (set: Set<T>, update: Update<T>, invalidate: Invalidate, revalidate: Revalidate) => StopNotifier | void;
+export type StartNotifier<T> = (set: ComplexSet<T>) => StopNotifier | void;
 
 /** Callback used to determine if a change signal should be emitted */
 export type Trigger<T> = (initial: boolean, new_value: T, old_value?: T) => boolean;
@@ -35,7 +44,7 @@ export type Trigger<T> = (initial: boolean, new_value: T, old_value?: T) => bool
 export type SubscribeBasic<T> = (this: void, run: Subscriber<T>) => Unsubscriber;
 
 /** Full subscription signature used by derived store types */
-export type SubscribeFull<T> = (this: void, run: Subscriber<T>, invalidate: Invalidate, revalidate: Revalidate) => Unsubscriber;
+export type SubscribeFull<T> = (this: void, run: Subscriber<T>, invalidate?: Invalidate, revalidate?: Revalidate) => Unsubscriber;
 
 /** Subscription signature */
 export type Subscribe<T> = SubscribeBasic<T> | SubscribeFull<T>;

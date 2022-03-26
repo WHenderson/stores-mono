@@ -1,5 +1,5 @@
 import {it} from "vitest";
-import {derive, trigger_strict_not_equal, writable, Set} from "../src";
+import {derive, trigger_strict_not_equal, writable} from "../src";
 import {shim_setInterval, shim_setTimeout} from "./_util";
 
 const setTimeout = shim_setTimeout();
@@ -82,7 +82,7 @@ it('example-derive-async-update', async () => {
     const auto_increment = derive(
         trigger_strict_not_equal,
         store_a,
-        (a, _set, update) => {
+        (a, { update }) => {
             const intervalId = setInterval(
                 () => { update(value => value + a); },
                 1000
