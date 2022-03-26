@@ -15,20 +15,17 @@ export type StoresValues<T> = T extends Readable<infer U> ? U :
 export type DeriveFnSync<S extends Stores,T> = (values: StoresValues<S>) => T;
 
 /** Asynchronous callback for deriving a value from resolved input stores */
-export type DeriveFnAsync<S extends Stores,T> =
-    ((values: StoresValues<S>, set: Set<T>) => Unsubscriber | void) |
+export type DeriveFnAsyncComplex<S extends Stores,T> =
     ((values: StoresValues<S>, set: ComplexSet<T>) => Unsubscriber | void);
+
+export type DeriveFnAsyncSimple<S extends Stores,T> =
+    ((values: StoresValues<S>, set: Set<T>) => Unsubscriber | void);
 
 /**
  * Derives a store from one or more other stores. The store value is calculated on demand and recalculated whenever any of
  * the store dependencies change.
  *
  * For simple usage, see the alternate signature.
- *
- * Values may be derived asynchronously:
- *
- * _Example_:
- * {@codeblock ../examples/derive.test.ts#example-derive-async-simple}
  *
  * Values may be updated asynchronously:
  *
@@ -41,21 +38,36 @@ export type DeriveFnAsync<S extends Stores,T> =
  * @param fn callback that aggregates the store values which are passed in as the first argument
  * @param initial_value initial value - useful when the aggregate function initialises the store asynchronously
  */
-
 export function derive<S extends Stores, T>(
     trigger: Trigger<T>,
     stores: S,
-    fn: ((values: StoresValues<S>, set: ComplexSet<T>) => Unsubscriber | void),
+    fn: DeriveFnAsyncComplex<S,T>,
     initial_value?: T
 ): Readable<T>;
 
+/**
+ * Derives a store from one or more other stores. The store value is calculated on demand and recalculated whenever any of
+ * the store dependencies change.
+ *
+ * For simple usage, see the alternate signature.
+ *
+ * Values may be derived asynchronously:
+ *
+ * _Example_:
+ * {@codeblock ../examples/derive.test.ts#example-derive-async-simple}
+ *
+ * @category Create Store
+ * @param trigger callback used to determine if subscribers should be called
+ * @param stores input stores
+ * @param fn callback that aggregates the store values which are passed in as the first argument
+ * @param initial_value initial value - useful when the aggregate function initialises the store asynchronously
+ */
 export function derive<S extends Stores, T>(
     trigger: Trigger<T>,
     stores: S,
-    fn: ((values: StoresValues<S>, set: Set<T>) => Unsubscriber | void),
+    fn: DeriveFnAsyncSimple<S,T>,
     initial_value?: T
 ): Readable<T>;
-
 
 /**
  * Derives a store from one or more other stores. The store value is calculated on demand and recalculated whenever any of
