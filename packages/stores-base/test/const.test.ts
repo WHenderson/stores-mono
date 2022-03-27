@@ -1,6 +1,5 @@
 import { expect, it } from 'vitest'
-import {constant} from "../src";
-import {get} from "@crikey/stores-base";
+import {get, constant} from "../src";
 
 it('should be immutable', () => {
     const store = constant(1);

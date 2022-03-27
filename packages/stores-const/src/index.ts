@@ -1,1 +1,0 @@
-export { constant } from './constant';

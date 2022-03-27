@@ -3,7 +3,6 @@
 ## Packages
 
 _user:_
-* [@crikey/stores-const](./packages/stores-const/README.md) - Provides a {@linkcode constant} store which always returns the same value 
 * [@crikey/stores-strict](./packages/stores-strict/README.md) - Stores with strict equality change semantics 
 * [@crikey/stores-promise](./packages/stores-promise/README.md) - Convert promises to stores
 * [@crikey/stores-rxjs](./packages/stores-rxjs/README.md) - Compatibility layer to mix stores and rxjs

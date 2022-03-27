@@ -23,7 +23,6 @@
   },
   "dependencies": {
     "@crikey/stores-base": "workspace:^1.0.0",
-    "@crikey/stores-const": "workspace:^1.0.0",
     "@crikey/stores-strict": "workspace:^1.0.0"
   }
 }
