@@ -21,7 +21,7 @@ importers:
       rollup-plugin-dts: ^4.1.0
       tslib: ^2.3.1
       typedoc: ^0.22.13
-      typedoc-plugin-resolve-crossmodule-references: ^0.1.1
+      typedoc-plugin-resolve-crossmodule-references: github:WHenderson/typedoc-plugin-resolve-crossmodule-references#v0.1.2
       typescript: ^4.6.2
       vite: ^2.7.13
       vitest: ^0.6.3
@@ -43,7 +43,7 @@ importers:
       rollup-plugin-dts: 4.2.0_rollup@2.69.1+typescript@4.6.2
       tslib: 2.3.1
       typedoc: 0.22.13_typescript@4.6.2
-      typedoc-plugin-resolve-crossmodule-references: 0.1.1_typedoc@0.22.13
+      typedoc-plugin-resolve-crossmodule-references: github.com/WHenderson/typedoc-plugin-resolve-crossmodule-references/c680c45dedd4d555f3ae2abc127429f1e52171d5_typedoc@0.22.13
       typescript: 4.6.2
       vite: 2.8.6
       vitest: 0.6.3_c8@7.11.0
@@ -1293,15 +1293,6 @@ packages:
     engines: {node: '>=4'}
     dev: true
 
-  /typedoc-plugin-resolve-crossmodule-references/0.1.1_typedoc@0.22.13:
-    resolution: {integrity: sha512-Dc+0Wuj5woqPG7aFhx884V2PCv7U51sSderd2QkOv6PoUOUYN/TI3JE1B2KKYvGDFWAr4UsSfC+sy3KDEvLPjA==}
-    peerDependencies:
-      typedoc: '*'
-    dependencies:
-      convert-source-map: 1.8.0
-      typedoc: 0.22.13_typescript@4.6.2
-    dev: true
-
   /typedoc/0.22.13_typescript@4.6.2:
     resolution: {integrity: sha512-NHNI7Dr6JHa/I3+c62gdRNXBIyX7P33O9TafGLd07ur3MqzcKgwTvpg18EtvCLHJyfeSthAtCLpM7WkStUmDuQ==}
     engines: {node: '>= 12.10.0'}
@@ -1455,4 +1446,16 @@ packages:
   /yocto-queue/0.1.0:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
+    dev: true
+
+  github.com/WHenderson/typedoc-plugin-resolve-crossmodule-references/c680c45dedd4d555f3ae2abc127429f1e52171d5_typedoc@0.22.13:
+    resolution: {tarball: https://codeload.github.com/WHenderson/typedoc-plugin-resolve-crossmodule-references/tar.gz/c680c45dedd4d555f3ae2abc127429f1e52171d5}
+    id: github.com/WHenderson/typedoc-plugin-resolve-crossmodule-references/c680c45dedd4d555f3ae2abc127429f1e52171d5
+    name: typedoc-plugin-resolve-crossmodule-references
+    version: 0.1.2
+    peerDependencies:
+      typedoc: '*'
+    dependencies:
+      convert-source-map: 1.8.0
+      typedoc: 0.22.13_typescript@4.6.2
     dev: true
