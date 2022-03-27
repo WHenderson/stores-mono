@@ -1,2 +1,3 @@
+export * from './readable';
+export * from './repromise';
 export * from './types';
-export { readable } from './readable';

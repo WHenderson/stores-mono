@@ -1,6 +1,7 @@
-import {expect, it} from 'vitest'
-import {readable, State} from "../src";
-import {get} from "@crikey/stores-base";
+import {expect, it, fn} from 'vitest'
+import {readable, repromise, State, Stateful} from "../src";
+import {get, Set} from "@crikey/stores-base";
+import {derive, writable} from "@crikey/stores-strict";
 
 it('should match promise state', async () => {
     const promisePending = new Promise(() => {});
@@ -105,3 +106,62 @@ it('should create synchronous rejected', () => {
         error: 1,
     });
 })
+
+it.only('should discard old promises', async () => {
+    const store = writable(1);
+    const derived = derive(store, (value, set: Set<Stateful<number>>) => {
+        const promise = new Promise<number>(resolve => {
+            setTimeout(() => resolve(value), 100)
+        });
+
+        return readable(promise).subscribe(set);
+    });
+
+    const watch = fn();
+
+    derived.subscribe(watch);
+
+    store.set(2);
+    store.set(3);
+    store.set(4);
+
+    await repromise(derived);
+
+    expect(watch.mock.calls).to.deep.equal([
+        [{
+            isPending: true,
+            isFulfilled: false,
+            isRejected: false,
+            state: 0,
+            value: undefined
+        }],
+        [{
+            isPending: true,
+            isFulfilled: false,
+            isRejected: false,
+            state: 0,
+            value: undefined
+        }],
+        [{
+            isPending: true,
+            isFulfilled: false,
+            isRejected: false,
+            state: 0,
+            value: undefined
+        }],
+        [{
+            isPending: true,
+            isFulfilled: false,
+            isRejected: false,
+            state: 0,
+            value: undefined
+        }],
+        [{
+            isPending: false,
+            isFulfilled: true,
+            isRejected: false,
+            state: 1,
+            value: 4
+        }]
+    ]);
+});
