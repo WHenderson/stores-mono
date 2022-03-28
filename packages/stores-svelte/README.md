@@ -1,7 +1,7 @@
 # @crikey/stores-svelte
 
-Provide svelte compatible implementations of {@linkcode readable}, {@linkcode writable}, {@linkcode derived} 
-and {@linkcode get}.
+Provide svelte compatible implementations of {@link readable}, {@link writable}, {@link derived} 
+and {@link get}.
 
 This package is a simple convenience wrapper around {@link @crikey/stores-base} utilising the 
 {@link trigger_safe_not_equal} trigger function to mirror svelte greedy signaling semantics.
@@ -28,3 +28,4 @@ See:
 * {@link readable}
 * {@link derived}
 * {@link get}
+* {@link constant}

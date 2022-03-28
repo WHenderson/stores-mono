@@ -77,8 +77,8 @@ describe('debounce', () => {
     });
 });
 
-describe.only('throttle', () => {
-    it.only('should trigger no more than once per period', async () => {
+describe('throttle', () => {
+    it('should trigger no more than once per period', async () => {
         const trigger = create_trigger_store();
         log_updates(trigger, 'trigger');
 

@@ -2,4 +2,4 @@ export { readable } from './readable';
 export { writable } from './writable';
 export { derive } from './derive';
 export { derive as derived } from './derive';
-export { trigger_strict_not_equal } from '@crikey/stores-base/src/trigger-strict-not-equal';
+export { get, constant } from '@crikey/stores-base';

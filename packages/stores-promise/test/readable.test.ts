@@ -107,7 +107,7 @@ it('should create synchronous rejected', () => {
     });
 })
 
-it.only('should discard old promises', async () => {
+it('should discard old promises', async () => {
     const store = writable(trigger_strict_not_equal, 1);
 
     const derived = repromise(store, value => {

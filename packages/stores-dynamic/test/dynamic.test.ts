@@ -1,7 +1,7 @@
 import {describe, expect, it} from 'vitest'
 import {to_dynamic, dynamic, DynamicResolved} from "../src";
-import {trigger_strict_not_equal, writable} from "@crikey/stores-strict";
-import {get} from "@crikey/stores-base";
+import {writable} from "@crikey/stores-strict";
+import {trigger_strict_not_equal, get} from "@crikey/stores-base";
 import {derive} from "@crikey/stores-strict";
 
 describe('static calculations', () => {
