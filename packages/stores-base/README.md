@@ -1,6 +1,23 @@
 # @crikey/stores-base
 
-Core package used for the implementation of various [Svelte](https://svelte.dev/) compatible stores.
+Types and functions for creating [Svelte](https://svelte.dev/) compatible stores.
+`@crikey/stores-base` stores further extend the the [svelte/store](https://svelte.dev/docs#run-time-svelte-store) 
+contract to allow for additional features and extensibility. 
+
+Store creation function:
+* {@link constant} - Create a {@link Readable} store with a fixed value 
+* {@link readable} - Create a {@link Readable} store
+* {@link writable} - Create a {@link Writable} store
+* {@link derive | derived} - Create a {@link Readable} store derived from the resolved values of other stores
+
+Utility functions:
+* {@link get} - Retrieve the value of a store
+* {@link read_only} - Restrict a store to the {@link Readable} interface
+
+Trigger functions:
+* {@link trigger_always} - Trigger at every available opportunity
+* {@link trigger_strict_not_equal} - Trigger based on strict inequality
+* {@link trigger_safe_not_equal} - Svelte compatible trigger - Trigger when not equal or value is complex
 
 ## Installation
 
@@ -17,20 +34,52 @@ $ yarn add @crikey/stores-base
 
 ## Usage
 
-This package (aside from its types) is intended for internal use.
+This package is predominantly intended for internal use.
 
 ## Differences with Svelte stores 
 
 ### Definable trigger semantics
-Svelte ties users to a greedy change detection system, whereby complex types are always considered to have changed.
-@crikey stores allow for user defined comparison functions. 
+Svelte stores use a greedy change detection system to, whereby complex types are always considered to have changed.
+
+e.g.
+```ts
+import { writable } from 'svelte/store';
+
+const value = {};
+const store = writable(value);
+store.subscribe(value => console.log('changed'));
+store.set(value);
+
+// > changed
+// > changed
+```
+
+`@crikey/stores-base` stores allow for user defined trigger functions. This trigger function is
+called for each {@link Writable.set} and {@link Writable.update} call, allowing for comparison between
+the old value and the new value to determine if subscribers should be notified.
+
+e.g.
+
+```ts
+import {writable, trigger_strict_not_equal } from '@crikey/stores-base';
+
+const value = {};
+const store = writable(trigger_strict_not_equal, value); // only trigger if old_value !== new_value
+store.subscribe(value => console.log('changed'));
+store.set(value);
+
+// > changed
+```
 
 ### Asynchronous `update` as well as `set` 
 
-@crikey stores extend the {@linkcode readable}, {@linkcode writable}, and {@linkcode derive} contracts allowing 
-calculations to asynchronously `update` as well as `set` their values.
+@crikey stores extend the {@link readable}, {@link writable}, and {@link derive | derived} signatures 
+allowing calculations to asynchronously `update` as well as `set` their values.
 
-### Seamless extensibility
+e.g.
+{@codeblock ./examples/derive.test.ts#example-derive-async-update}
+
+### Subscriber execution order
 In order to ensure reliable and predictable execution order for subscribers, stores utilize an internal action queue.
 Whenever a store is changed, its active subscriptions are pushed onto a queue and executed in order. If more changes 
 result in more subscriptions being pushed onto the queue, they are added to the end of the current queue and everything 
@@ -38,11 +87,17 @@ continues to be executed in FIFO order.
 
 Svelte does not expose this queue and thus extensions are not able to maintain a pure FIFO order when mixed.
 
-### Limited dependencies
-derived svelte stores with more than 32 dependencies will behave incorrectly due to the internal mechanism used for 
-tracking updates.
+As a natural result, when mixing svelte stores and `@crikey/stores`, execution order will not be strictly FIFO.
 
-Note that this is an implementation detail and as such is likely to be fixed at some point.
+### Unlimited dependencies
+To avoid erroneous recalculations, {@link derive | derived} store types keep track of which inputs are being
+recalculated (see _Premature evaluation_ below). `@crikey/stores-base` determines the most efficient approach 
+to this problem based on the number of inputs required.
+
+`svelte` store implementation details use a fixed tracking system allowing for a maximum of 32 inputs. Additional
+inputs beyond this number will begin to behave incorrectly.
+
+Note that this is an implementation detail and as such is likely to be improved at some point.
 
 ### Premature evaluation
 Ensuring a derived store value is evaluated against up-to-date inputs is non-trivial.

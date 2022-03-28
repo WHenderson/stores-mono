@@ -18,6 +18,7 @@ export type DeriveFnSync<S extends Stores,T> = (values: StoresValues<S>) => T;
 export type DeriveFnAsyncComplex<S extends Stores,T> =
     ((values: StoresValues<S>, set: ComplexSet<T>) => Unsubscriber | void);
 
+/** Asynchronous callback for deriving a value from resolved input stores */
 export type DeriveFnAsyncSimple<S extends Stores,T> =
     ((values: StoresValues<S>, set: Set<T>) => Unsubscriber | void);
 
