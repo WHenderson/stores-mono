@@ -3,12 +3,13 @@
 Provide signature compatible implementations of {@link readable}, {@link writable}, {@link derived} 
 and {@link get} with strict inequality triggering semantics.
 
-Strict stores mirror the functionality provided by
-[<svelte:options immutable={true} />](https://svelte.dev/docs#template-syntax-svelte-options) in the svelte compiler.
+Strict inequality triggering semantics provide a store version of the functionality seen with
+[<svelte:options immutable={true} />](https://svelte.dev/docs#template-syntax-svelte-options) 
+in the svelte compiler.
 
 Strict equality stores make the most sense when programming with strict immutability rules and functional programming.
 
-For advanced structure immutable types, try {@link @crikey/stores-immer} 
+For complex structured immutable types, try {@link @crikey/stores-immer} 
 
 ## Installation
 
