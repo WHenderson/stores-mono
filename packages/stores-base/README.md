@@ -42,7 +42,7 @@ Svelte does not expose this queue and thus extensions are not able to maintain a
 derived svelte stores with more than 32 dependencies will behave incorrectly due to the internal mechanism used for 
 tracking updates.
 
-Note that this is an implementation detail and as such is likely to be fixed.
+Note that this is an implementation detail and as such is likely to be fixed at some point.
 
 ### Premature evaluation
 Ensuring a derived store value is evaluated against up-to-date inputs is non-trivial.
@@ -87,7 +87,7 @@ graph TD
 ```
 
 e) Diamond+ dependency
-* As soon as `a` changes, `b` and `c` are recalculated.
+* As soon as `a` changes, `b`, `c`, and `d` are recalculated.
 * As soon as `b` or `c` changes, `d` is recalculated.
 
 _svelte_:
