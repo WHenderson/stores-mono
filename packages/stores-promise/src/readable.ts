@@ -1,6 +1,6 @@
-import {writable} from "@crikey/stores-strict";
 import {ReadablePromise, State, Stateful, StatefulFulfilled, StatefulRejected} from "./types";
-import {read_only, constant} from "@crikey/stores-base";
+import {writable, read_only, constant} from "@crikey/stores-base";
+import {trigger_strict_not_equal} from "@crikey/stores-base/src";
 
 /**
  * Create a readable store that resolves according to the provided promise
@@ -8,13 +8,16 @@ import {read_only, constant} from "@crikey/stores-base";
  * @param initial_value initial store value
  */
 export function readable<T>(promise: PromiseLike<T>, initial_value?: T): ReadablePromise<Stateful<T>> {
-    const promise$ = writable<Stateful<T>>({
-        isPending: true,
-        isFulfilled: false,
-        isRejected: false,
-        state: State.Pending,
-        value: initial_value
-    });
+    const promise$ = writable<Stateful<T>>(
+        trigger_strict_not_equal,
+        {
+            isPending: true,
+            isFulfilled: false,
+            isRejected: false,
+            state: State.Pending,
+            value: initial_value
+        }
+    );
 
     promise.then(
         (v) => {

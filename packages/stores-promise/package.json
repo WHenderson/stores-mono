@@ -22,7 +22,6 @@
     "coverage:watch": "vitest --coverage"
   },
   "dependencies": {
-    "@crikey/stores-base": "workspace:^1.0.0",
-    "@crikey/stores-strict": "workspace:^1.0.0"
+    "@crikey/stores-base": "workspace:^1.0.0"
   }
 }

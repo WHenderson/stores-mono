@@ -1,7 +1,7 @@
-import {expect, it, fn} from 'vitest'
-import {readable, repromise, State, Stateful} from "../src";
-import {get, Set} from "@crikey/stores-base";
-import {derive, writable} from "@crikey/stores-strict";
+import {expect, fn, it} from 'vitest'
+import {promise, readable, repromise, State} from "../src";
+import {get, writable} from "@crikey/stores-base";
+import {trigger_strict_not_equal} from "../../stores-base/src";
 
 it('should match promise state', async () => {
     const promisePending = new Promise(() => {});
@@ -108,14 +108,13 @@ it('should create synchronous rejected', () => {
 })
 
 it.only('should discard old promises', async () => {
-    const store = writable(1);
-    const derived = derive(store, (value, set: Set<Stateful<number>>) => {
-        const promise = new Promise<number>(resolve => {
-            setTimeout(() => resolve(value), 100)
-        });
+    const store = writable(trigger_strict_not_equal, 1);
 
-        return readable(promise).subscribe(set);
-    });
+    const derived = repromise(store, value => {
+        return new Promise<number>(resolve => {
+            setTimeout(() => resolve(value), 0);
+        });
+    })
 
     const watch = fn();
 
@@ -125,38 +124,40 @@ it.only('should discard old promises', async () => {
     store.set(3);
     store.set(4);
 
-    await repromise(derived);
+    await promise(derived);
+
+    // note that only store.set(4) results in a fulfilled signal
 
     expect(watch.mock.calls).to.deep.equal([
-        [{
+        [{ // initial creation
             isPending: true,
             isFulfilled: false,
             isRejected: false,
             state: 0,
             value: undefined
         }],
-        [{
+        [{ // set 2
             isPending: true,
             isFulfilled: false,
             isRejected: false,
             state: 0,
             value: undefined
         }],
-        [{
+        [{ // set 3
             isPending: true,
             isFulfilled: false,
             isRejected: false,
             state: 0,
             value: undefined
         }],
-        [{
+        [{ // set 4
             isPending: true,
             isFulfilled: false,
             isRejected: false,
             state: 0,
             value: undefined
         }],
-        [{
+        [{ // set 4 - fulfilled
             isPending: false,
             isFulfilled: true,
             isRejected: false,

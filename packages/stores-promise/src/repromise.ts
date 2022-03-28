@@ -1,33 +1,19 @@
-import {Readable, Unsubscriber} from "@crikey/stores-base/src";
-import {Stateful} from "$src/types";
+import {derive, Readable, Set, Stores, StoresValues, trigger_strict_not_equal} from "@crikey/stores-base";
+import {Stateful} from "./types";
+import {readable} from "./readable";
 
-export function repromise<T>(store: Readable<Stateful<T>>): Promise<T> {
-    return new Promise<T>((resolve, reject) => {
-        let unsubscribe: Unsubscriber | undefined;
-        let settled = false;
+export type PromiseCreator<S extends Stores,T> = (values: StoresValues<S>) => Promise<T>;
 
-        const settle = () => {
-            settled = true;
-            if (unsubscribe) {
-                unsubscribe();
-                unsubscribe = undefined;
-            }
+export function repromise<S extends Stores, T>(
+    stores: S,
+    creator: PromiseCreator<S, T>,
+    initial_value?: T
+): Readable<Stateful<T>> {
+    return derive(
+        trigger_strict_not_equal,
+        stores,
+        (value, set: Set<Stateful<T>>) => {
+            return readable(creator(value), initial_value).subscribe(set);
         }
-
-        unsubscribe = store.subscribe(value => {
-            if (value.isRejected) {
-                settle();
-                reject(value.error);
-            }
-            else
-            if (value.isFulfilled) {
-                settle();
-                resolve(value.value);
-            }
-        });
-
-        if (settled) {
-            settle();
-        }
-    })
+    );
 }
