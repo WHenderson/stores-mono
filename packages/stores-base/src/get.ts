@@ -7,7 +7,7 @@ import {Readable} from "./types";
  * This is neither efficient nor reactive and should generally be avoided.
  *
  * _Example_:
- * {@codeblock ../examples/get.test.ts#example-get}
+ * {@codeblock ../stores-base/examples/get.test.ts#example-get}
  *
  * @category Utility
  * @param store `store` to get the value from

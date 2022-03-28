@@ -5,13 +5,13 @@ import {writable} from "./writable";
 /**
  * Creates a readable store with the value of `undefined`.
  *
- * This signature provides little benefit other than mirroring the signature for its counterpart, {@link writable}
+ * This signature provides little benefit other than mirroring the signature for its counterpart, {@link readable}
  *
  * _Example_:
- * {@codeblock ../examples/readable.test.ts#example-readable-undefined}
+ * {@codeblock ../stores-base/examples/readable.test.ts#example-readable-undefined}
  *
- * Explicitly defining the type of store via `writable<Type>` will
- * result in a store of type `Writable<Type | undefined>` to allow for the default value.
+ * Explicitly defining the type of store via `readable<Type>` will
+ * result in a store of type `Readable<Type | undefined>` to allow for the default value.
  * If this is undesired, an alternate default value/type can be provided.
  *
  * @category Create Store
@@ -27,7 +27,7 @@ export function readable<T = undefined>(trigger: Trigger<T>): Readable<T | undef
  * See {@link writable} for detailed usage of the `start` argument.
  *
  * _Example_:
- * {@codeblock ../examples/readable.test.ts#example-readable-start}
+ * {@codeblock ../stores-base/examples/readable.test.ts#example-readable-start}
  *
  * @category Create Store
  * @param trigger callback used to determine if subscribers should be called

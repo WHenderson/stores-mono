@@ -13,10 +13,10 @@ let queue_aborted = false;
  * Further actions may be added during execution which will be executed once the preceding actions are exhausted.
  *
  * _Example:_
- * {@codeblock ../examples/store-queue.test.ts#example}
+ * {@codeblock ../stores-base-queue/examples/store-queue.test.ts#example}
  *
  * _Example with nesting:_
- * {@codeblock ../examples/store-queue.test.ts#example-nested}
+ * {@codeblock ../stores-base-queue/examples/store-queue.test.ts#example-nested}
  *
  * @category Core
  * @param actions array of actions to enqueue

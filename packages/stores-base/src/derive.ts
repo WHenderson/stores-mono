@@ -31,7 +31,7 @@ export type DeriveFnAsyncSimple<S extends Stores,T> =
  * Values may be updated asynchronously:
  *
  * _Example_:
- * {@codeblock ../examples/derive.test.ts#example-derive-async-update}
+ * {@codeblock ../stores-base/examples/derive.test.ts#example-derive-async-update}
  *
  * @category Create Store
  * @param trigger callback used to determine if subscribers should be called
@@ -55,7 +55,7 @@ export function derive<S extends Stores, T>(
  * Values may be derived asynchronously:
  *
  * _Example_:
- * {@codeblock ../examples/derive.test.ts#example-derive-async-simple}
+ * {@codeblock ../stores-base/examples/derive.test.ts#example-derive-async-simple}
  *
  * @category Create Store
  * @param trigger callback used to determine if subscribers should be called
@@ -77,12 +77,12 @@ export function derive<S extends Stores, T>(
  * In the simplest version, `derive` takes a single store, and the callback returns a derived value:
  *
  * _Example_:
- * {@codeblock ../examples/derive.test.ts#example-derive-simple-single}
+ * {@codeblock ../stores-base/examples/derive.test.ts#example-derive-simple-single}
  *
  * `derive` may also take a tuple or array of inputs a derive a value from those:
  *
  * _Example_:
- * {@codeblock ../examples/derive.test.ts#example-derive-simple-multiple}
+ * {@codeblock ../stores-base/examples/derive.test.ts#example-derive-simple-multiple}
  *
  * Alternate signatures provide a means for deriving the value asynchronously.
  *

@@ -1,39 +1,30 @@
-# @crikey/stores-strict
+# @crikey/stores-svelte
 
-Provide signature compatible implementations of {@linkcode readable}, {@linkcode writable}, {@linkcode derived} with 
-svelte compatible (greedy) change signal semantics.
+Provide svelte compatible implementations of {@linkcode readable}, {@linkcode writable}, {@linkcode derived} 
+and {@linkcode get}.
 
-## Differences from strict stores
-Strict stores use a simple referential quality check (`!==`) to determine if a change signal should be sent.
+This package is a simple convenience wrapper around {@link @crikey/stores-base} utilising the 
+{@link trigger_safe_not_equal} trigger function to mirror svelte greedy signaling semantics.
 
-Classic svelte stores signal for changes greedily. If a store value is updated and either the old or new value are 
-complex types, then svelte will signal a change even if those values are strictly equal.
+## Installation
 
-e.g.
-```js
+```bash
+# pnpm
+$ pnpm add @crikey/stores-svelte
 
-const store = writable([1]);
+# npm
+$ npm add @crikey/stores-svelte
 
-// log each change
-store.subscribe(arr => console.log(arr));
-
-// don't change anything
-store.update(arr => {
-    return arr;
-});
-
-// push an item onto the array
-store.update(arr => {
-    arr.push(2);
-    return arr;
-});
-
-// @crikey/stores-strict
-// > [1]
-//
-// @crikey/stores-svelte (svelte compatible stores)
-// > [1]
-// > [1]
-// > [1,2]
-//
+# yarn
+$ yarn add @crikey/stores-svelte
 ```
+
+## Usage
+
+Standard usage should be a drop in replacement for `svelte/store`.
+
+See:
+* {@link writable}
+* {@link readable}
+* {@link derived}
+* {@link get}

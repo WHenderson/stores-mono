@@ -7,7 +7,7 @@ import {store_runner_throw_errors} from "./store_runner_throw_errors";
  *  The store runner is primarily used for handling unhandled exceptions thrown by actions.
  *
  * _Example:_
- * {@codeblock ../examples/store-queue.test.ts#example-log-errors}
+ * {@codeblock ../stores-base-queue/examples/store-queue.test.ts#example-log-errors}
  *
  * @category Exception Handling
  */

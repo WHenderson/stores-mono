@@ -1,9 +1,9 @@
 import {it} from "vitest";
-import {readable, trigger_strict_not_equal} from "../src";
+import {readable} from "../src";
 
 it('example-readable-undefined', () => {
     // #region example-readable-undefined
-    const store = readable(trigger_strict_not_equal);
+    const store = readable();
 
     store.subscribe(value => { console.log('store value:', value) });
 
@@ -13,7 +13,7 @@ it('example-readable-undefined', () => {
 
 it('example-readable-start', async () => {
     // #region example-readable-start
-    const time = readable<Date | null>(trigger_strict_not_equal, null, (set) => {
+    const time = readable<Date | null>(null, (set) => {
         set(new Date());
 
         const intervalId = setInterval(() => {

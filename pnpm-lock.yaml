@@ -88,10 +88,8 @@ importers:
   packages/stores-promise:
     specifiers:
       '@crikey/stores-base': workspace:^1.0.0
-      '@crikey/stores-strict': workspace:^1.0.0
     dependencies:
       '@crikey/stores-base': link:../stores-base
-      '@crikey/stores-strict': link:../stores-strict
 
   packages/stores-rxjs:
     specifiers:

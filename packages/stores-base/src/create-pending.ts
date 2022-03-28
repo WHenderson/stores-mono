@@ -29,7 +29,7 @@ export interface Pending {
  * a clean state.
  *
  * _Example_:
- * {@codeblock ../examples/pending.test.ts#example-pending}
+ * {@codeblock ../stores-base/examples/pending.test.ts#example-pending}
  *
  * @category Pending
  * @param length maximum number of pending items to keep track of
