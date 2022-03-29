@@ -4,6 +4,9 @@ import {noop} from "./noop";
 /**
  * Create a simple store which always returns the same value upon subscription
  *
+ * _Example_:
+ * {@codeblock ../stores-base/examples/constant.test.ts#example-constant}
+ *
  * @category Create Store
  * @param value the constant value of the store
  */
