@@ -7,7 +7,7 @@ import {noop, StartNotifier, trigger_strict_not_equal, Writable, writable as bas
  * external code via {@link Writable.set} and {@link Writable.update}.
  *
  * _Example_:
- * {@codeblock ../stores-svelte/examples/writable.test.ts#example-writable-undefined}
+ * {@codeblock ../stores-strict/examples/writable.test.ts#example-writable-undefined}
  *
  * Explicitly defining the type of store via `writable<Type>` will
  * result in a store of type `Writable<Type | undefined>` to allow for the default value.
@@ -24,14 +24,14 @@ export function writable<T = undefined>(): Writable<T | undefined>;
  * external code via {@link Writable.set} and {@link Writable.update}.
  *
  * _Example_:
- * {@codeblock ../stores-svelte/examples/writable.test.ts#example-writable-default}
+ * {@codeblock ../stores-strict/examples/writable.test.ts#example-writable-default}
  *
  * If `start` is provided, it will be called when the number of subscribers goes from zero to one (but not from one
  * to two, etc). Thus, `start` is called whenever the writable store 'starts up'.
  * `start` may optionally return a function which will be called when the last subscriber unsubscribes.
  *
  * _Example_:
- * {@codeblock ../stores-svelte/examples/writable.test.ts#example-writable-start}
+ * {@codeblock ../stores-strict/examples/writable.test.ts#example-writable-start}
  *
  * `start` is passed 4 functions - `set`, `update`, `invalidate`, and `validate`.
  *
@@ -39,13 +39,13 @@ export function writable<T = undefined>(): Writable<T | undefined>;
  * Set the current value of the store (and thus marking the store value as valid).
  *
  * _Example_:
- * {@codeblock ../stores-svelte/examples/writable.test.ts#example-writable-start-set}
+ * {@codeblock ../stores-strict/examples/writable.test.ts#example-writable-start-set}
  *
  * #### `start`: `update`
  * Update the current value of the store (and thus marking the store value as valid).
  *
  * _Example_:
- * {@codeblock ../stores-svelte/examples/writable.test.ts#example-writable-start-update}
+ * {@codeblock ../stores-strict/examples/writable.test.ts#example-writable-start-update}
  *
  * #### `start`: `invalidate`
  * Mark the store (and any dependencies) as dirty.

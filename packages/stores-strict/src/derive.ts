@@ -17,7 +17,7 @@ import {
  * Values may be updated asynchronously:
  *
  * _Example_:
- * {@codeblock ../stores-svelte/examples/derive.test.ts#example-derive-async-update}
+ * {@codeblock ../stores-strict/examples/derive.test.ts#example-derive-async-update}
  *
  * @category Create Store
  * @param stores input stores
@@ -39,7 +39,7 @@ export function derive<S extends Stores, T>(
  * Values may be derived asynchronously:
  *
  * _Example_:
- * {@codeblock ../stores-svelte/examples/derive.test.ts#example-derive-async-simple}
+ * {@codeblock ../stores-strict/examples/derive.test.ts#example-derive-async-simple}
  *
  * @category Create Store
  * @param stores input stores
@@ -59,12 +59,12 @@ export function derive<S extends Stores, T>(
  * In the simplest version, `derive` takes a single store, and the callback returns a derived value:
  *
  * _Example_:
- * {@codeblock ../stores-svelte/examples/derive.test.ts#example-derive-simple-single}
+ * {@codeblock ../stores-strict/examples/derive.test.ts#example-derive-simple-single}
  *
  * `derive` may also take a tuple or array of inputs a derive a value from those:
  *
  * _Example_:
- * {@codeblock ../stores-svelte/examples/derive.test.ts#example-derive-simple-add}
+ * {@codeblock ../stores-strict/examples/derive.test.ts#example-derive-simple-add}
  *
  * Alternate signatures provide a means for deriving the value asynchronously.
  *

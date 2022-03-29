@@ -6,7 +6,7 @@ import {Readable, readable as baseReadable, StartNotifier, trigger_strict_not_eq
  * This signature provides little benefit other than mirroring the signature for its counterpart, {@link readable}
  *
  * _Example_:
- * {@codeblock ../stores-svelte/examples/readable.test.ts#example-readable-undefined}
+ * {@codeblock ../stores-strict/examples/readable.test.ts#example-readable-undefined}
  *
  * Explicitly defining the type of store via `readable<Type>` will
  * result in a store of type `Readable<Type | undefined>` to allow for the default value.
@@ -24,7 +24,7 @@ export function readable<T = undefined>(): Readable<T | undefined>;
  * See {@link writable} for detailed usage of the `start` argument.
  *
  * _Example_:
- * {@codeblock ../stores-svelte/examples/readable.test.ts#example-readable-start}
+ * {@codeblock ../stores-strict/examples/readable.test.ts#example-readable-start}
  *
  * @category Create Store
  * @param value initial store value
