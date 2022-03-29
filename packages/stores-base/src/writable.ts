@@ -21,7 +21,7 @@ type SubscribeInvalidateTuple<T> = [Subscriber<T>, Invalidate, Revalidate];
  * @category Create Store
  * @param trigger callback used to determine if subscribers should be called
  */
-export function writable<T = undefined>(trigger: Trigger<T>): Writable<T | undefined>;
+export function writable<T = undefined>(trigger: Trigger<T | undefined>): Writable<T | undefined>;
 
 /**
  * Create a writable store with an initial value of `value`.
@@ -70,7 +70,7 @@ export function writable<T = undefined>(trigger: Trigger<T>): Writable<T | undef
  * @param value initial store value
  * @param start callback called whenever the number of subscribers changes from 0 to 1
  */
-export function writable<T>(trigger: Trigger<T>, value?: T, start?: StartNotifier<T>): Writable<T>;
+export function writable<T>(trigger: Trigger<T>, value: T, start?: StartNotifier<T>): Writable<T>;
 
 /* implementation */
 export function writable<T>(trigger: Trigger<T>, value?: T, start: StartNotifier<T> = noop): Writable<T | undefined> {

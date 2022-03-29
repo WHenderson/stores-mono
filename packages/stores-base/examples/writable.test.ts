@@ -1,7 +1,10 @@
-import {it} from "vitest";
+import {expect, it} from "vitest";
 import {trigger_strict_not_equal, writable} from "../src";
+import {shim_console} from "./_util";
 
 it('example-writable-undefined', () => {
+    const console = shim_console();
+
     // #region example-writable-undefined
 
     // create a writable store
@@ -25,9 +28,18 @@ it('example-writable-undefined', () => {
     // > undefined
 
     // #endregion example-writable-undefined
+
+    expect(console.log.mock.calls).to.deep.equal([
+        [undefined],
+        [1],
+        [2],
+        [undefined],
+    ]);
 });
 
 it('example-writable-default', () => {
+    const console = shim_console();
+
     // #region example-writable-default
 
     // create a writable store
@@ -47,9 +59,17 @@ it('example-writable-default', () => {
     // > 2
 
     // #endregion example-writable-default
+
+    expect(console.log.mock.calls).to.deep.equal([
+        [42],
+        [1],
+        [2],
+    ]);
 });
 
 it('example-writable-start', () => {
+    const console = shim_console();
+
     // #region example-writable-start
 
     // create a writable store
@@ -76,9 +96,19 @@ it('example-writable-start', () => {
     // > no more subscribers
 
     // #endregion example-writable-start
+
+    expect(console.log.mock.calls).to.deep.equal([
+        ['got a subscriber'],
+        [42],
+        [1],
+        [2],
+        ['no more subscribers'],
+    ]);
 });
 
 it('example-writable-start-set', async () => {
+    const console = shim_console();
+
     // #region example-writable-start-set
 
     // create a writable store which updates asynchronously
@@ -107,9 +137,16 @@ it('example-writable-start-set', async () => {
     // > store value: true
 
     // #endregion example-writable-start-set
+
+    expect(console.log.mock.calls).to.deep.equal([
+        ['store value:', false],
+        ['store value:', true],
+    ]);
 });
 
 it('example-writable-start-update', async () => {
+    const console = shim_console();
+
     // #region example-writable-start-update
 
     // create a writable store which updates asynchronously
@@ -138,4 +175,9 @@ it('example-writable-start-update', async () => {
     // > store value: 5000
 
     // #endregion example-writable-start-update
+
+    expect(console.log.mock.calls).to.deep.equal([
+        ['store value:', 5],
+        ['store value:', 5000],
+    ]);
 });

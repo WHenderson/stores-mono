@@ -64,7 +64,7 @@ export function derive<S extends Stores, T>(
  * `derive` may also take a tuple or array of inputs a derive a value from those:
  *
  * _Example_:
- * {@codeblock ../stores-svelte/examples/derive.test.ts#example-derive-simple-multiple}
+ * {@codeblock ../stores-svelte/examples/derive.test.ts#example-derive-simple-add}
  *
  * Alternate signatures provide a means for deriving the value asynchronously.
  *
