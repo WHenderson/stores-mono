@@ -1,6 +1,6 @@
 # @crikey/stores-strict
 
-Provide signature compatible implementations of {@link readable}, {@link writable}, {@link derived} 
+Provide [svelte](https://svelte.dev/docs#run-time-svelte-store) compatible implementations of {@link readable}, {@link writable}, {@link derived} 
 and {@link get} with strict inequality triggering semantics.
 
 Strict inequality triggering semantics provide a store version of the functionality seen with
