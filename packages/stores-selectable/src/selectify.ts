@@ -1,28 +1,9 @@
-import {Readable, Stores, StoresValues, Unsubscriber, Writable} from "@crikey/stores-base";
-import {TraverseGet, TraverseUpdate, ReadOrWrite, Selectable, TraverseDelete, ResolveSelector} from "./types";
+import {derive, is_writable, Readable, Trigger, Writable} from "@crikey/stores-base";
+import {ReadOrWrite, ResolveSelector, Selectable, TraverseDelete, TraverseGet, TraverseUpdate} from "./types";
 import {traverse_get} from "./traverse-get";
 import {traverse_update} from "./traverse-update";
 import {traverse_delete} from "./traverse-delete";
 import {resolve_selector} from "./resolve-selector";
-
-export type DeriveCreator = {
-    <S extends Stores, T>(
-        stores: S,
-        fn: (values: StoresValues<S>, set: (value: T) => void) => Unsubscriber | void,
-        initial_value?: T
-    ) : Readable<T>;
-
-    <S extends Stores, T>(
-        stores: S,
-        fn: (values: StoresValues<S>) => T,
-        initial_value?: T
-    ) : Readable<T>;
-}
-
-function isWritable<T>(store: Readable<T> | Writable<T>): store is Writable<T> {
-    return 'set' in store && 'update' in store;
-}
-
 
 export interface SelectableOptions<T, P> {
     traverse_get: TraverseGet<T, P>;
@@ -38,11 +19,11 @@ const default_options: SelectableOptions<any, PropertyKey> = {
     resolve_selector
 }
 
-export function selectify<T, S extends Readable<T>>(store: S & Readable<T>, derive: DeriveCreator): Selectable<T, S, PropertyKey>;
-export function selectify<T, S extends Readable<T>, P>(store: S & Readable<T>, derive: DeriveCreator, options: SelectableOptions<T, P>): Selectable<T, S, P>;
+export function selectify<T, S extends Readable<T>>(trigger: Trigger<any>, store: S & Readable<T>): Selectable<T, S, PropertyKey>;
+export function selectify<T, S extends Readable<T>, P>(trigger: Trigger<any>, store: S & Readable<T>, options: SelectableOptions<T, P>): Selectable<T, S, P>;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function selectify<T, S extends Readable<T>, P>(store: S & Readable<T>, derive: DeriveCreator, options?: SelectableOptions<T, P>): Selectable<T, S, P> {
+export function selectify<T, S extends Readable<T>, P>(trigger: Trigger<any>, store: S & Readable<T>, options?: SelectableOptions<T, P>): Selectable<T, S, P> {
     const readOnly: Readable<T> = store;
     const readWrite: Writable<T> = <Writable<T>><unknown>store;
 
@@ -98,6 +79,7 @@ export function selectify<T, S extends Readable<T>, P>(store: S & Readable<T>, d
 
         // subscribe
         const { subscribe: subSubscribe } = derive(
+            trigger,
             readOnly,
             (new_root_value) => selectRo(new_root_value)
         );
@@ -128,7 +110,7 @@ export function selectify<T, S extends Readable<T>, P>(store: S & Readable<T>, d
             return select<V>(subPath);
         }
 
-        const selectableStore = isWritable(store)
+        const selectableStore = is_writable(store)
         ? {
             set: subSet,
             update: subUpdate,
@@ -151,7 +133,7 @@ export function selectify<T, S extends Readable<T>, P>(store: S & Readable<T>, d
         readWrite.set(<never>undefined);
     }
 
-    const selectableStore = isWritable(store)
+    const selectableStore = is_writable(store)
     ? {
         ...store,
         select,
