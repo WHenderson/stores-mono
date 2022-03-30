@@ -1,11 +1,11 @@
 import {expect, fn, it} from "vitest";
-import {selectable} from "../../src";
+import {selectify} from "../../src";
 import {derive, writable} from "@crikey/stores-strict";
 
 it('strict derive should only trigger on change', () => {
     type Root = Record<string, Record<string, number>>;
 
-    const store = selectable(writable<Root>({ a: { b: 1 } }), derive);
+    const store = selectify(writable<Root>({ a: { b: 1 } }), derive);
 
     const watchRoot = fn();
     store.subscribe(watchRoot);

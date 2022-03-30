@@ -8,7 +8,7 @@
 * {@link @crikey/stores-svelte}
 * {@link @crikey/stores-promise}
 * {@link @crikey/stores-immer}
-* {@link @crikey/stores-selectable}
+* {@link @crikey/stores-selectify}
 * {@link @crikey/stores-dynamic}
 * {@link @crikey/stores-temporal}
 

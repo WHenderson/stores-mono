@@ -38,11 +38,11 @@ const default_options: SelectableOptions<any, PropertyKey> = {
     resolve_selector
 }
 
-export function selectable<T, S extends Readable<T>>(store: S & Readable<T>, derive: DeriveCreator): Selectable<T, S, PropertyKey>;
-export function selectable<T, S extends Readable<T>, P>(store: S & Readable<T>, derive: DeriveCreator, options: SelectableOptions<T, P>): Selectable<T, S, P>;
+export function selectify<T, S extends Readable<T>>(store: S & Readable<T>, derive: DeriveCreator): Selectable<T, S, PropertyKey>;
+export function selectify<T, S extends Readable<T>, P>(store: S & Readable<T>, derive: DeriveCreator, options: SelectableOptions<T, P>): Selectable<T, S, P>;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function selectable<T, S extends Readable<T>, P>(store: S & Readable<T>, derive: DeriveCreator, options?: SelectableOptions<T, P>): Selectable<T, S, P> {
+export function selectify<T, S extends Readable<T>, P>(store: S & Readable<T>, derive: DeriveCreator, options?: SelectableOptions<T, P>): Selectable<T, S, P> {
     const readOnly: Readable<T> = store;
     const readWrite: Writable<T> = <Writable<T>><unknown>store;
 
