@@ -24,33 +24,46 @@ function isWritable<T>(store: Readable<T> | Writable<T>): store is Writable<T> {
 }
 
 
-export interface SelectableOptions<T> {
-    traverse_get?: TraverseGet<T>;
-    traverse_update?: TraverseUpdate<T>;
-    traverse_delete?: TraverseDelete<T>;
-    resolve_selector?: ResolveSelector;
+export interface SelectableOptions<T, P> {
+    traverse_get: TraverseGet<T, P>;
+    traverse_update: TraverseUpdate<T, P>;
+    traverse_delete: TraverseDelete<T, P>;
+    resolve_selector: ResolveSelector<P>;
 }
 
+const default_options: SelectableOptions<any, PropertyKey> = {
+    traverse_get,
+    traverse_update,
+    traverse_delete,
+    resolve_selector
+}
+
+export function selectable<T, S extends Readable<T>>(store: S & Readable<T>, derive: DeriveCreator): Selectable<T, S, PropertyKey>;
+export function selectable<T, S extends Readable<T>, P>(store: S & Readable<T>, derive: DeriveCreator, options: SelectableOptions<T, P>): Selectable<T, S, P>;
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function selectable<T, S extends Readable<T>>(store: S & Readable<T>, derive: DeriveCreator, options?: SelectableOptions<T>): Selectable<T,S> {
+export function selectable<T, S extends Readable<T>, P>(store: S & Readable<T>, derive: DeriveCreator, options?: SelectableOptions<T, P>): Selectable<T, S, P> {
     const readOnly: Readable<T> = store;
     const readWrite: Writable<T> = <Writable<T>><unknown>store;
 
-    const my_traverse_get = options?.traverse_get ?? traverse_get;
-    const my_traverse_update = options?.traverse_update ?? traverse_update;
-    const my_traverse_delete = options?.traverse_delete ?? traverse_delete;
-    const my_resolve_selector = options?.resolve_selector ?? resolve_selector;
+    if (!options)
+        options = <SelectableOptions<T,P>><unknown>default_options;
 
-    function select<D>(this:void, selector: (v: T) => D): Selectable<D,ReadOrWrite<D,S>>;
-    function select<D>(this:void, segment: PropertyKey): Selectable<D,ReadOrWrite<D,S>>;
-    function select<D>(this:void, absPath: PropertyKey[], relative?: number | undefined): Selectable<D,ReadOrWrite<D,S>>;
+    const my_traverse_get = options.traverse_get;
+    const my_traverse_update = options.traverse_update;
+    const my_traverse_delete = options.traverse_delete;
+    const my_resolve_selector = options.resolve_selector;
 
-    function select<D>(this:void, first: PropertyKey | PropertyKey[] | ((v: T) => D), relative?: number): Selectable<D, ReadOrWrite<D,S>> {
-        const rootPath: readonly PropertyKey[] = (() => {
+    function select<D>(this:void, selector: (v: T) => D): Selectable<D,ReadOrWrite<D,S>, P>;
+    function select<D>(this:void, segment: P & Exclude<P, Function> & Exclude<P, any[]>): Selectable<D,ReadOrWrite<D,S>, P>;
+    function select<D>(this:void, absPath: P[], relative?: number | undefined): Selectable<D,ReadOrWrite<D,S>, P>;
+
+    function select<D>(this:void, first: (P & Exclude<P, Function> & Exclude<P, any[]>) | P[] | ((v: T) => D), relative?: number): Selectable<D, ReadOrWrite<D,S>, P> {
+        const rootPath: readonly P[] = (() => {
             if (typeof first === 'function')
-                return my_resolve_selector(first);
+                return my_resolve_selector(<(v: T) => D>first);
 
-            if (typeof first === 'number' || typeof first === 'string' || typeof first === 'symbol')
+            if (!Array.isArray(first))
                 return [first];
 
             if (relative !== undefined && relative !== 0)
@@ -90,16 +103,16 @@ export function selectable<T, S extends Readable<T>>(store: S & Readable<T>, der
         );
 
         // create sub-sub-store
-        function subSelect<V>(selector: (v: D) => V): Selectable<V,ReadOrWrite<V,S>>;
-        function subSelect<V>(segment: PropertyKey): Selectable<V,ReadOrWrite<V,S>>;
-        function subSelect<V>(path: PropertyKey[], relative?: number | undefined): Selectable<V,ReadOrWrite<V,S>>;
+        function subSelect<V>(selector: (v: D) => V): Selectable<V,ReadOrWrite<V,S>, P>;
+        function subSelect<V>(segment: P & Exclude<P, Function> & Exclude<P, any[]>): Selectable<V,ReadOrWrite<V,S>, P>;
+        function subSelect<V>(path: P[], relative?: number | undefined): Selectable<V,ReadOrWrite<V,S>, P>;
 
-        function subSelect<V>(first: PropertyKey | PropertyKey[] | ((v: D) => V), relative?: number): Selectable<V,ReadOrWrite<V,S>> {
+        function subSelect<V>(first: (P & Exclude<P, Function> & Exclude<P, any[]>) | P[] | ((v: D) => V), relative?: number): Selectable<V,ReadOrWrite<V,S>, P> {
             const subPath = (() => {
                 if (typeof first === 'function')
-                    return [...rootPath, ...resolve_selector(first)];
+                    return [...rootPath, ...my_resolve_selector(<(v: D) => V>first)];
 
-                if (typeof first === 'number' || typeof first === 'string' || typeof first === 'symbol')
+                if (!Array.isArray(first))
                     return [...rootPath, first];
 
                 if (relative !== undefined && (
@@ -131,7 +144,7 @@ export function selectable<T, S extends Readable<T>>(store: S & Readable<T>, der
             path: rootPath
         };
 
-        return <Selectable<D, ReadOrWrite<D,S>>><unknown>selectableStore;
+        return <Selectable<D, ReadOrWrite<D,S>, P>><unknown>selectableStore;
     }
 
     function delete_(this:void) {
@@ -152,5 +165,5 @@ export function selectable<T, S extends Readable<T>>(store: S & Readable<T>, der
         path: <readonly PropertyKey[]>[],
     };
 
-    return <Selectable<T,S>><unknown>selectableStore;
+    return <Selectable<T,S, P>><unknown>selectableStore;
 }

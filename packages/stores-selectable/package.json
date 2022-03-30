@@ -16,9 +16,11 @@
     "build": "tsc && vite build && rollup --config rollup.config.ts --configPlugin typescript",
     "clean": "rimraf dist",
     "test": "vitest run",
+    "test:tsc": "tsc --noEmit",
     "debug": "vitest run --no-threads --no-isolate",
     "coverage": "vitest run --coverage",
     "test:watch": "vitest",
+    "test:tsc:watch": "tsc --noEmit --watch",
     "coverage:watch": "vitest --coverage"
   },
   "dependencies": {

@@ -1,15 +1,15 @@
 import {Readable, Writable} from "@crikey/stores-base";
 
-export type Selectable<T, S extends Readable<any>> =
+export type Selectable<T, S extends Readable<any>, P> =
     S &
-    SelectablePath &
+    SelectablePath<P> &
     (
         S extends Writable<any>
         ? (
-            SelectableSelect<T, Writable<T>> &
+            SelectableSelect<T, Writable<T>, P> &
             (undefined extends T ? SelectableDelete : {})
         )
-        : SelectableSelect<T, Readable<T>>
+        : SelectableSelect<T, Readable<T>, P>
     );
 
 export type ReadOrWrite<T, S extends Readable<any>> = (
@@ -18,20 +18,20 @@ export type ReadOrWrite<T, S extends Readable<any>> = (
     : Readable<T>
 );
 
-export interface SelectableSelect<T, S extends Readable<T>> {
+export interface SelectableSelect<T, S extends Readable<T>, P> {
     /**
      * Select child element/member based on selector callback and wrap it in a Writable or Readable store depending on
      * the source store.
      * @param selector callback which takes a (proxy) to the store value and returns a child selected from it
      */
-    select<D>(this: void, selector: (v: T) => D): Selectable<D, ReadOrWrite<D,S>>;
+    select<D>(this: void, selector: (v: T) => D): Selectable<D, ReadOrWrite<D,S>, P>;
 
     /**
      * Select child element/member based on the specified property and wrap it in a Writable or Readable store depending on
      * the source store.
      * @param property member/element to select from the store
      */
-    select<D = any>(this: void, property: PropertyKey): Selectable<D, ReadOrWrite<D,S>>;
+    select<D = any>(this: void, property: P): Selectable<D, ReadOrWrite<D,S>, P>;
 
     /**
      * Select child element/member based on the specified path and wrap it in a Writable or Readable store depending on
@@ -40,25 +40,25 @@ export interface SelectableSelect<T, S extends Readable<T>> {
      * @param relative if provided, path is relative to the current path minus the specified number of segments
      * otherwise it is absolute to the root store value
      */
-    select<D = any>(this: void, path: PropertyKey[], relative?: number | undefined): Selectable<D, ReadOrWrite<D,S>>;
+    select<D = any>(this: void, path: P[], relative?: number | undefined): Selectable<D, ReadOrWrite<D,S>, P>;
 }
 
 export interface SelectableDelete {
     delete(this:void): void;
 }
 
-export interface SelectablePath {
-    readonly path: readonly PropertyKey[];
+export interface SelectablePath<P> {
+    readonly path: readonly P[];
 }
 
-
 /** Callback used to traverse root using path and return the final node */
-export type TraverseGet<T> = (root: T, path: readonly PropertyKey[]) => any;
+export type TraverseGet<T, P> = (root: T, path: readonly P[]) => any;
 
 /** Callback used to traverse root using path and update the final node using a callback */
-export type TraverseUpdate<T> = <U>(root: T, path: readonly PropertyKey[], update: (old_value: any) => U) => T;
+export type TraverseUpdate<T, P> = <U>(root: T, path: readonly P[], update: (old_value: any) => U) => T;
 
 /** Callback used to traverse root using path and delete/set undefined the final leaf node */
-export type TraverseDelete<T> = (root: T, path: readonly PropertyKey[]) => T;
+export type TraverseDelete<T, P> = (root: T, path: readonly P[]) => T;
 
-export type ResolveSelector = <T,R>(selector: (root: T) => R) => PropertyKey[];
+/** Callback used to resolve a selector into a path */
+export type ResolveSelector<P> = <T, R>(selector: (root: T) => R) => P[];
