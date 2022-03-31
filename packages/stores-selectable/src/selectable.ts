@@ -4,36 +4,72 @@ import {traverse_get} from "./traverse-get";
 import {traverse_update} from "./traverse-update";
 import {traverse_delete} from "./traverse-delete";
 import {resolve_selector} from "./resolve-selector";
+import {trigger_strict_not_equal} from "@crikey/stores-base/src";
 
 export interface SelectableOptions<T, P> {
+    /**
+     * Callback used when performing a readonly traversal
+     */
     traverse_get: TraverseGet<T, P>;
+
+    /**
+     * Callback used when upserting a value
+     */
     traverse_update: TraverseUpdate<T, P>;
+
+    /**
+     * Callback used when deleting a value
+     */
     traverse_delete: TraverseDelete<T, P>;
+
+    /**
+     * Callback used when converting a selector into a path
+     */
     resolve_selector: ResolveSelector<P>;
+
+    /**
+     * Trigger to use for comparing derived store values
+     */
+    trigger: Trigger<any>;
 }
 
 const default_options: SelectableOptions<any, PropertyKey> = {
     traverse_get,
     traverse_update,
     traverse_delete,
-    resolve_selector
+    resolve_selector,
+    trigger: trigger_strict_not_equal
 }
 
-export function selectify<T, S extends Readable<T>>(trigger: Trigger<any>, store: S & Readable<T>): Selectable<T, S, PropertyKey>;
-export function selectify<T, S extends Readable<T>, P>(trigger: Trigger<any>, store: S & Readable<T>, options: SelectableOptions<T, P>): Selectable<T, S, P>;
+/**
+ * Create a selectable {@link Selectable} store with custom pathing semantics.
+ *
+ * @param trigger comparison function used to determine when to propagate changes
+ * @param store base store to add selection semantics to
+ * @param options path resolution semantics
+ */
+export function selectable<T, S extends Readable<T>, P>(store: S & Readable<T>, options: SelectableOptions<T, P>): Selectable<T, S, P>;
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function selectify<T, S extends Readable<T>, P>(trigger: Trigger<any>, store: S & Readable<T>, options?: SelectableOptions<T, P>): Selectable<T, S, P> {
+/**
+ * Create a selectable {@link Selectable} store with standard json pathing semantics.
+ *
+ * @param trigger comparison function used to determine when to propagate changes
+ * @param store base store to add selection semantics to
+ */
+export function selectable<T, S extends Readable<T>>(store: S & Readable<T>): Selectable<T, S, PropertyKey>;
+
+export function selectable<T, S extends Readable<T>, P>(store: S & Readable<T>, options?: SelectableOptions<T, P>): Selectable<T, S, P> {
     const readOnly: Readable<T> = store;
     const readWrite: Writable<T> = <Writable<T>><unknown>store;
 
     if (!options)
         options = <SelectableOptions<T,P>><unknown>default_options;
 
-    const my_traverse_get = options.traverse_get;
-    const my_traverse_update = options.traverse_update;
-    const my_traverse_delete = options.traverse_delete;
-    const my_resolve_selector = options.resolve_selector;
+    const trigger = options.trigger;
+    const traverse_get = options.traverse_get;
+    const traverse_update = options.traverse_update;
+    const traverse_delete = options.traverse_delete;
+    const resolve_selector = options.resolve_selector;
 
     function select<D>(this:void, selector: (v: T) => D): Selectable<D,ReadOrWrite<D,S>, P>;
     function select<D>(this:void, segment: P & Exclude<P, Function> & Exclude<P, any[]>): Selectable<D,ReadOrWrite<D,S>, P>;
@@ -42,7 +78,7 @@ export function selectify<T, S extends Readable<T>, P>(trigger: Trigger<any>, st
     function select<D>(this:void, first: (P & Exclude<P, Function> & Exclude<P, any[]>) | P[] | ((v: T) => D), relative?: number): Selectable<D, ReadOrWrite<D,S>, P> {
         const rootPath: readonly P[] = (() => {
             if (typeof first === 'function')
-                return my_resolve_selector(<(v: T) => D>first);
+                return resolve_selector(<(v: T) => D>first);
 
             if (!Array.isArray(first))
                 return [first];
@@ -54,13 +90,13 @@ export function selectify<T, S extends Readable<T>, P>(trigger: Trigger<any>, st
         })();
 
         const selectRo = (root: T): D =>
-            <D>my_traverse_get(root, rootPath);
+            <D>traverse_get(root, rootPath);
 
         const updateRw = (root: T, update: (old_value: D) => D): T =>
-            my_traverse_update(root, rootPath, update);
+            traverse_update(root, rootPath, update);
 
         const deleteRw = (root: T): T =>
-            my_traverse_delete(root, rootPath);
+            traverse_delete(root, rootPath);
 
         // set the sub-store value
         function subSet(new_sub_value: D) {
@@ -92,7 +128,7 @@ export function selectify<T, S extends Readable<T>, P>(trigger: Trigger<any>, st
         function subSelect<V>(first: (P & Exclude<P, Function> & Exclude<P, any[]>) | P[] | ((v: D) => V), relative?: number): Selectable<V,ReadOrWrite<V,S>, P> {
             const subPath = (() => {
                 if (typeof first === 'function')
-                    return [...rootPath, ...my_resolve_selector(<(v: D) => V>first)];
+                    return [...rootPath, ...resolve_selector(<(v: D) => V>first)];
 
                 if (!Array.isArray(first))
                     return [...rootPath, first];
@@ -149,3 +185,5 @@ export function selectify<T, S extends Readable<T>, P>(trigger: Trigger<any>, st
 
     return <Selectable<T,S, P>><unknown>selectableStore;
 }
+
+selectable.default_options = default_options;

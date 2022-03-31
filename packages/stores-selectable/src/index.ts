@@ -1,4 +1,4 @@
-export * from './selectify';
+export * from './selectable';
 export * from './traverse-get';
 export * from './traverse-update';
 export * from './traverse-delete';

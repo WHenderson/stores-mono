@@ -1,11 +1,11 @@
 import {expect, fn, it} from "vitest";
-import {selectify} from "../../src";
-import {derive, writable} from "@crikey/stores-immer";
+import {selectable} from "../../src";
+import {writable} from "@crikey/stores-immer";
 
 it('strict derive should only trigger on change', () => {
     type Root = Record<string, Record<string, number>>;
 
-    const store = selectify(writable<Root>({ a: { b: 1 } }), derive);
+    const store = selectable(writable<Root>({ a: { b: 1 } }));
 
     const watchRoot = fn();
     store.subscribe(watchRoot);

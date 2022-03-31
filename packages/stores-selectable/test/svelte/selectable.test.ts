@@ -1,11 +1,20 @@
 import {expect, fn, it} from "vitest";
-import {selectify} from "../../src";
-import {derive, writable} from "@crikey/stores-svelte";
+import {selectable} from "../../src";
+import {writable} from "@crikey/stores-svelte";
+import {trigger_safe_not_equal} from "@crikey/stores-base/src";
 
 it('strict derive should only trigger on change', () => {
     type Root = Record<string, Record<string, number>>;
 
-    const store = selectify(writable<Root>({ a: { b: 1 } }), derive);
+    // Change trigger semantics on selectable
+    const store = selectable(
+        writable<Root>({ a: { b: 1 } }),
+        Object.assign(
+            {},
+            selectable.default_options,
+            { trigger: trigger_safe_not_equal }
+        )
+    );
 
     const watchRoot = fn();
     store.subscribe(watchRoot);

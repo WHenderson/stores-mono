@@ -1,5 +1,13 @@
 import {Readable, Writable} from "@crikey/stores-base";
 
+/**
+ * Extends an existing store with select semantics.
+ *
+ * {@link Readable} stores are extended with {@link SelectablePath} and {@link SelectableSelect}.
+ *
+ * {@link Writable} stores are additionally extended with {@link SelectableDelete} if their value can be set to
+ * `undefined`.
+ */
 export type Selectable<T, S extends Readable<any>, P> =
     S &
     SelectablePath<P> &
@@ -44,10 +52,16 @@ export interface SelectableSelect<T, S extends Readable<T>, P> {
 }
 
 export interface SelectableDelete {
+    /**
+     * Delete the store value from its parent, or in the case of a root item, set it to undefined
+     */
     delete(this:void): void;
 }
 
 export interface SelectablePath<P> {
+    /**
+     * The full path of this node, relative to the original {@link selectable} that created it
+     */
     readonly path: readonly P[];
 }
 
