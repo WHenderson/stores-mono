@@ -44,17 +44,19 @@ const default_options: SelectableOptions<any, PropertyKey> = {
 /**
  * Create a selectable {@link Selectable} store with custom pathing semantics.
  *
- * @param trigger comparison function used to determine when to propagate changes
+ * Use {@link SelectableSelect.select} to derive a new child store from the current store.
+ *
  * @param store base store to add selection semantics to
- * @param options path resolution semantics
+ * @param options path resolution and trigger semantics
  */
 export function selectable<T, S extends Readable<T>, P>(store: S & Readable<T>, options: SelectableOptions<T, P>): Selectable<T, S, P>;
 
 /**
- * Create a selectable {@link Selectable} store with standard json pathing semantics.
+ * Create a selectable {@link Selectable} store with standard json pathing and strict inequality trigger semantics.
  *
- * @param trigger comparison function used to determine when to propagate changes
- * @param store base store to add selection semantics to
+ * Use {@link SelectableSelect.select} to derive a new child store from the current store.
+ *
+ * @param store path resolution and trigger semantics
  */
 export function selectable<T, S extends Readable<T>>(store: S & Readable<T>): Selectable<T, S, PropertyKey>;
 

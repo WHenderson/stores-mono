@@ -1,8 +1,9 @@
 # @crikey/stores-selectable
 
 Types and functions for creating [Svelte](https://svelte.dev/) compatible stores.
-`@crikey/stores-base` stores further extend the the [svelte/store](https://svelte.dev/docs#run-time-svelte-store)
-contract to allow for additional features and extensibility.
+
+`@crikey/stores-selectable` further extends the {@link Readable} and {@link Writable} interfaces with methods
+for generating derived stores by referencing values within the original store.   
 
 Store creation function:
 * {@link selectable} - Create a {@link Readable} or {@link Writable} store with select methods ({@link SelectablePath.path}, {@link SelectableSelect.select} and {@link SelectableDelete.delete}). 
@@ -30,3 +31,5 @@ $ yarn add @crikey/stores-selectable
 ```
 
 ## Usage
+
+* {@codeblock ../stores-selectable/examples/select.test.ts#example-select}
