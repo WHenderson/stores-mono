@@ -1,8 +1,7 @@
 import {describe, expect, it} from 'vitest'
-import {to_dynamic, dynamic, DynamicResolved} from "../src";
-import {writable} from "@crikey/stores-strict";
-import {trigger_strict_not_equal, get} from "@crikey/stores-base";
-import {derive} from "@crikey/stores-strict";
+import {dynamic, DynamicResolved, to_dynamic} from "../src";
+import {derive, writable} from "@crikey/stores-strict";
+import {get, trigger_strict_not_equal} from "@crikey/stores-base";
 
 describe('static calculations', () => {
     it('static result should resolve with static values', () => {
@@ -19,12 +18,11 @@ describe('static calculations', () => {
         const derived = dynamic(
             trigger_strict_not_equal,
             [ { value: 'x' }, { value: 1 } ],
-            (resolve, a, b) => ({ value: resolve(a) + resolve(b) })
+            ([a, b], { resolve }) => ({ value: resolve(a) + resolve(b) })
         );
         const resolved = get(derived);
         expect(resolved).toHaveProperty('value', 'x1');
-        expect(resolved.dependencies).not.toBeUndefined();
-        expect(resolved.dependencies!.size).toBe(2);
+        expect(resolved.dependencies).toBeUndefined();
     });
 });
 
@@ -53,12 +51,11 @@ describe('static errors', () => {
         const derived = dynamic(
             trigger_strict_not_equal,
             [ { value: 1 }, { value: 2, error: 42 }],
-            (resolve, a, b) => ({ value: resolve(a) + resolve(b) })
+            ([a, b], resolve) => ({ value: resolve(a) + resolve(b) })
         );
         const resolved = get(derived);
         expect(resolved).toHaveProperty('error', 42);
-        expect(resolved.dependencies).not.toBeUndefined();
-        expect(resolved.dependencies!.size).toBe(2);
+        expect(resolved.dependencies).toBeUndefined();
     });
 });
 
@@ -68,10 +65,12 @@ describe('dynamic calculations', () => {
         let store_count = 0;
         store.subscribe(_ => ++store_count);
 
+        const dstore = dynamic(store);
+
         const derived = dynamic(
             trigger_strict_not_equal,
             (resolve) => {
-                return { value: resolve(store) };
+                return { value: resolve(dstore) };
             }
         );
         let derived_count = 0;
@@ -80,7 +79,7 @@ describe('dynamic calculations', () => {
         const resolved = get(derived);
         expect(resolved).toHaveProperty('value', 1);
         expect(resolved.dependencies).not.toBeUndefined();
-        expect([...resolved.dependencies!.keys()]).to.deep.equal([store]);
+        expect([...resolved.dependencies!.keys()]).to.deep.equal([dstore]);
         expect(derived_count).to.equals(store_count);
 
         store.set(2);
@@ -100,7 +99,7 @@ describe('dynamic calculations', () => {
         const derived = dynamic(
             trigger_strict_not_equal,
             [ dynamic_store ],
-            (resolve, a) => {
+            ([a], resolve) => {
                 return { value: resolve(a) };
             }
         );
@@ -156,13 +155,15 @@ describe('dynamic calculations', () => {
 
     it('complex dynamic calculations should resolve dynamically', () => {
         const store1 = writable(2);
+        const dynamic_store1 = dynamic(store1);
         const a = derive(store1, value => value * 10);
-        const dynamic_a = to_dynamic(a);
+        const dynamic_a = dynamic(a);
         const b = derive(store1, value => value * 100);
-        const dynamic_b = to_dynamic(b);
+        const dynamic_b = dynamic(b);
         const c = derive(store1, value => value * 1000);
-        const dynamic_c = to_dynamic(c);
+        const dynamic_c = dynamic(c);
         const store2 = writable(0.1);
+        const dynamic_store2 = dynamic(store2);
 
         const set_name = (store: any, name: string) => { store.name = name; };
 
@@ -181,10 +182,10 @@ describe('dynamic calculations', () => {
         const derived = dynamic(
             trigger_strict_not_equal,
             [dynamic_a, dynamic_b, dynamic_c],
-            (resolve, a, b, _c) => {
-                const value = (resolve(store1) % 2 === 0)
+            ([a, b, _c], resolve) => {
+                const value = (resolve(dynamic_store1) % 2 === 0)
                     ? resolve(a) + resolve(b)
-                    : resolve(b) + resolve(store2)
+                    : resolve(b) + resolve(dynamic_store2)
 
                 return { value };
             }
@@ -200,7 +201,7 @@ describe('dynamic calculations', () => {
 
         expect(resolved).toHaveProperty('value', 2*10 + 2*100);
         expect(resolved.dependencies).not.toBeUndefined();
-        expect([...resolved.dependencies!.keys()]).to.deep.equal([ store1, dynamic_a, dynamic_b]);
+        expect([...resolved.dependencies!.keys()]).to.deep.equal([ dynamic_store1, dynamic_a, dynamic_b]);
         expect(derived_count).toBe(1);
 
         //console.log('-- store1.set(3);');
@@ -208,6 +209,7 @@ describe('dynamic calculations', () => {
 
         expect(resolved).toHaveProperty('value', 3*100 + 0.1);
         expect(resolved.dependencies).not.toBeUndefined();
+        expect([...resolved.dependencies!.keys()]).to.deep.equal([ dynamic_store1, dynamic_b, dynamic_store2]);
         expect(derived_count).toBe(2);
 
         //console.log('-- store2.set(0.2);');

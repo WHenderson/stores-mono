@@ -1,14 +1,14 @@
 import {Readable} from "@crikey/stores-base";
 
-export type DynamicDependents = ReadonlySet<Dynamic<any> | Readable<any>>;
+export type DynamicDependents = ReadonlySet<DynamicReadable<any>>;
 
-export type DynamicDependencies = { dependencies?: DynamicDependents | undefined };
+export type DynamicDependencies = { dependencies: DynamicDependents | undefined };
 
 /** Hold an error thrown during the evaluation of a dynamic item */
-export type DynamicError = { error: any } & DynamicDependencies;
+export type DynamicError = { error: any } & Partial<DynamicDependencies>;
 
 /** Hold the resolved value of a dynamic item */
-export type DynamicValue<T> = { value: T } & DynamicDependencies;
+export type DynamicValue<T> = { value: T } & Partial<DynamicDependencies>;
 
 /** Hold the resolved value or error of a dynamic item */
 export type DynamicResolved<T> = DynamicError | DynamicValue<T>;
