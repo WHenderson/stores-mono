@@ -1,7 +1,6 @@
 import {expect, fn, it} from 'vitest'
-import {promise, readable, derive, State} from "../src";
-import {get, writable} from "@crikey/stores-base";
-import {trigger_strict_not_equal} from "../../stores-base/src";
+import {derive, promise, readable, State} from "../src";
+import {get, trigger_strict_not_equal, writable} from "@crikey/stores-base";
 
 it('should match promise state', async () => {
     const promisePending = new Promise(() => {});
