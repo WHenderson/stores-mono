@@ -4,10 +4,14 @@ import {trigger_strict_not_equal} from "@crikey/stores-base/src";
 
 /**
  * Create a readable store that resolves according to the provided promise
+ *
  * @param promise promise which resolves into the store value / rejects into the store error
  * @param initial_value initial store value
  */
-export function readable<T>(promise: PromiseLike<T>, initial_value?: T): ReadablePromise<Stateful<T>> {
+export function readable<T>(
+    promise: PromiseLike<T>,
+    initial_value?: T
+): ReadablePromise<Stateful<T>> {
     const promise$ = writable<Stateful<T>>(
         trigger_strict_not_equal,
         {
@@ -19,72 +23,82 @@ export function readable<T>(promise: PromiseLike<T>, initial_value?: T): Readabl
         }
     );
 
-    promise.then(
+    const chained = promise.then(
         (v) => {
-            promise$.set({
+            const state: StatefulFulfilled<T> = {
                 isPending: false,
                 isFulfilled: true,
                 isRejected: false,
                 state: State.Fulfilled,
                 value: v
-            });
-            return v;
+            };
+            promise$.set(state);
+
+            return state;
         },
         (e) => {
-            promise$.set({
+            const state: StatefulRejected = {
                 isPending: false,
                 isFulfilled: false,
                 isRejected: true,
                 state: State.Rejected,
                 error: e
-            });
+            };
+            promise$.set(state);
+
+            return state;
         }
     );
 
     return Object.assign({
-            promise
+            promise: chained
         },
         read_only(promise$)
     );
 }
 
 /**
- * Create a resolved promise store without the overhead of a promise
+ * Create a resolved promise store without the overhead of waiting for a promise
+ *
  * @param value the value of the store
  */
-function resolve<T>(value: T): ReadablePromise<StatefulFulfilled<T>> {
+function resolve<T>(
+    value: T
+): ReadablePromise<StatefulFulfilled<T>> {
+    const state: StatefulFulfilled<T> = {
+        state: State.Fulfilled,
+        value: value,
+        isPending: false,
+        isFulfilled: true,
+        isRejected: false
+    };
+
     return Object.assign({
-            promise: Promise.resolve(value)
+            promise: Promise.resolve(state)
         },
-        constant<StatefulFulfilled<T>>({
-            state: State.Fulfilled,
-            value: value,
-            isPending: false,
-            isFulfilled: true,
-            isRejected: false
-        })
+        constant(state)
     );
 }
 
 /**
- * Create a rejected promise store without the overhead of a promise
+ * Create a rejected promise store without the overhead of waiting for a promise
+ *
  * @param error the error value of the store
  */
 function reject(error: any): ReadablePromise<StatefulRejected> {
-    const promise = Promise.reject(error);
-    promise.catch(() => {}); // prevent unhandled rejection errors
+    const state: StatefulRejected = {
+        state: State.Rejected,
+        error: error,
+        isPending: false,
+        isFulfilled: false,
+        isRejected: true
+    };
 
     return Object.assign(
         {
-            promise
+            promise: Promise.resolve(state)
         },
-        constant<StatefulRejected>({
-           state: State.Rejected,
-           error: error,
-           isPending: false,
-           isFulfilled: false,
-           isRejected: true
-       })
+        constant(state)
     );
 }
 

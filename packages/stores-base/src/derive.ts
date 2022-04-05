@@ -4,7 +4,6 @@ import {noop} from "./noop";
 import {readable} from "./readable";
 
 /** One or more `Readable`s. */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type Stores = Readable<any> | [Readable<any>, ...Array<Readable<any>>] | Array<Readable<any>>;
 
 /** One or more values from `Readable` stores. */
@@ -18,15 +17,11 @@ export type DeriveFnSync<S extends Stores,T> = (values: StoresValues<S>) => T;
 export type DeriveFnAsyncComplex<S extends Stores,T> =
     ((values: StoresValues<S>, set: ComplexSet<T>) => Unsubscriber | void);
 
-/** Asynchronous callback for deriving a value from resolved input stores */
-export type DeriveFnAsyncSimple<S extends Stores,T> =
-    ((values: StoresValues<S>, set: Set<T>) => Unsubscriber | void);
-
 /**
  * Derives a store from one or more other stores. The store value is calculated on demand and recalculated whenever any of
  * the store dependencies change.
  *
- * For simple usage, see the alternate signature.
+ * For simple synchronous usage, see the alternate signature.
  *
  * Values may be updated asynchronously:
  *
@@ -37,37 +32,35 @@ export type DeriveFnAsyncSimple<S extends Stores,T> =
  * @param trigger callback used to determine if subscribers should be called
  * @param stores input stores
  * @param fn callback that aggregates the store values which are passed in as the first argument
- * @param initial_value initial value - useful when the aggregate function initialises the store asynchronously
  */
 export function derive<S extends Stores, T>(
     trigger: Trigger<T>,
     stores: S,
-    fn: DeriveFnAsyncComplex<S,T>,
-    initial_value?: T
-): Readable<T>;
+    fn: DeriveFnAsyncComplex<S,T>
+): Readable<T | undefined>;
 
 /**
  * Derives a store from one or more other stores. The store value is calculated on demand and recalculated whenever any of
  * the store dependencies change.
  *
- * For simple usage, see the alternate signature.
+ * For simple synchronous usage, see the alternate signature.
  *
- * Values may be derived asynchronously:
+ * Values may be updated asynchronously:
  *
  * _Example_:
- * {@codeblock ../stores-base/examples/derive.test.ts#example-derive-async-simple}
+ * {@codeblock ../stores-base/examples/derive.test.ts#example-derive-async-update}
  *
  * @category Create Store
  * @param trigger callback used to determine if subscribers should be called
  * @param stores input stores
  * @param fn callback that aggregates the store values which are passed in as the first argument
- * @param initial_value initial value - useful when the aggregate function initialises the store asynchronously
+ * @param initial_value initial value
  */
 export function derive<S extends Stores, T>(
     trigger: Trigger<T>,
     stores: S,
-    fn: DeriveFnAsyncSimple<S,T>,
-    initial_value?: T
+    fn: DeriveFnAsyncComplex<S,T>,
+    initial_value: T
 ): Readable<T>;
 
 /**
@@ -90,17 +83,19 @@ export function derive<S extends Stores, T>(
  * @param trigger callback used to determine if subscribers should be called
  * @param stores input stores
  * @param fn callback that aggregates the store values
- * @param initial_value initial value - useful when the aggregate function initialises the store asynchronously
  */
 export function derive<S extends Stores, T>(
     trigger: Trigger<T>,
     stores: S,
-    fn: DeriveFnSync<S,T>,
-    initial_value?: T
+    fn: DeriveFnSync<S,T>
 ): Readable<T>;
 
-
-export function derive<T>(trigger: Trigger<T>, stores: Stores, fn: Function, initial_value?: T): Readable<T> {
+export function derive<T>(
+    trigger: Trigger<T>,
+    stores: Stores,
+    fn: Function,
+    initial_value?: T
+): Readable<T> {
     const single = !Array.isArray(stores);
     const stores_array = single
         ? [stores as Readable<any>]

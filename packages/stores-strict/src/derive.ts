@@ -1,7 +1,6 @@
 import {
     derive as baseDerive,
     DeriveFnAsyncComplex,
-    DeriveFnAsyncSimple,
     DeriveFnSync,
     Readable,
     Stores,
@@ -22,13 +21,11 @@ import {
  * @category Create Store
  * @param stores input stores
  * @param fn callback that aggregates the store values which are passed in as the first argument
- * @param initial_value initial value - useful when the aggregate function initialises the store asynchronously
  */
 export function derive<S extends Stores, T>(
     stores: S,
-    fn: DeriveFnAsyncComplex<S,T>,
-    initial_value?: T
-): Readable<T>;
+    fn: DeriveFnAsyncComplex<S,T>
+): Readable<T | undefined>;
 
 /**
  * Derives a store from one or more other stores. The store value is calculated on demand and recalculated whenever any of
@@ -36,10 +33,10 @@ export function derive<S extends Stores, T>(
  *
  * For simple usage, see the alternate signature.
  *
- * Values may be derived asynchronously:
+ * Values may be updated asynchronously:
  *
  * _Example_:
- * {@codeblock ../stores-strict/examples/derive.test.ts#example-derive-async-simple}
+ * {@codeblock ../stores-strict/examples/derive.test.ts#example-derive-async-update}
  *
  * @category Create Store
  * @param stores input stores
@@ -48,8 +45,8 @@ export function derive<S extends Stores, T>(
  */
 export function derive<S extends Stores, T>(
     stores: S,
-    fn: DeriveFnAsyncSimple<S,T>,
-    initial_value?: T
+    fn: DeriveFnAsyncComplex<S,T>,
+    initial_value: T
 ): Readable<T>;
 
 /**
@@ -71,12 +68,10 @@ export function derive<S extends Stores, T>(
  * @category Create Store
  * @param stores input stores
  * @param fn callback that aggregates the store values
- * @param initial_value initial value - useful when the aggregate function initialises the store asynchronously
  */
 export function derive<S extends Stores, T>(
     stores: S,
-    fn: DeriveFnSync<S,T>,
-    initial_value?: T
+    fn: DeriveFnSync<S,T>
 ): Readable<T>;
 
 export function derive<T>(
@@ -84,5 +79,5 @@ export function derive<T>(
     fn: any,
     initial_value?: T
 ): Readable<T> {
-    return baseDerive(trigger_strict_not_equal, stores, fn, initial_value);
+    return baseDerive(trigger_strict_not_equal, stores, fn, initial_value!);
 }

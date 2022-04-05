@@ -1,7 +1,9 @@
 import {Readable, Unsubscriber} from "@crikey/stores-base";
 import {Stateful} from "./types";
 
-export function promise<T>(store: Readable<Stateful<T>>): Promise<T> {
+export function promise<T>(
+    store: Readable<Stateful<T>>
+): Promise<T> {
     return new Promise<T>((resolve, reject) => {
         let unsubscribe: Unsubscriber | undefined;
         let settled = false;
@@ -18,9 +20,7 @@ export function promise<T>(store: Readable<Stateful<T>>): Promise<T> {
             if (value.isRejected) {
                 settle();
                 reject(value.error);
-            }
-            else
-            if (value.isFulfilled) {
+            } else if (value.isFulfilled) {
                 settle();
                 resolve(value.value);
             }
@@ -29,5 +29,5 @@ export function promise<T>(store: Readable<Stateful<T>>): Promise<T> {
         if (settled) {
             settle();
         }
-    })
+    });
 }

@@ -20,6 +20,8 @@
     "debug": "vitest run --no-threads --no-isolate",
     "coverage": "vitest run --coverage",
     "test:watch": "vitest",
+    "test:tsc": "tsc --noEmit",
+    "test:tsc:watch": "tsc --noEmit --watch",
     "coverage:watch": "vitest --coverage"
   },
   "devDependencies": {

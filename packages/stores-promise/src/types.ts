@@ -40,5 +40,5 @@ export type InferInnerType<S> =
     : never;
 
 export interface ReadablePromise<T> extends Readable<T> {
-    promise: PromiseLike<InferInnerType<T>>;
+    promise: PromiseLike<T>;
 }

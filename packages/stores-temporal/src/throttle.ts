@@ -30,7 +30,15 @@ import {trigger_always} from "@crikey/stores-base";
  * @param store
  * @param period_ms
  */
-export function throttle<T>(store: Readable<T>, period_ms: number) : Readable<T> {
+export function throttle<T>(
+    store: Readable<T>,
+    period_ms: number
+) : Readable<T>;
+
+export function throttle<T>(
+    store: Readable<T>,
+    period_ms: number
+) : Readable<T> {
     let last_time: number | undefined;
 
     return derive(
@@ -58,6 +66,7 @@ export function throttle<T>(store: Readable<T>, period_ms: number) : Readable<T>
                     clearTimeout(timeout_id);
                 }
             }
-        }
+        },
+        <T>undefined!
     );
 }

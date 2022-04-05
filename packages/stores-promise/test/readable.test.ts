@@ -1,5 +1,5 @@
 import {expect, fn, it} from 'vitest'
-import {promise, readable, repromise, State} from "../src";
+import {promise, readable, derive, State} from "../src";
 import {get, writable} from "@crikey/stores-base";
 import {trigger_strict_not_equal} from "../../stores-base/src";
 
@@ -110,7 +110,7 @@ it('should create synchronous rejected', () => {
 it('should discard old promises', async () => {
     const store = writable(trigger_strict_not_equal, 1);
 
-    const derived = repromise(store, value => {
+    const derived = derive(store, value => {
         return new Promise<number>(resolve => {
             setTimeout(() => resolve(value), 0);
         });

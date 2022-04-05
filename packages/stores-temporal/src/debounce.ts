@@ -29,9 +29,16 @@ import {trigger_always} from "@crikey/stores-base";
  *
  * @param store store to debounce
  * @param delay_ms number of ms to delay changes by
- * @param default_value optional initial value. If none is provided, the initial value of `store` is used.
  */
-export function debounce<T>(store: Readable<T>, delay_ms: number, default_value?: T) : Readable<T> {
+export function debounce<T>(
+    store: Readable<T>,
+    delay_ms: number
+) : Readable<T>;
+
+export function debounce<T>(
+    store: Readable<T>,
+    delay_ms: number
+) : Readable<T> {
     let initialised = arguments.length > 2;
 
     return derive(
@@ -54,6 +61,6 @@ export function debounce<T>(store: Readable<T>, delay_ms: number, default_value?
                 clearTimeout(timeout_id);
             }
         },
-        default_value
+        <T>undefined!
     );
 }
