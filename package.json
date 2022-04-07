@@ -4,7 +4,8 @@
   "description": "Mono repo for stores libraries",
   "packageManager": "pnpm",
   "engines": {
-    "pnpm": ">=6"
+    "node": ">=14.0.0",
+    "pnpm": ">=6.0.0"
   },
   "devDependencies": {
     "@knodes/typedoc-plugin-code-blocks": "^0.22.3",

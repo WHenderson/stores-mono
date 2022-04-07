@@ -2,6 +2,11 @@
   "name": "@crikey/stores-base",
   "version": "1.0.0",
   "description": "",
+  "packageManager": "pnpm",
+  "engines": {
+    "node": ">=14.0.0",
+    "pnpm": ">=6.0.0"
+  },
   "main": "src/index",
   "files": [
     "dist",
