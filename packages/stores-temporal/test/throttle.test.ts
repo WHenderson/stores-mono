@@ -19,28 +19,27 @@ it('should trigger no more than once per period', async () => {
     const watch = fn();
     throttled.subscribe(watch);
 
-    await duration(100);
+    await duration(10);
     trigger.set(1);
-    await duration(100);
+    await duration(10);
     trigger.set(2);
-    await duration(100);
+    await duration(10);
     trigger.set(3);
 
-    await duration(500);
+    await duration(600);
 
-    await duration(100);
+    await duration(10);
     trigger.set(4);
-    await duration(100);
+    await duration(10);
     trigger.set(5);
-    await duration(100);
+    await duration(10);
     trigger.set(6);
 
-    await duration(500);
+    await duration(600);
 
     expect(watch.mock.calls).to.deep.equal([
         [0],
         [3],
-        [4],
         [6]
     ]);
 });

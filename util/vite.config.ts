@@ -19,7 +19,8 @@ export default defineConfig({
     },
     test: {
         coverage: {
-            reportsDirectory: "build/coverage"
+            reportsDirectory: "build/coverage",
+            reporter: ["json", "html"]
         }
     }
 });

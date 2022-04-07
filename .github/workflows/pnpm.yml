@@ -18,6 +18,7 @@ jobs:
       matrix:
         node-version: [14.x, 16.x]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+      fail-fast: false
 
     steps:
       - uses: actions/checkout@v3
@@ -43,11 +44,23 @@ jobs:
             - recursive: true
               args: [--frozen-lockfile, --strict-peer-dependencies]
 
-      - name: Test tsc
+      - name: Test using tsc
         run: pnpm run test:tsc
 
-      - name: Test vitest with coverage
+      - name: Test using vitest
         run: pnpm run coverage
+
+      - name: Build coverage
+        run: pnpm run coverage:per-package
+
+      - name: Remove temp files getting in the way
+        run: rm -rf ./packages/*/build/coverage/tmp
+
+      - name: Upload coverage reports to Codecov with GitHub Action
+        uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: true
 
       - name: Build
         run: pnpm run build
