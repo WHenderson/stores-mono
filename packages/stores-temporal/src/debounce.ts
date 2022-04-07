@@ -1,5 +1,4 @@
-import {derive, Readable} from "@crikey/stores-base";
-import {trigger_always} from "@crikey/stores-base";
+import {derive, Readable, trigger_always} from "@crikey/stores-base";
 
 /**
  * Debounce changes from `store`.

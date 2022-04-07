@@ -33,11 +33,11 @@
     "clean": "pnpm -r --filter ./packages run clean",
     "clean:modules": "rimraf \"./packages/*/node_modules\" && rimraf node_modules",
     "test": "vitest run",
-    "debug": "vitest run --no-threads --no-isolate",
-    "coverage": "vitest run --coverage",
     "test:watch": "vitest",
     "test:tsc": "tsc --noEmit",
     "test:tsc:watch": "tsc --noEmit --watch",
+    "debug": "vitest run --no-threads --no-isolate",
+    "coverage": "vitest run --coverage",
     "coverage:watch": "vitest --coverage",
     "publish:packages": "pnpm -r --filter ./packages publish --no-git-checks"
   },

@@ -1,6 +1,6 @@
 module.exports = {
     name: '@crikey/stores-mono',
-    out: 'docs',
+    out: 'build/docs',
     entryPointStrategy: 'packages',
     entryPoints: [
         'packages/*',

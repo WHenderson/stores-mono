@@ -7,14 +7,12 @@
 # Mono Repo
 /node_modules
 /dist
-/coverage
-/docs
+/build
 /.pnpm-debug.log
 
 # Packages
 /packages/*/node_modules
 /packages/*/dist
-/packages/*/coverage
-/packages/*/docs
+/packages/*/build
 /packages/*/.pnpm-debug.log
 

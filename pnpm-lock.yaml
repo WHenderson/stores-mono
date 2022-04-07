@@ -134,11 +134,9 @@ importers:
     specifiers:
       '@crikey/stores-base': workspace:^1.0.0
       '@crikey/stores-rxjs': workspace:^1.0.0
-      rxjs: ^7.5.5
     devDependencies:
       '@crikey/stores-base': link:../stores-base
       '@crikey/stores-rxjs': link:../stores-rxjs
-      rxjs: 7.5.5
 
 packages:
 
