@@ -2,6 +2,10 @@
   "name": "stores-mono",
   "version": "1.0.0",
   "description": "Mono repo for stores libraries",
+  "packageManager": "pnpm",
+  "engines": {
+    "pnpm": ">=6"
+  },
   "devDependencies": {
     "@knodes/typedoc-plugin-code-blocks": "^0.22.3",
     "@knodes/typedoc-plugin-monorepo-readmes": "^0.22.3",
