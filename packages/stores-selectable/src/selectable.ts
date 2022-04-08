@@ -33,7 +33,7 @@ export interface SelectableOptions<T, P> {
     trigger: Trigger<any>;
 }
 
-const default_options: SelectableOptions<any, PropertyKey> = {
+const default_options: SelectableOptions<unknown, PropertyKey> = {
     traverse_get,
     traverse_update,
     traverse_delete,

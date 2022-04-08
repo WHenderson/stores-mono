@@ -16,10 +16,10 @@
 export function traverse_update<T,U>(
     root: T,
     path: readonly PropertyKey[],
-    update: (old_value: any) => U // returns new value
+    update: (old_value: unknown) => U // returns new value
 ): T {
     if (path.length === 0)
-        return <T><any>update(root);
+        return <T><unknown>update(root);
 
     if (root === undefined) {
         const segment = path[0];

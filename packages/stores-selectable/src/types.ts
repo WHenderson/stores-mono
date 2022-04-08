@@ -8,11 +8,11 @@ import {Readable, Writable} from "@crikey/stores-base";
  * {@link Writable} stores are additionally extended with {@link SelectableDelete} if their value can be set to
  * `undefined`.
  */
-export type Selectable<T, S extends Readable<any>, P> =
+export type Selectable<T, S extends Readable<unknown>, P> =
     S &
     SelectablePath<P> &
     (
-        S extends Writable<any>
+        S extends Writable<unknown>
         ? (
             SelectableSelect<T, Writable<T>, P> &
             (undefined extends T ? SelectableDelete : {})
@@ -20,8 +20,8 @@ export type Selectable<T, S extends Readable<any>, P> =
         : SelectableSelect<T, Readable<T>, P>
     );
 
-export type ReadOrWrite<T, S extends Readable<any>> = (
-    S extends Writable<any>
+export type ReadOrWrite<T, S extends Readable<unknown>> = (
+    S extends Writable<unknown>
     ? Writable<T>
     : Readable<T>
 );
@@ -39,7 +39,7 @@ export interface SelectableSelect<T, S extends Readable<T>, P> {
      * the source store.
      * @param property member/element to select from the store
      */
-    select<D = any>(this: void, property: P): Selectable<D, ReadOrWrite<D,S>, P>;
+    select<D = unknown>(this: void, property: P): Selectable<D, ReadOrWrite<D,S>, P>;
 
     /**
      * Select child element/member based on the specified path and wrap it in a Writable or Readable store depending on
@@ -48,7 +48,7 @@ export interface SelectableSelect<T, S extends Readable<T>, P> {
      * @param relative if provided, path is relative to the current path minus the specified number of segments
      * otherwise it is absolute to the root store value
      */
-    select<D = any>(this: void, path: P[], relative?: number | undefined): Selectable<D, ReadOrWrite<D,S>, P>;
+    select<D = unknown>(this: void, path: P[], relative?: number | undefined): Selectable<D, ReadOrWrite<D,S>, P>;
 }
 
 export interface SelectableDelete {
@@ -66,7 +66,7 @@ export interface SelectablePath<P> {
 }
 
 /** Callback used to traverse root using path and return the final node */
-export type TraverseGet<T, P> = (root: T, path: readonly P[]) => any;
+export type TraverseGet<T, P> = (root: T, path: readonly P[]) => unknown;
 
 /** Callback used to traverse root using path and update the final node using a callback */
 export type TraverseUpdate<T, P> = <U>(root: T, path: readonly P[], update: (old_value: any) => U) => T;
