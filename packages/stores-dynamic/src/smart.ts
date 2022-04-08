@@ -3,6 +3,9 @@ import {ComplexSet, create_pending, noop, readable, Trigger, Unsubscriber} from 
 import {ComplexResolveDynamic, DeriveFn} from "./dynamic";
 import {Updater} from "@crikey/stores-base/src";
 
+export type ResolvedInputs = [DynamicResolved<unknown>, ...DynamicResolved<unknown>[]] | Array<DynamicResolved<unknown>>; // Prioritise tuple type
+export type DynamicInputs = [Dynamic<unknown>, ...Dynamic<unknown>[]] | Array<Dynamic<unknown>>; // Prioritise tuple type
+
 export type StoresValues<A> =
     { [K in keyof A]: A[K] extends DynamicReadable<infer U> ? DynamicResolved<U> : A[K] };
 
@@ -28,73 +31,40 @@ export function smart<R>(
     initial_value: DynamicResolved<R>
 ) : Dynamic<R>;
 
-export function smart<A extends [DynamicResolved<any>, ...DynamicResolved<any>[]], R>(
+export function smart<A extends ResolvedInputs, R>(
     trigger: Trigger<DynamicResolved<R>>,
     args: A,
     calc: DeriveFn<A, DynamicResolved<R>, ComplexResolveResolved, never>,
     initial_value?: DynamicResolved<R>
 ) : DynamicResolved<R>;
 
-export function smart<A extends [Dynamic<any>, ...Dynamic<any>[]], R>(
+export function smart<A extends DynamicInputs, R>(
     trigger: Trigger<DynamicResolved<R>>,
     args: A,
     calc: DeriveFn<A, Dynamic<R>, ComplexResolveDynamic, never>
 ) : Dynamic<R | undefined>;
 
-export function smart<A extends [Dynamic<any>, ...Dynamic<any>[]], R>(
+export function smart<A extends DynamicInputs, R>(
     trigger: Trigger<DynamicResolved<R>>,
     args: A,
     calc: DeriveFn<A, Dynamic<R>, ComplexResolveDynamic, never>,
     initial_value: DynamicResolved<R>
 ) : Dynamic<R>;
 
-export function smart<A extends [Dynamic<any>, ...Dynamic<any>[]], R>(
+export function smart<A extends DynamicInputs, R>(
     trigger: Trigger<DynamicResolved<R>>,
     args: A,
     calc: DeriveFn<A, Dynamic<R>, ComplexResolveDynamic, ComplexSet<R>>
 ) : Dynamic<R | undefined>;
 
-export function smart<A extends [Dynamic<any>, ...Dynamic<any>[]], R>(
+export function smart<A extends DynamicInputs, R>(
     trigger: Trigger<DynamicResolved<R>>,
     args: A,
     calc: DeriveFn<A, Dynamic<R>, ComplexResolveDynamic, ComplexSet<R>>,
     initial_value: DynamicResolved<R>
 ) : Dynamic<R>;
 
-export function smart<A extends DynamicResolved<any>[], R>(
-    trigger: Trigger<DynamicResolved<R>>,
-    args: A,
-    calc: DeriveFn<A, DynamicResolved<R>, ComplexResolveResolved, never>,
-    initial_value?: DynamicResolved<R>
-) : DynamicResolved<R>;
-
-export function smart<A extends Dynamic<any>[], R>(
-    trigger: Trigger<DynamicResolved<R>>,
-    args: A,
-    calc: DeriveFn<A, Dynamic<R>, ComplexResolveDynamic, never>
-) : Dynamic<R | undefined>;
-
-export function smart<A extends Dynamic<any>[], R>(
-    trigger: Trigger<DynamicResolved<R>>,
-    args: A,
-    calc: DeriveFn<A, Dynamic<R>, ComplexResolveDynamic, never>,
-    initial_value: DynamicResolved<R>
-) : Dynamic<R>;
-
-export function smart<A extends Dynamic<any>[], R>(
-    trigger: Trigger<DynamicResolved<R>>,
-    args: A,
-    calc: DeriveFn<A, Dynamic<R>, ComplexResolveDynamic, ComplexSet<R>>
-) : Dynamic<R | undefined>;
-
-export function smart<A extends Dynamic<any>[], R>(
-    trigger: Trigger<DynamicResolved<R>>,
-    args: A,
-    calc: DeriveFn<A, Dynamic<R>, ComplexResolveDynamic, ComplexSet<R>>,
-    initial_value: DynamicResolved<R>
-) : Dynamic<R>;
-
-export function smart<A extends Dynamic<any>[], R>(
+export function smart<A extends DynamicInputs, R>(
     trigger: Trigger<DynamicResolved<R>>,
     args_or_calc: A | Function,
     maybe_initial_value_or_calc?: DynamicResolved<R> | Function,

@@ -5,7 +5,7 @@ import {ComplexSet, Updater} from "@crikey/stores-base/src";
 export type ResolveDynamic = <V>(arg: Dynamic<V>) => V;
 export type ComplexResolveDynamic = ResolveDynamic & { resolve: ResolveDynamic };
 
-export type Inputs = [any, ...any[]] | Array<any>; // Prioritise tuple type
+export type Inputs = [unknown, ...unknown[]] | Array<unknown>; // Prioritise tuple type
 
 export type DeriveFn<A, R, SYNC, ASYNC> =
     [A] extends [never] ? (
@@ -35,28 +35,14 @@ export function dynamic<R>(
     initial_value?: DynamicResolved<R>
 ) : DynamicReadable<R>;
 
-export function dynamic<A extends [any, ...any[]], R>(
+export function dynamic<A extends Inputs, R>(
     trigger: Trigger<Dynamic<R>>,
     args: A,
     calculate: DeriveFn<A, Dynamic<R>, ComplexResolveDynamic, never>,
     initial_value?: DynamicResolved<R>
 ) : DynamicReadable<R>;
 
-export function dynamic<A extends [any, ...any[]], R>(
-    trigger: Trigger<Dynamic<R>>,
-    args: A,
-    calculate: DeriveFn<A, Dynamic<R>, ComplexResolveDynamic, ComplexSet<DynamicResolved<R>>>,
-    initial_value?: DynamicResolved<R>
-) : DynamicReadable<R>;
-
-export function dynamic<A extends Array<any>, R>(
-    trigger: Trigger<Dynamic<R>>,
-    args: A,
-    calculate: DeriveFn<A, Dynamic<R>, ComplexResolveDynamic, never>,
-    initial_value?: DynamicResolved<R>
-) : DynamicReadable<R>;
-
-export function dynamic<A extends Array<any>, R>(
+export function dynamic<A extends Inputs, R>(
     trigger: Trigger<Dynamic<R>>,
     args: A,
     calculate: DeriveFn<A, Dynamic<R>, ComplexResolveDynamic, ComplexSet<DynamicResolved<R>>>,
@@ -80,7 +66,7 @@ export function dynamic<A extends Inputs, R>(
     const [args, calculator, initial_value] =
         (typeof args_or_calculator === 'function')
         ? [undefined, args_or_calculator, <DynamicResolved<R> | undefined>calculate_or_initial_value]
-        : [args_or_calculator!, <Function>calculate_or_initial_value, , maybe_initial_value];
+        : [args_or_calculator!, <Function>calculate_or_initial_value, maybe_initial_value];
 
     const is_async = args ? calculator.length > 2 : calculator.length > 1;
 
@@ -90,9 +76,9 @@ export function dynamic<A extends Inputs, R>(
         ({ set, update, invalidate, revalidate }) => {
             type Value = DynamicResolved<unknown>;
             type Subscription = [Unsubscriber, undefined | Value];
-            const subscriptions = new Map<DynamicReadable<any>, Subscription>();
-            const pending = new Set<DynamicReadable<any>>();
-            const used = new Set<DynamicReadable<any>>();
+            const subscriptions = new Map<DynamicReadable<unknown>, Subscription>();
+            const pending = new Set<DynamicReadable<unknown>>();
+            const used = new Set<DynamicReadable<unknown>>();
 
             let tracked_dependencies: DynamicDependents | undefined;
 

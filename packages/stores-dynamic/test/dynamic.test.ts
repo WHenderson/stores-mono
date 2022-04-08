@@ -1,9 +1,44 @@
 import {describe, expect, it} from 'vitest'
-import {dynamic, DynamicResolved, to_dynamic} from "../src";
+import {dynamic, DynamicResolved, DynamicValue, to_dynamic} from "../src";
 import {derive, writable} from "@crikey/stores-strict";
-import {get, trigger_strict_not_equal} from "@crikey/stores-base";
+import {constant, get, Readable, trigger_strict_not_equal} from "@crikey/stores-base";
+
+type ExactType<A,B> = [A] extends [B]
+    ? (
+        [B] extends [A]
+            ? true
+            : never
+        )
+    : never;
+
+function ts_assert<T extends boolean>(_condition: T) {
+}
 
 describe('static calculations', () => {
+    it('should correctly type resolved arguments', () => {
+        const a = dynamic(constant('a'));
+        const b = dynamic(constant(1));
+
+        const derived = dynamic(
+            trigger_strict_not_equal,
+            [a,b],
+            ([a,b], resolve) => {
+                ts_assert<ExactType<typeof a, Readable<DynamicValue<string>>>>(true);
+                ts_assert<ExactType<typeof b, Readable<DynamicValue<number>>>>(true);
+
+                const aa = resolve(a);
+                const bb = resolve(b);
+
+                ts_assert<ExactType<typeof aa, string>>(true);
+                ts_assert<ExactType<typeof bb, number>>(true);
+
+                return { value: aa + bb };
+            }
+        );
+
+        expect(get(derived)).to.have.ownProperty('value', 'a1');
+    });
+
     it('static result should resolve with static values', () => {
         const derived = dynamic(
             trigger_strict_not_equal,

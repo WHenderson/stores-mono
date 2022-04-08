@@ -1,5 +1,36 @@
+// noinspection JSMismatchedCollectionQueryUpdate
+
 import {expect, fn, it} from 'vitest'
-import {derive, get, readable, Set, trigger_strict_not_equal, writable} from "../src";
+import {constant, derive, get, readable, Set, trigger_strict_not_equal, writable} from "../src";
+
+type ExactType<A,B> = [A] extends [B]
+    ? (
+        [B] extends [A]
+        ? true
+        : never
+    )
+    : never;
+
+function ts_assert<T extends boolean>(_condition: T) {
+}
+
+it('should correctly type resolved arguments', () => {
+    const a = constant('a');
+    const b = constant(1);
+
+    const derived = derive(
+        trigger_strict_not_equal,
+        [a,b],
+        ([a,b]) => {
+            ts_assert<ExactType<typeof a, string>>(true);
+            ts_assert<ExactType<typeof b, number>>(true);
+
+            return a + b;
+        }
+    );
+
+    expect(get(derived)).toBe('a1');
+});
 
 it('should only trigger once all dependencies are ready', () => {
     // diamond dependency problem

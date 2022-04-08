@@ -4,7 +4,7 @@ import {noop} from "./noop";
 import {readable} from "./readable";
 
 /** One or more `Readable`s. */
-export type Stores = Readable<any> | [Readable<any>, ...Array<Readable<any>>] | Array<Readable<any>>;
+export type Stores = Readable<unknown> | [Readable<unknown>, ...Array<Readable<unknown>>] | Array<Readable<unknown>>;
 
 /** One or more values from `Readable` stores. */
 export type StoresValues<T> = T extends Readable<infer U> ? U :
@@ -98,8 +98,8 @@ export function derive<T>(
 ): Readable<T> {
     const single = !Array.isArray(stores);
     const stores_array = single
-        ? [stores as Readable<any>]
-        : stores as Array<Readable<any>>;
+        ? [stores as Readable<unknown>]
+        : stores as Array<Readable<unknown>>;
 
     const auto = fn.length < 2;
 
