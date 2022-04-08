@@ -10,14 +10,30 @@ on:
     branches: [ master, develop ]
 
 jobs:
-  build:
+  # Discover all mono repos
+  mono:
+    runs-on: ubuntu-latest
 
+    outputs:
+      repos: ${{ steps.set-repos.outputs.repos }}
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Find repos
+        id: set-repos
+        run: echo "::set-output name=repos::$(ls packages/*/package.json | jq -R -s -c 'scan("(?<=packages/)[^/]+(?=/)")' | jq -s -c)"
+
+  # Run tests for each repo
+  test:
+    needs: mono
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
         node-version: [14.x, 16.x]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+        repo: ${{ fromJson(needs.mono.outputs.repos) }}
       fail-fast: false
 
     steps:
@@ -45,25 +61,130 @@ jobs:
               args: [--frozen-lockfile, --strict-peer-dependencies]
 
       - name: Test using tsc
-        run: pnpm run test:tsc
+        run: pnpm -C packages/${{ matrix.repo }} run test:tsc
 
       - name: Test using vitest
-        run: pnpm run coverage
+        run: pnpm -C packages/${{ matrix.repo }} run test
 
-      - name: Build coverage
-        run: pnpm run coverage:per-package
+  # Run coverage for each repo and push it to CodeCov
+  coverage:
+    needs: [mono, test]
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [16.x]
+        repo: ${{ fromJson(needs.mono.outputs.repos) }}
+      fail-fast: false
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Cache pnpm modules
+        uses: actions/cache@v2
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2.1.0
+        with:
+          version: latest
+          run_install: |
+            - recursive: true
+              args: [--frozen-lockfile, --strict-peer-dependencies]
+
+      - name: Build coverage for ${{ matrix.repo }}
+        run: pnpm -C packages/${{ matrix.repo }} run coverage
 
       - name: Remove temp files getting in the way
-        run: rm -rf ./packages/*/build/coverage/tmp
+        run: rm -rf packages/${{ matrix.repo }}/build/coverage/tmp
 
       - name: Upload coverage reports to Codecov with GitHub Action
         uses: codecov/codecov-action@v2
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
+          files: packages/${{ matrix.repo }}/build/coverage/coverage-final.json
+          flags: ${{ matrix.repo }}
           fail_ci_if_error: true
+
+  # Build each package using a global script
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [16.x]
+      fail-fast: false
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Cache pnpm modules
+        uses: actions/cache@v2
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2.1.0
+        with:
+          version: latest
+          run_install: |
+            - recursive: true
+              args: [--frozen-lockfile, --strict-peer-dependencies]
 
       - name: Build
         run: pnpm run build
+
+  # Build documentation
+  build-docs:
+    needs: test
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [16.x]
+      fail-fast: false
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Cache pnpm modules
+        uses: actions/cache@v2
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2.1.0
+        with:
+          version: latest
+          # Note that for docs we only need the workspace dependencies, don't need to worry about repo dependencies
+          run_install: |
+            - args: [--frozen-lockfile, --strict-peer-dependencies]
 
       - name: Build documentation
         run: pnpm run build:docs

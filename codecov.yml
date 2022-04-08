@@ -1,0 +1,8 @@
+flag_management:
+  default_rules:
+    carryforward: false
+    statuses:
+      - name_prefix: stores-
+        type: project
+        target: auto
+        threshold: 1%
