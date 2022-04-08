@@ -35,6 +35,13 @@ export function dynamic<R>(
     initial_value?: DynamicResolved<R>
 ) : DynamicReadable<R>;
 
+/**
+ * docs a
+ * @param trigger
+ * @param args
+ * @param calculate
+ * @param initial_value
+ */
 export function dynamic<A extends Inputs, R>(
     trigger: Trigger<Dynamic<R>>,
     args: A,
@@ -42,6 +49,13 @@ export function dynamic<A extends Inputs, R>(
     initial_value?: DynamicResolved<R>
 ) : DynamicReadable<R>;
 
+/**
+ * docs b
+ * @param trigger
+ * @param args
+ * @param calculate
+ * @param initial_value
+ */
 export function dynamic<A extends Inputs, R>(
     trigger: Trigger<Dynamic<R>>,
     args: A,
