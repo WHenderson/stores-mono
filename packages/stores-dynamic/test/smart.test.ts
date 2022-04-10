@@ -36,7 +36,7 @@ it('should correctly type resolved arguments', () => {
         }
     );
 
-    expect(derived).to.deep.equal({ value: 'a1' });
+    expect(derived).to.deep.equal({ value: 'a1', is_static: true });
 });
 
 it('should resolve with constant inputs', () => {
@@ -51,7 +51,7 @@ it('should resolve with constant inputs', () => {
         }
     );
 
-    expect(store).to.deep.equal({ value: 3 });
+    expect(store).to.deep.equal({ value: 3, is_static: true });
 });
 
 it('should resolve dynamic with dynamic result', () => {

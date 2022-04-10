@@ -72,7 +72,7 @@ export function smart<A extends DynamicInputs, R>(
 ) : Dynamic<R> {
     const [args, calc, initial_value] = typeof args_or_calc === 'function'
     ? [undefined, args_or_calc, <DynamicResolved<R>>maybe_initial_value_or_calc]
-    : [<A>args_or_calc, <Function>maybe_initial_value_or_calc, maybe_initial_value!];
+    : [args_or_calc, <Function>maybe_initial_value_or_calc, maybe_initial_value!];
 
     const is_async = args ? calc.length > 2 : calc.length > 1;
 
@@ -93,18 +93,22 @@ export function smart<A extends DynamicInputs, R>(
         );
 
         try {
-            return args
-            ? calc(args, complex_resolve)
-            : calc(complex_resolve);
+            return Object.assign(
+                {},
+                args
+                ? calc(args, complex_resolve)
+                : calc(complex_resolve),
+                { is_static: true }
+            );
         }
         catch (ex) {
-            return { error: ex };
+            return { error: ex, is_static: true };
         }
     }
 
     return readable<DynamicResolved<R>>(
         trigger,
-        initial_value!,
+        initial_value,
         ({ set, update, invalidate, revalidate }) => {
             const stores_map = new Map<DynamicReadable<unknown>, number>();
             const used = new Set<DynamicReadable<unknown>>();
@@ -163,7 +167,7 @@ export function smart<A extends DynamicInputs, R>(
                     return <V>resolve_static(values[index]);
                 }
 
-                return <V>resolve_static(arg);
+                return resolve_static(arg);
             }
 
             const complex_resolve = Object.assign(
@@ -186,7 +190,7 @@ export function smart<A extends DynamicInputs, R>(
             const local_set = (value: DynamicResolved<R>) => {
                 const dependencies = store_dependencies();
 
-                set(Object.assign({}, value, { dependencies }));
+                set(Object.assign({}, value, { dependencies, is_static: false }));
             }
 
             const local_update = (updater: Updater<DynamicResolved<R>>) => {
@@ -194,7 +198,7 @@ export function smart<A extends DynamicInputs, R>(
 
                 update(value => {
                     try {
-                        return Object.assign({}, updater(value), { dependencies });
+                        return Object.assign({}, updater(value), { dependencies, is_static: false });
                     }
                     catch (error) {
                         return { error, dependencies }
@@ -259,25 +263,31 @@ export function smart<A extends DynamicInputs, R>(
 
                 used.clear();
 
+                const is_static = !is_async
+                    && (!dependencies || [...dependencies.values()].every(store => {
+                        const index = stores_map.get(store)!;
+                        return values[index]?.is_static;
+                    }));
+
                 if (result === undefined) {
                     if (!is_async)
-                        set({ error: new Error('invalid result type'), dependencies });
+                        set({ error: new Error('invalid result type'), dependencies, is_static });
                 }
                 else
                 if (typeof result === 'function') {
                     if (is_async)
                         cleanup = result;
                     else
-                        set({ error: new Error('invalid result type'), dependencies });
+                        set({ error: new Error('invalid result type'), dependencies, is_static });
                 }
                 else
                 if ('error' in result || 'value' in result) {
-                    set(Object.assign({}, result, { dependencies }));
+                    set(Object.assign({}, result, { dependencies, is_static }));
                 }
                 else {
                     cleanup = result.subscribe(
                         (value) => {
-                            set(Object.assign({}, value, { dependencies }));
+                            set(Object.assign({}, value, { dependencies, is_static: false }));
                         },
                         invalidate,
                         revalidate
