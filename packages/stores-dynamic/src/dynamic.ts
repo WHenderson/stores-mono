@@ -1,6 +1,6 @@
 import {Dynamic, DynamicDependents, DynamicReadable, DynamicResolved, DynamicValue} from "./types";
-import {derive, noop, readable, Readable, Trigger, trigger_always, Unsubscriber} from "@crikey/stores-base";
-import {ComplexSet, Updater} from "@crikey/stores-base/src";
+import {noop, readable, Readable, Trigger, trigger_always, Unsubscriber} from "@crikey/stores-base";
+import {ComplexSet, transform, Updater} from "@crikey/stores-base/src";
 
 export type ResolveDynamic = <V>(arg: Dynamic<V>) => V;
 export type ComplexResolveDynamic = ResolveDynamic & { resolve: ResolveDynamic };
@@ -18,49 +18,140 @@ export type DeriveFn<A, R, SYNC, ASYNC> =
         : ((args: A, resolve: SYNC, set: ASYNC) => R | Unsubscriber | void)
     );
 
+/**
+ * Transforms a regular store into a dynamic store by transforming its value into a @{link DynamicValue}
+ *
+ * See other signatures for alternate semantics
+ *
+ * @param store the input store to transform
+ */
 export function dynamic<R>(
     store: Readable<R>
 ): Readable<DynamicValue<R>>;
 
 
+/**
+ * Derives a store via a calculation callback. Calculations can be dependent on any number of stores
+ * and will be recalculated as needed,
+ * Note: Whilst an array of arguments can be provided to be passed to the calculation, store dependencies need
+ * not be included in this list.
+ * The only requirement is that they be resolved via the `resolve` function passed to the `calculate` callback.
+ *
+ * Equivalent of {@link derive}, but store dependencies are determined dynamically as needed.
+ *
+ * For asynchronous usage, see alternate signatures.
+ *
+ * @param trigger callback used to determine if subscribers should be called
+ * @param calculate callback used to calculate the resulting store value
+ */
 export function dynamic<R>(
     trigger: Trigger<Dynamic<R>>,
-    calculate: DeriveFn<never, Dynamic<R>, ComplexResolveDynamic, never>,
-    initial_value?: DynamicResolved<R>
-) : DynamicReadable<R>;
-
-export function dynamic<R>(
-    trigger: Trigger<Dynamic<R>>,
-    calculate: DeriveFn<never, Dynamic<R>, ComplexResolveDynamic, ComplexSet<DynamicResolved<R>>>,
-    initial_value?: DynamicResolved<R>
+    calculate: DeriveFn<never, Dynamic<R>, ComplexResolveDynamic, never>
 ) : DynamicReadable<R>;
 
 /**
- * docs a
- * @param trigger
- * @param args
- * @param calculate
- * @param initial_value
+ * Derives a store via a calculation callback. Calculations can be dependent on any number of stores
+ * and will be recalculated as needed,
+ * Note: Whilst an array of arguments can be provided to be passed to the calculation, store dependencies need
+ * not be included in this list.
+ * The only requirement is that they be resolved via the `resolve` function passed to the `calculate` callback.
+ *
+ * Equivalent of {@link derive}, but store dependencies are determined dynamically as needed.
+ *
+ * For synchronous usage, see alternate signatures.
+ *
+ * @param trigger callback used to determine if subscribers should be called
+ * @param calculate callback used to calculate the resulting store value
+ */
+export function dynamic<R>(
+    trigger: Trigger<Dynamic<R>>,
+    calculate: DeriveFn<never, Dynamic<R>, ComplexResolveDynamic, ComplexSet<DynamicResolved<R | undefined>>>
+) : DynamicReadable<R | undefined>;
+
+/**
+ * Derives a store via a calculation callback. Calculations can be dependent on any number of stores
+ * and will be recalculated as needed,
+ * Note: Whilst an array of arguments can be provided to be passed to the calculation, store dependencies need
+ * not be included in this list.
+ * The only requirement is that they be resolved via the `resolve` function passed to the `calculate` callback.
+ *
+ * Equivalent of {@link derive}, but store dependencies are determined dynamically as needed.
+ *
+ * For synchronous usage, see alternate signatures.
+ *
+ * @param trigger callback used to determine if subscribers should be called
+ * @param calculate callback used to calculate the resulting store value
+ * @param initial_value initial value
+ */
+export function dynamic<R>(
+    trigger: Trigger<Dynamic<R>>,
+    calculate: DeriveFn<never, Dynamic<R>, ComplexResolveDynamic, ComplexSet<DynamicResolved<R | undefined>>>,
+    initial_value: DynamicResolved<R>
+) : DynamicReadable<R>;
+
+/**
+ * Derives a store via a calculation callback. Calculations can be dependent on any number of stores
+ * and will be recalculated as needed,
+ * Note: Whilst an array of arguments can be provided to be passed to the calculation, store dependencies need
+ * not be included in this list.
+ * The only requirement is that they be resolved via the `resolve` function passed to the `calculate` callback.
+ *
+ * Equivalent of {@link derive}, but store dependencies are determined dynamically as needed.
+ *
+ * For asynchronous usage, see alternate signatures.
+ *
+ * @param trigger callback used to determine if subscribers should be called
+ * @param args array of arguments to be passed to the callback unchanged
+ * @param calculate callback used to calculate the resulting store value
  */
 export function dynamic<A extends Inputs, R>(
     trigger: Trigger<Dynamic<R>>,
     args: A,
-    calculate: DeriveFn<A, Dynamic<R>, ComplexResolveDynamic, never>,
-    initial_value?: DynamicResolved<R>
+    calculate: DeriveFn<A, Dynamic<R>, ComplexResolveDynamic, never>
 ) : DynamicReadable<R>;
 
 /**
- * docs b
- * @param trigger
- * @param args
- * @param calculate
- * @param initial_value
+ * Derives a store via a calculation callback. Calculations can be dependent on any number of stores
+ * and will be recalculated as needed,
+ * Note: Whilst an array of arguments can be provided to be passed to the calculation, store dependencies need
+ * not be included in this list.
+ * The only requirement is that they be resolved via the `resolve` function passed to the `calculate` callback.
+ *
+ * Equivalent of {@link derive}, but store dependencies are determined dynamically as needed.
+ *
+ * For synchronous usage, see alternate signatures.
+ *
+ * @param trigger callback used to determine if subscribers should be called
+ * @param args array of arguments to be passed to the callback unchanged
+ * @param calculate callback used to calculate the resulting store value
+ */
+export function dynamic<A extends Inputs, R>(
+    trigger: Trigger<Dynamic<R>>,
+    args: A,
+    calculate: DeriveFn<A, Dynamic<R>, ComplexResolveDynamic, ComplexSet<DynamicResolved<R | undefined>>>
+) : DynamicReadable<R | undefined>;
+
+/**
+ * Derives a store via a calculation callback. Calculations can be dependent on any number of stores
+ * and will be recalculated as needed,
+ * Note: Whilst an array of arguments can be provided to be passed to the calculation, store dependencies need
+ * not be included in this list.
+ * The only requirement is that they be resolved via the `resolve` function passed to the `calculate` callback.
+ *
+ * Equivalent of {@link derive}, but store dependencies are determined dynamically as needed.
+ *
+ * For synchronous usage, see alternate signatures.
+ *
+ * @param trigger callback used to determine if subscribers should be called
+ * @param args array of arguments to be passed to the callback unchanged
+ * @param calculate callback used to calculate the resulting store value
+ * @param initial_value initial value
  */
 export function dynamic<A extends Inputs, R>(
     trigger: Trigger<Dynamic<R>>,
     args: A,
     calculate: DeriveFn<A, Dynamic<R>, ComplexResolveDynamic, ComplexSet<DynamicResolved<R>>>,
-    initial_value?: DynamicResolved<R>
+    initial_value: DynamicResolved<R>
 ) : DynamicReadable<R>;
 
 export function dynamic<A extends Inputs, R>(
@@ -70,9 +161,11 @@ export function dynamic<A extends Inputs, R>(
     maybe_initial_value?: DynamicResolved<R>)
 : DynamicReadable<R> {
     if (typeof trigger_or_store !== 'function') {
-        return derive(trigger_always, trigger_or_store, value => {
-            return { value };
-        });
+        return transform<R, DynamicValue<R>>(
+            trigger_always,
+            trigger_or_store,
+            value => ({ value })
+        );
     }
 
     const trigger = trigger_or_store;
