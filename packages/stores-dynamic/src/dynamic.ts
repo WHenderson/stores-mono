@@ -344,25 +344,31 @@ export function dynamic<A extends Inputs, R>(
 
                 used.clear();
 
+                const is_static = !is_async
+                    && (!dependencies || [...dependencies.values()].every(store => {
+                        const [,value] = subscriptions.get(store)!;
+                        return value?.is_static;
+                    }));
+
                 if (result === undefined) {
                     if (!is_async)
-                        set({ error: new Error('invalid result type'), dependencies });
+                        set({ error: new Error('invalid result type'), dependencies, is_static });
                 }
                 else
                 if (typeof result === 'function') {
                     if (is_async)
                         cleanup = result;
                     else
-                        set({ error: new Error('invalid result type'), dependencies });
+                        set({ error: new Error('invalid result type'), dependencies, is_static });
                 }
                 else
                 if ('error' in result || 'value' in result) {
-                    set(Object.assign({}, result, { dependencies }));
+                    set(Object.assign({}, result, { dependencies, is_static }));
                 }
                 else {
                     cleanup = result.subscribe(
                         (value) => {
-                            set(Object.assign({}, value, { dependencies }));
+                            set(Object.assign({}, value, { dependencies, is_static }));
                         },
                         invalidate,
                         revalidate
