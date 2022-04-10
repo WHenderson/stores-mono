@@ -12,7 +12,7 @@ export type Selectable<T, S extends Readable<unknown>, P> =
     S &
     SelectablePath<P> &
     (
-        S extends Writable<unknown>
+        S extends Writable<any>
         ? (
             SelectableSelect<T, Writable<T>, P> &
             (undefined extends T ? SelectableDelete : {})
@@ -21,7 +21,7 @@ export type Selectable<T, S extends Readable<unknown>, P> =
     );
 
 export type ReadOrWrite<T, S extends Readable<unknown>> = (
-    S extends Writable<unknown>
+    S extends Writable<any>
     ? Writable<T>
     : Readable<T>
 );
