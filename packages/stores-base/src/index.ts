@@ -11,3 +11,4 @@ export * from './trigger-always';
 export * from './trigger-strict-not-equal';
 export * from './trigger-safe-not-equal';
 export * from './is-writable';
+export * from './transform';

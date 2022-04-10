@@ -8,7 +8,6 @@
  * @param a new value
  * @param b current value
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function trigger_safe_not_equal(_initial: boolean, a: any, b: any): boolean {
+export function trigger_safe_not_equal<T>(_initial: boolean, a: T, b: T): boolean {
     return a != a ? b == b : a !== b || ((!!a && typeof a === 'object') || typeof a === 'function');
 }

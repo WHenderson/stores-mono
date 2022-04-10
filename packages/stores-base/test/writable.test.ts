@@ -1,8 +1,8 @@
 import { expect, it } from 'vitest'
-import {get, writable} from "../src";
+import {get, trigger_always, writable} from "../src";
 
 it('should update with each change', () => {
-    const store = writable(() => true, 1);
+    const store = writable(trigger_always, 1);
     let count = 0;
     store.subscribe(_ => ++count);
 
