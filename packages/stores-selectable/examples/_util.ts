@@ -1,11 +1,11 @@
 import {fn, SpyInstanceFn} from "vitest";
 
 export function shim_setTimeout() {
-    return (callback: Function, ms?: number) => setTimeout(callback, (ms ?? 0) / 10);
+    return (callback: Function, ms?: number): number  => setTimeout(callback, (ms ?? 0) / 10);
 }
 
 export function shim_setInterval() {
-    return (callback: Function, ms?: number) => setInterval(callback, (ms ?? 0) / 10);
+    return (callback: Function, ms?: number): number  => setInterval(callback, (ms ?? 0) / 10);
 }
 
 export interface Console {
