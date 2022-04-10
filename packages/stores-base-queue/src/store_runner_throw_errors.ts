@@ -6,6 +6,6 @@ import {Action} from "./types";
  * @category Predefined Store Runners
  * @param action
  */
-export function store_runner_throw_errors(action: Action) {
+export function store_runner_throw_errors(action: Action): void  {
     action();
 }
