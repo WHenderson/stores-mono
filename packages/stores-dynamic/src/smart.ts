@@ -23,13 +23,13 @@ export function smart<R>(
     trigger: Trigger<DynamicResolved<R>>,
     calc: DeriveFn<never, Dynamic<R>, ComplexResolveDynamic, ComplexSet<R>>,
     initial_value?: DynamicResolved<R>
-) : Dynamic<R | undefined>;
+) : DynamicReadable<R | undefined>;
 
 export function smart<R>(
     trigger: Trigger<DynamicResolved<R>>,
     calc: DeriveFn<never, Dynamic<R>, ComplexResolveResolved, ComplexSet<R>>,
     initial_value: DynamicResolved<R>
-) : Dynamic<R>;
+) : DynamicReadable<R>;
 
 export function smart<A extends ResolvedInputs, R>(
     trigger: Trigger<DynamicResolved<R>>,
@@ -55,14 +55,14 @@ export function smart<A extends DynamicInputs, R>(
     trigger: Trigger<DynamicResolved<R>>,
     args: A,
     calc: DeriveFn<A, Dynamic<R>, ComplexResolveDynamic, ComplexSet<R>>
-) : Dynamic<R | undefined>;
+) : DynamicReadable<R | undefined>;
 
 export function smart<A extends DynamicInputs, R>(
     trigger: Trigger<DynamicResolved<R>>,
     args: A,
     calc: DeriveFn<A, Dynamic<R>, ComplexResolveDynamic, ComplexSet<R>>,
     initial_value: DynamicResolved<R>
-) : Dynamic<R>;
+) : DynamicReadable<R>;
 
 export function smart<A extends DynamicInputs, R>(
     trigger: Trigger<DynamicResolved<R>>,
