@@ -1,5 +1,5 @@
 import {expect, it, vi} from 'vitest'
-import {get, trigger_always, writable} from "../src";
+import {get, trigger_always, writable, Action} from "../src";
 import {
     get_store_runner,
     set_store_runner,
@@ -24,7 +24,7 @@ it('should update with each change', () => {
     expect(count).toBe(3);
 });
 
-const run = (runner: StoreRunner, action: () => void) => {
+const run = (runner: StoreRunner, action: Action) => {
     const originalRunner = set_store_runner(runner);
     expect(get_store_runner()).to.equal(runner);
     try {

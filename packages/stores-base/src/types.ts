@@ -1,8 +1,8 @@
 /** Callback to inform of a value updates. */
 export type Subscriber<T> = (value: T) => void;
 
-import { Action } from '@crikey/stores-base-queue';
-export { Action } from '@crikey/stores-base-queue';
+/** Generic action. */
+export type Action = () => void;
 
 /** Unsubscribes from value updates. */
 export type Unsubscriber = Action;
