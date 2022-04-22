@@ -1,5 +1,5 @@
 import {trigger_strict_not_equal, writable} from "@crikey/stores-base";
-import {expect, fn, it} from "vitest";
+import {expect, vi, it} from "vitest";
 import {debounce} from '../src';
 
 function duration(ms: number): Promise<void> {
@@ -16,7 +16,7 @@ it('should discard high frequency updates', async () => {
         50
     );
 
-    const watch = fn();
+    const watch = vi.fn();
     debounced.subscribe(watch);
 
     await duration(10);

@@ -1,10 +1,10 @@
-import { expect, it, fn } from 'vitest'
+import { expect, it, vi } from 'vitest'
 import {writable} from "../src";
 
 it('all updates on objects should trigger subscribers', () => {
     const value = {};
     const store = writable(value);
-    const watcher = fn();
+    const watcher = vi.fn();
     store.subscribe(watcher);
 
     expect(watcher).toHaveBeenCalledOnce();

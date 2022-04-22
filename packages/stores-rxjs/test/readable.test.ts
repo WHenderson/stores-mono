@@ -1,4 +1,4 @@
-import {expect, fn, it} from 'vitest'
+import {expect, vi, it} from 'vitest'
 import {Observable} from "rxjs";
 import {readable} from "../src";
 
@@ -9,8 +9,8 @@ it('each fresh subscription should receive all constructor signals', () => {
         subscriber.next(2);
     });
     const store = readable(observable);
-    const watcher1 = fn();
-    const watcher2 = fn();
+    const watcher1 = vi.fn();
+    const watcher2 = vi.fn();
 
     store.subscribe(watcher1);
     store.subscribe(watcher2);
@@ -27,8 +27,8 @@ it('subscribers should initially receive the default value if there are no synch
         }, 0);
     });
     const store = readable(observable);
-    const watcher1 = fn();
-    const watcher2 = fn();
+    const watcher1 = vi.fn();
+    const watcher2 = vi.fn();
 
     store.subscribe(watcher1);
     store.subscribe(watcher2);

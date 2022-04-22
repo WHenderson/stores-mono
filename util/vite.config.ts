@@ -1,5 +1,5 @@
 /// <reference types="vitest" />
-import {defineConfig} from 'vite'
+import {defineConfig} from 'vitest/config'
 import rollupConfig from './rollup.config';
 
 export default defineConfig({

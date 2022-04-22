@@ -1,4 +1,4 @@
-import {expect, it, fn} from 'vitest'
+import {expect, it, vi} from 'vitest'
 import {derive, readable, writable} from "../src";
 import {get, Subscriber} from "@crikey/stores-base";
 
@@ -10,7 +10,7 @@ it('should only trigger once all dependencies are ready', () => {
     const rhs = derive(root, root => root * 100);
     const combined = derive([lhs, rhs], ([lhs, rhs]) => lhs + rhs);
 
-    const watch = fn();
+    const watch = vi.fn();
     combined.subscribe(watch);
 
     root.set(2);
@@ -29,7 +29,7 @@ it('should support async resolution', () => {
         set = set_;
     }, -1);
 
-    const watch = fn();
+    const watch = vi.fn();
     derived.subscribe(watch);
     expect(watch.mock.calls).to.deep.equal([[-1]])
 
@@ -39,7 +39,7 @@ it('should support async resolution', () => {
 });
 
 it('should run cleanup code', () => {
-    const watch = fn();
+    const watch = vi.fn();
     const store = derive(readable(1), (value, set: Subscriber<number>) => {
         set(value);
         return watch;

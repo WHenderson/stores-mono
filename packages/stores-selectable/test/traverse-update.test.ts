@@ -27,7 +27,7 @@ it('should create entire path', () => {
 });
 
 it('should update the existing value', () => {
-    expect(traverse_update(<any>{ a: 1 }, ['a'], old_value => old_value + 1)).to.deep.equal({ a: 2 });
-    expect(traverse_update(<any>[1], [0], old_value => old_value + 1)).to.deep.equal([2]);
+    expect(traverse_update(<any>{ a: 1 }, ['a'], old_value => <number>old_value + 1)).to.deep.equal({ a: 2 });
+    expect(traverse_update(<any>[1], [0], old_value => <number>old_value + 1)).to.deep.equal([2]);
 });
 

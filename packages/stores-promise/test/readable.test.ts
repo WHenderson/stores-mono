@@ -1,4 +1,4 @@
-import {expect, fn, it} from 'vitest'
+import {expect, vi, it} from 'vitest'
 import {derive, promise, readable, State} from "../src";
 import {get, trigger_strict_not_equal, writable} from "@crikey/stores-base";
 
@@ -115,7 +115,7 @@ it('should discard old promises', async () => {
         });
     })
 
-    const watch = fn();
+    const watch = vi.fn();
 
     derived.subscribe(watch);
 

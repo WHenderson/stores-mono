@@ -1,4 +1,4 @@
-import {fn, SpyInstanceFn} from "vitest";
+import {vi, SpyInstanceFn} from "vitest";
 
 export function shim_setTimeout() {
     return (callback: Function, ms?: number): number  => setTimeout(callback, (ms ?? 0) / 10);
@@ -16,8 +16,8 @@ export interface Console {
 
 export function shim_console(): Console {
     return {
-        log: fn(),
-        error: fn(),
+        log: vi.fn(),
+        error: vi.fn(),
         debug: console.debug
     }
 }

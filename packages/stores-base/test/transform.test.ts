@@ -1,4 +1,4 @@
-import {expect, fn, it} from "vitest";
+import {expect, vi, it} from "vitest";
 import {transform, trigger_always, trigger_strict_not_equal, writable} from "../src";
 
 it('should transform values', () => {
@@ -9,7 +9,7 @@ it('should transform values', () => {
         (value) => `#${value}`
     );
 
-    const watch = fn();
+    const watch = vi.fn();
     derived.subscribe(watch);
 
     input.set(2);

@@ -1,4 +1,4 @@
-import {fn, SpyInstanceFn} from 'vitest';
+import {vi, SpyInstanceFn} from 'vitest';
 
 export interface Console {
     log: SpyInstanceFn<Parameters<typeof console.log>, ReturnType<typeof console.log>>;
@@ -7,7 +7,7 @@ export interface Console {
 
 export function create_console(): Console {
     return {
-        log: fn(),
-        error: fn()
+        log: vi.fn(),
+        error: vi.fn()
     }
 }

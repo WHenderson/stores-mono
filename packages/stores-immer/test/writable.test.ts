@@ -1,11 +1,11 @@
-import { expect, it, fn } from 'vitest'
+import { expect, it, vi } from 'vitest'
 import {writable} from "../src";
 import {get} from "@crikey/stores-base";
 
 it('mutations should trigger subscribers', () => {
     const value: Record<string,number> = {};
     const store = writable(value);
-    const watcher = fn();
+    const watcher = vi.fn();
     store.subscribe(watcher);
 
     expect(watcher).toHaveBeenCalledOnce();

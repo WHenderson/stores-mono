@@ -1,4 +1,4 @@
-import {expect, fn, it} from 'vitest'
+import {expect, vi, it} from 'vitest'
 import {BehaviorSubject, Observable} from "rxjs";
 import {readable_persist} from "../src";
 
@@ -10,7 +10,7 @@ it('synchronous constructor signals should be collapsed', () => {
         subscriber.next(3);
     });
     const store = readable_persist(observable);
-    const watcher1 = fn();
+    const watcher1 = vi.fn();
 
     store.subscribe(watcher1);
 
@@ -25,8 +25,8 @@ it('subscribers should initially receive the default value if there are no synch
         }, 0);
     });
     const store = readable_persist(observable);
-    const watcher1 = fn();
-    const watcher2 = fn();
+    const watcher1 = vi.fn();
+    const watcher2 = vi.fn();
 
     store.subscribe(watcher1);
     store.subscribe(watcher2);
@@ -49,8 +49,8 @@ it('constructor signals should not be re-issued', async () => {
         }, 0);
     });
     const store = readable_persist(observable);
-    const watcher1 = fn();
-    const watcher2 = fn();
+    const watcher1 = vi.fn();
+    const watcher2 = vi.fn();
 
     store.subscribe(watcher1);
 
@@ -68,7 +68,7 @@ it('should be able to unlink and link from the observable', () => {
     // i.e. subscribers are immediately called with the current value
     const observable = new BehaviorSubject<number>(0);
     const store = readable_persist(observable, -1);
-    const watcher = fn();
+    const watcher = vi.fn();
 
     store.subscribe(watcher);
     expect(watcher.mock.calls).to.deep.equal([[0]]);

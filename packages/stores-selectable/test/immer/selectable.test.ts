@@ -1,4 +1,4 @@
-import {expect, fn, it} from "vitest";
+import {expect, vi, it} from "vitest";
 import {selectable} from "../../src";
 import {writable} from "@crikey/stores-immer";
 
@@ -7,15 +7,15 @@ it('strict derive should only trigger on change', () => {
 
     const store = selectable(writable<Root>({ a: { b: 1 } }));
 
-    const watchRoot = fn();
+    const watchRoot = vi.fn();
     store.subscribe(watchRoot);
     expect(watchRoot.mock.calls[0][0]).to.deep.equal({ a: { b: 1 } });
 
-    const watchA = fn();
+    const watchA = vi.fn();
     store.select(root => root.a).subscribe(watchA);
     expect(watchA.mock.calls[0][0]).to.deep.equal({ b: 1 });
 
-    const watchB = fn();
+    const watchB = vi.fn();
     store.select(root => root.a.b).subscribe(watchB);
     expect(watchB.mock.calls[0][0]).to.deep.equal(1);
 

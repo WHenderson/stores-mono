@@ -49,7 +49,7 @@ const default_options: SelectableOptions<unknown, PropertyKey> = {
  * @param store base store to add selection semantics to
  * @param options path resolution and trigger semantics
  */
-export function selectable<T, S extends Readable<T>, P>(store: S & Readable<T>, options: SelectableOptions<T, P>): Selectable<T, S, P>;
+export function selectable<T, S extends Readable<T>, P>(store: S & Readable<T>, options: Partial<SelectableOptions<T, P>>): Selectable<T, S, P>;
 
 /**
  * Create a selectable {@link Selectable} store with standard json pathing and strict inequality trigger semantics.
@@ -60,18 +60,17 @@ export function selectable<T, S extends Readable<T>, P>(store: S & Readable<T>, 
  */
 export function selectable<T, S extends Readable<T>>(store: S & Readable<T>): Selectable<T, S, PropertyKey>;
 
-export function selectable<T, S extends Readable<T>, P>(store: S & Readable<T>, options?: SelectableOptions<T, P>): Selectable<T, S, P> {
+export function selectable<T, S extends Readable<T>, P>(store: S & Readable<T>, options?: Partial<SelectableOptions<T, P>>): Selectable<T, S, P> {
     const readOnly: Readable<T> = store;
     const readWrite: Writable<T> = <Writable<T>><unknown>store;
 
-    if (!options)
-        options = <SelectableOptions<T,P>><unknown>default_options;
+    const resolved_options = <SelectableOptions<T,P>>Object.assign({}, default_options, options);
 
-    const trigger = options.trigger;
-    const traverse_get = options.traverse_get;
-    const traverse_update = options.traverse_update;
-    const traverse_delete = options.traverse_delete;
-    const resolve_selector = options.resolve_selector;
+    const trigger = resolved_options.trigger;
+    const traverse_get = resolved_options.traverse_get;
+    const traverse_update = resolved_options.traverse_update;
+    const traverse_delete = resolved_options.traverse_delete;
+    const resolve_selector = resolved_options.resolve_selector;
 
     function select<D>(this:void, selector: (v: T) => D): Selectable<D,ReadOrWrite<D,S>, P>;
     function select<D>(this:void, segment: P & Exclude<P, Function> & Exclude<P, any[]>): Selectable<D,ReadOrWrite<D,S>, P>;

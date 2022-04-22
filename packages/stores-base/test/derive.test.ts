@@ -1,6 +1,6 @@
 // noinspection JSMismatchedCollectionQueryUpdate
 
-import {expect, fn, it} from 'vitest'
+import {expect, vi, it} from 'vitest'
 import {constant, derive, get, readable, Set, trigger_strict_not_equal, writable} from "../src";
 
 type ExactType<A,B> = [A] extends [B]
@@ -55,7 +55,7 @@ it('should only trigger once all dependencies are ready', () => {
         ([lhs, rhs]) => lhs + rhs
     );
 
-    const watch = fn();
+    const watch = vi.fn();
     combined.subscribe(watch);
 
     root.set(2);
@@ -80,7 +80,7 @@ it('should support async resolution', () => {
         <number>-1
     );
 
-    const watch = fn();
+    const watch = vi.fn();
     derived.subscribe(watch);
     expect(watch.mock.calls).to.deep.equal([[-1]])
 

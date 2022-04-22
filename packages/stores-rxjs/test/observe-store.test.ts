@@ -1,14 +1,14 @@
-import {expect, fn, it} from 'vitest'
+import {expect, vi, it} from 'vitest'
 import {writable} from "../../stores-strict/src";
 import {observe_store} from "../src";
 
 it('should signal upon changing values', () => {
     const store = writable(1);
     const observable = observe_store(store);
-    const watcher = fn();
+    const watcher = vi.fn();
     observable.subscribe(watcher);
 
-    const watcher2 = fn();
+    const watcher2 = vi.fn();
     observable.subscribe(watcher2);
 
     store.set(2);
