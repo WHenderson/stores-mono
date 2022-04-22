@@ -111,11 +111,13 @@ export function derive<T>(
 
         let pending = create_pending(stores_array.length);
         let cleanup = noop;
+        let changed = false;
 
         const sync = () => {
-            if (pending.is_dirty()) {
+            if (!changed || pending.is_dirty()) {
                 return;
             }
+            changed = false;
             cleanup();
             const result: unknown = fn(single ? values[0] : values, complexSet);
             if (auto) {
@@ -129,6 +131,7 @@ export function derive<T>(
             // changed
             (value: unknown) => {
                 values[i] = value;
+                changed = true;
                 pending.validate(i);
                 if (initiated) {
                     sync();

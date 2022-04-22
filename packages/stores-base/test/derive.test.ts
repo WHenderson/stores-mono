@@ -1,7 +1,17 @@
 // noinspection JSMismatchedCollectionQueryUpdate
 
 import {expect, vi, it} from 'vitest'
-import {constant, derive, get, readable, Set, trigger_strict_not_equal, writable} from "../src";
+import {
+    ComplexSet,
+    constant,
+    derive,
+    get,
+    readable,
+    Set,
+    trigger_always,
+    trigger_strict_not_equal,
+    writable
+} from "../src";
 
 type ExactType<A,B> = [A] extends [B]
     ? (
@@ -107,4 +117,70 @@ it('should support async update', () => {
 
     a.set(3);
     expect(get(store)).toBe(6);
+});
+
+it('should wait until all dependencies are valid', () => {
+    let a_set: ComplexSet<number> = undefined!;
+    const a = writable(trigger_strict_not_equal, 1, (set) => {
+        a_set = set;
+    });
+    const b = writable(trigger_always, 10);
+    const derived = derive(trigger_always, [a,b], ([a,b]) => a + b);
+    const watch = vi.fn();
+
+    // initial subscription
+    derived.subscribe(watch);
+    expect(watch.mock.calls).to.deep.equal([
+        [11]
+    ]);
+
+    // ensure changes are propagating
+    b.set(20);
+    expect(watch.mock.calls).to.deep.equal([
+        [11],
+        [21]
+    ]);
+
+    // ensure deriving is delayed whilst dependencies are invalid
+    a_set.invalidate();
+    b.set(30);
+    expect(watch.mock.calls).to.deep.equal([
+        [11],
+        [21]
+    ]);
+
+    // ensure deriving picks up once dependencies are revalidated
+    a_set.revalidate();
+    expect(watch.mock.calls).to.deep.equal([
+        [11],
+        [21],
+        [31],
+    ]);
+
+    // ensure toggling validity doesn't automatically a derivation
+    a_set.invalidate();
+    a_set.revalidate();
+    expect(watch.mock.calls).to.deep.equal([
+        [11],
+        [21],
+        [31],
+    ]);
+
+    // ensure erroneous revalidation does nothing
+    a_set.revalidate();
+    a_set.revalidate();
+    expect(watch.mock.calls).to.deep.equal([
+        [11],
+        [21],
+        [31],
+    ]);
+
+    // ensure triggers cause revalidation as necessary
+    a_set.invalidate();
+    a_set.set(1);
+    expect(watch.mock.calls).to.deep.equal([
+        [11],
+        [21],
+        [31],
+    ]);
 });
