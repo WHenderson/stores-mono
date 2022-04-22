@@ -2,6 +2,7 @@
 
 import {expect, vi, it} from 'vitest'
 import {
+    Action,
     ComplexSet,
     constant,
     derive,
@@ -12,6 +13,12 @@ import {
     trigger_strict_not_equal,
     writable
 } from "../src";
+import {
+    get_store_runner,
+    set_store_runner,
+    store_runner_throw_errors,
+    StoreRunner
+} from "@crikey/stores-base-queue/src";
 
 type ExactType<A,B> = [A] extends [B]
     ? (
@@ -183,4 +190,36 @@ it('should wait until all dependencies are valid', () => {
         [21],
         [31],
     ]);
+});
+
+
+const run = (runner: StoreRunner, action: Action) => {
+    const originalRunner = set_store_runner(runner);
+    expect(get_store_runner()).to.equal(runner);
+    try {
+        action();
+    } finally {
+        expect(get_store_runner()).to.equal(runner);
+        set_store_runner(originalRunner);
+        expect(get_store_runner()).to.equal(originalRunner);
+    }
+}
+
+it('should perform cleanup even during an unhandled exception', () => {
+    run(store_runner_throw_errors, () => {
+        const a = writable(trigger_always, 1);
+        const derived = derive(trigger_always, a, () => {
+            throw Error('unhandled exception');
+        });
+
+        expect(() => {
+            derived.subscribe(
+                _value => {}
+            );
+        }).toThrow('unhandled exception');
+
+        expect(() => {
+            a.set(2);
+        }).not.toThrow();
+    });
 });
