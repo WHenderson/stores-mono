@@ -1,20 +1,14 @@
-import {ComplexSet, Readable, Trigger} from "./types";
+import {ComplexSet, Readable, Trigger, Unsubscriber} from "./types";
 import {readable} from "./readable";
+import {Action} from "@crikey/stores-base-queue/src";
 
-/**
- * Creates a new store by applying a transform callback to values from the input store.
- *
- * Whilst {@link derive} can be used to provide the same utility, transform has less overhead.
- *
- * @param trigger callback used to determine if subscribers should be called
- * @param store input store
- * @param transformer callback used to transfrom values from the input into values for the output store
- */
-export function transform<T, R>(
-    trigger: Trigger<R>,
-    store: Readable<T>,
-    transformer: (value: T) => R
-) : Readable<R>;
+
+/** Synchronous callback for deriving a value from resolved input value */
+export type TransformFnSync<I,O> = (values: I) => O;
+
+/** Asynchronous callback for deriving a value from resolved input value */
+export type TransformFnAsyncComplex<I,O> =
+    ((values: I, set: ComplexSet<O>) => Unsubscriber | void);
 
 /**
  * Creates a new store by applying a transform callback to values from the input store.
@@ -29,7 +23,7 @@ export function transform<T, R>(
 export function transform<T, R>(
     trigger: Trigger<R | undefined>,
     store: Readable<T>,
-    transformer: (value: T, set: ComplexSet<R | undefined>) => R
+    transformer: TransformFnAsyncComplex<T, R | undefined>
 ) : Readable<R | undefined>;
 
 /**
@@ -46,30 +40,60 @@ export function transform<T, R>(
 export function transform<T, R>(
     trigger: Trigger<R>,
     store: Readable<T>,
-    transformer: (value: T, set: ComplexSet<R>) => R,
+    transformer: TransformFnAsyncComplex<T, R>,
     initial_value: R
 ) : Readable<R>;
 
+/**
+ * Creates a new store by applying a transform callback to values from the input store.
+ *
+ * Whilst {@link derive} can be used to provide the same utility, transform has less overhead.
+ *
+ * @param trigger callback used to determine if subscribers should be called
+ * @param store input store
+ * @param transformer callback used to transfrom values from the input into values for the output store
+ */
+export function transform<T, R>(
+    trigger: Trigger<R>,
+    store: Readable<T>,
+    transformer: TransformFnSync<T, R>
+) : Readable<R>;
 
 export function transform<T, R>(
     trigger: Trigger<R>,
     store: Readable<T>,
-    transformer: (value: T, set: ComplexSet<R>) => R,
+    transformer: TransformFnSync<T, R> | TransformFnAsyncComplex<T, R>,
     initial_value?: R
 ) : Readable<R>  {
     return readable(
         trigger,
         <R>initial_value!,
         (complexSet) => {
-            return store.subscribe(
-                value => complexSet(
-                    transformer.length > 1
-                        ? transformer(value, complexSet)
-                        : (<(value: T) => R>transformer)(value)
-                ),
+            let async_cleanup: Action | undefined;
+            let store_unsub: Action | undefined = store.subscribe(
+                value => {
+                    if (transformer.length > 1) {
+                        async_cleanup?.();
+                        async_cleanup = undefined;
+
+                        const unsub = (<TransformFnAsyncComplex<T, R>>transformer)(value, complexSet); // async
+                        if (unsub)
+                            async_cleanup = unsub;
+                    }
+                    else
+                        complexSet((<TransformFnSync<T, R>>transformer)(value)); // sync
+                },
                 complexSet.invalidate,
                 complexSet.revalidate
             );
+
+            return () => {
+                async_cleanup?.();
+                async_cleanup = undefined;
+
+                store_unsub?.();
+                store_unsub = undefined;
+            };
         }
     );
 }

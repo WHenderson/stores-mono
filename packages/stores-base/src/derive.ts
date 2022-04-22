@@ -36,7 +36,7 @@ export type DeriveFnAsyncComplex<S extends Stores,T> =
 export function derive<S extends Stores, T>(
     trigger: Trigger<T>,
     stores: S,
-    fn: DeriveFnAsyncComplex<S,T>
+    fn: DeriveFnAsyncComplex<S,T | undefined>
 ): Readable<T | undefined>;
 
 /**
