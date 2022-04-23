@@ -1,5 +1,5 @@
 import {StoreRunner} from "./types";
-import {store_runner_throw_errors} from "./store_runner_throw_errors";
+import {store_runner_throw_errors} from "./store-runner-throw-errors";
 
 /**
  *  The active store runner used while executing actions queued with {@link enqueue_store_signals}

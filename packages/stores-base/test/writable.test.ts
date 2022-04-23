@@ -5,7 +5,7 @@ import {
     set_store_runner,
     store_runner_throw_errors,
     StoreRunner
-} from "@crikey/stores-base-queue/src";
+} from "@crikey/stores-base-queue";
 
 it('should update with each change', () => {
     const store = writable(trigger_always, 1);

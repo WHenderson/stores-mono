@@ -1,7 +1,8 @@
 import {describe, expect, it} from 'vitest'
-import {dynamic, DynamicResolved, DynamicValue, to_dynamic} from "../src";
+import {dynamic, DynamicReadable, DynamicResolved, DynamicValue, to_dynamic} from "../src";
 import {derive, writable} from "@crikey/stores-strict";
 import {constant, get, Readable, trigger_strict_not_equal} from "@crikey/stores-base";
+import {trigger_always} from "@crikey/stores-base";
 
 type ExactType<A,B> = [A] extends [B]
     ? (
@@ -256,4 +257,46 @@ describe('dynamic calculations', () => {
     });
 });
 
+describe('infinite recursion', () => {
+    it('should handle infinite recursion of self', () => {
+        const a : DynamicReadable<number> = dynamic(trigger_always, (resolve) => {
+            return { value: resolve(a) };
+        });
 
+        expect(get(a)).toHaveProperty('error');
+    });
+
+    it('should handle infinite recursion between two dynamics', () => {
+        const a : DynamicReadable<number> = dynamic(trigger_always, (resolve) => {
+            return { value: resolve(b) };
+        });
+        const b : DynamicReadable<number> = dynamic(trigger_always, (resolve) => {
+            return { value: resolve(a) };
+        });
+
+        (<any>a).name = 'a';
+        (<any>b).name = 'b';
+
+        expect(get(a)).toHaveProperty('error');
+        expect(get(b)).toHaveProperty('error');
+    });
+
+
+    it('should handle infinite recursion between n dynamics', () => {
+        const n = 10;
+
+        const stores : Readable<DynamicResolved<number>>[] = [...Array(n)].map((_, i) =>
+            dynamic(trigger_always, (resolve) => {
+                return { value: resolve(stores[i + 1 % n]) };
+            })
+        );
+
+        stores.forEach((store, i) => {
+            (<any>store).name = i;
+        });
+
+        stores.forEach((store) => {
+            expect(get(store)).toHaveProperty('error');
+        });
+    });
+});

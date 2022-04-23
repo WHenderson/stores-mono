@@ -1,6 +1,6 @@
 // noinspection JSMismatchedCollectionQueryUpdate
 
-import {expect, vi, it} from 'vitest'
+import {expect, it, vi} from 'vitest'
 import {
     Action,
     ComplexSet,
@@ -13,12 +13,7 @@ import {
     trigger_strict_not_equal,
     writable
 } from "../src";
-import {
-    get_store_runner,
-    set_store_runner,
-    store_runner_throw_errors,
-    StoreRunner
-} from "@crikey/stores-base-queue/src";
+import {get_store_runner, set_store_runner, store_runner_throw_errors, StoreRunner} from "@crikey/stores-base-queue";
 
 type ExactType<A,B> = [A] extends [B]
     ? (

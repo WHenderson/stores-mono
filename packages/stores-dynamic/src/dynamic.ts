@@ -1,6 +1,7 @@
 import {Dynamic, DynamicDependents, DynamicReadable, DynamicResolved, DynamicValue} from "./types";
 import {noop, readable, Readable, Trigger, trigger_always, Unsubscriber} from "@crikey/stores-base";
-import {ComplexSet, transform, Updater} from "@crikey/stores-base/src";
+import {ComplexSet, Invalidate, Revalidate, Subscriber, transform, Updater} from "@crikey/stores-base/src";
+import {store_stack_use} from "../../stores-base-queue/src";
 
 export type ResolveDynamic = <V>(arg: Dynamic<V>) => V;
 export type ComplexResolveDynamic = ResolveDynamic & { resolve: ResolveDynamic };
@@ -177,7 +178,7 @@ export function dynamic<A extends Inputs, R>(
 
     const is_async = args ? calculator.length > 2 : calculator.length > 1;
 
-    return readable<DynamicResolved<R>>(
+    const store: Readable<DynamicResolved<R>> = readable<DynamicResolved<R>>(
         trigger,
         initial_value!,
         ({ set, update, invalidate, revalidate }) => {
@@ -188,6 +189,8 @@ export function dynamic<A extends Inputs, R>(
             const used = new Set<DynamicReadable<unknown>>();
 
             let tracked_dependencies: DynamicDependents | undefined;
+
+            invalidate();
 
             const local_resolve = <V>(arg: Dynamic<V>): V => {
                 if ('error' in arg)
@@ -204,6 +207,7 @@ export function dynamic<A extends Inputs, R>(
                     tracked_dependencies = undefined;
 
                     let initialised = false;
+
                     const unsubscribe = arg.subscribe(
                         (value) => {
                             cacheValue = (value && typeof value === 'object' && (('error' in value) || ('value' in value)))
@@ -346,8 +350,8 @@ export function dynamic<A extends Inputs, R>(
 
                 const is_static = !is_async
                     && (!dependencies || [...dependencies.values()].every(store => {
-                        const [,value] = subscriptions.get(store)!;
-                        return value?.is_static;
+                        const value = subscriptions.get(store)?.[1];
+                        return !value ?? value?.is_static;
                     }));
 
                 if (result === undefined) {
@@ -394,4 +398,10 @@ export function dynamic<A extends Inputs, R>(
             return stop;
         }
     );
+
+    return {
+        ...store,
+        subscribe: (run: Subscriber<DynamicResolved<R>>, invalidate?: Invalidate, revalidate?: Revalidate) : Unsubscriber =>
+            store_stack_use(store, () => store.subscribe(run, invalidate, revalidate))
+    };
 }
