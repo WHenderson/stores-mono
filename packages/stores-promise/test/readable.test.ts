@@ -1,6 +1,6 @@
-import {expect, vi, it} from 'vitest'
-import {derive, promise, readable, State} from "../src";
-import {get, trigger_strict_not_equal, writable} from "@crikey/stores-base";
+import {expect, it} from 'vitest'
+import {readable, State} from "../src";
+import {get} from "@crikey/stores-base";
 
 it('should match promise state', async () => {
     const promisePending = new Promise(() => {});
@@ -46,44 +46,6 @@ it('should match promise state', async () => {
     });
 })
 
-it('should track promise state to fulfilled', async () => {
-    let resolve: (value: any) => void;
-    const promise = new Promise<any>((r) => {
-        resolve = r;
-    });
-
-    const store = readable(promise);
-
-    expect(get(store).isPending).toBeTruthy();
-
-    resolve!(1);
-    await promise;
-
-    expect(get(store).isFulfilled).toBeTruthy();
-});
-
-
-it('should track promise state to rejected', async () => {
-    let reject: (value: any) => void;
-    const promise = new Promise<any>((_, r) => {
-        reject = r;
-    });
-
-    const store = readable(promise);
-
-    expect(get(store).isPending).toBeTruthy();
-
-    reject!(-1);
-
-    try {
-        await promise;
-    }
-    catch {
-    }
-
-    expect(get(store).isRejected).toBeTruthy();
-});
-
 it('should create synchronous fulfilled', () => {
     const store = readable.resolve(1);
     expect(get(store)).to.deep.equal({
@@ -106,62 +68,39 @@ it('should create synchronous rejected', () => {
     });
 })
 
-it('should discard old promises', async () => {
-    const store = writable(trigger_strict_not_equal, 1);
+it('should track promise state to fulfilled', async () => {
+    let resolve: (value: any) => void;
+    const promise = new Promise<any>((r) => {
+        resolve = r;
+    });
 
-    const derived = derive(store, value => {
-        return new Promise<number>(resolve => {
-            setTimeout(() => resolve(value), 0);
-        });
-    })
+    const store = readable(promise);
 
-    const watch = vi.fn();
+    expect(get(store).isPending).toBeTruthy();
 
-    derived.subscribe(watch);
+    resolve!(1);
+    await promise;
 
-    store.set(2);
-    store.set(3);
-    store.set(4);
+    expect(get(store).isFulfilled).toBeTruthy();
+});
 
-    await promise(derived);
+it('should track promise state to rejected', async () => {
+    let reject: (value: any) => void;
+    const promise = new Promise<any>((_, r) => {
+        reject = r;
+    });
 
-    // note that only store.set(4) results in a fulfilled signal
+    const store = readable(promise);
 
-    expect(watch.mock.calls).to.deep.equal([
-        [{ // initial creation
-            isPending: true,
-            isFulfilled: false,
-            isRejected: false,
-            state: 0,
-            value: undefined
-        }],
-        [{ // set 2
-            isPending: true,
-            isFulfilled: false,
-            isRejected: false,
-            state: 0,
-            value: undefined
-        }],
-        [{ // set 3
-            isPending: true,
-            isFulfilled: false,
-            isRejected: false,
-            state: 0,
-            value: undefined
-        }],
-        [{ // set 4
-            isPending: true,
-            isFulfilled: false,
-            isRejected: false,
-            state: 0,
-            value: undefined
-        }],
-        [{ // set 4 - fulfilled
-            isPending: false,
-            isFulfilled: true,
-            isRejected: false,
-            state: 1,
-            value: 4
-        }]
-    ]);
+    expect(get(store).isPending).toBeTruthy();
+
+    reject!(-1);
+
+    try {
+        await promise;
+    }
+    catch {
+    }
+
+    expect(get(store).isRejected).toBeTruthy();
 });
