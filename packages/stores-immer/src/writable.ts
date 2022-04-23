@@ -1,6 +1,7 @@
 import {noop, StartNotifier, Updater, Writable} from "@crikey/stores-base";
 import {writable as strictWritable} from "@crikey/stores-strict";
 import {produce, Draft, nothing} from "immer";
+import {ComplexSet} from "@crikey/stores-base/src";
 
 /**
  * Create a writable store with an initial value of `undefined`.
@@ -76,7 +77,35 @@ export function writable<T = undefined>(): Writable<T | undefined>;
 export function writable<T>(value?: T, start?: StartNotifier<T>): Writable<T>;
 
 export function writable<T>(value?: T, start: StartNotifier<T> = noop): Writable<T | undefined> | Writable<T> {
-    const store = strictWritable(value!, start);
+    const store = strictWritable(value, ({set, update, invalidate, revalidate}) => {
+        const complexSet: ComplexSet<T> = Object.assign(
+            (value: T) => set(value),
+            {
+                set,
+                update: (fn: Updater<T>) => {
+                    return update(
+                        (value: T) => {
+                            return produce(
+                                value,
+                                draft => {
+                                    const result = fn(<T>draft);
+
+                                    return <Draft<T>>((result !== undefined)
+                                            ? result
+                                            : nothing
+                                    );
+                                }
+                            );
+                        }
+                    )
+                },
+                invalidate,
+                revalidate
+            }
+        );
+
+        return start(complexSet);
+    });
 
     function update(fn: Updater<T>): void {
         store.update(

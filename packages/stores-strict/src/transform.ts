@@ -1,4 +1,10 @@
-import {Readable, TransformFnAsyncComplex, TransformFnSync, trigger_strict_not_equal, transform as transformBase} from "@crikey/stores-base";
+import {
+    Readable,
+    transform as transformBase,
+    TransformFnAsyncComplex,
+    TransformFnSync,
+    trigger_strict_not_equal
+} from "@crikey/stores-base";
 
 /**
  * Creates a new store by applying a transform callback to values from the input store.
