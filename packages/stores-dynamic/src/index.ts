@@ -12,3 +12,4 @@ export * from './is-dynamic-error';
 export * from './is-dynamic-value';
 export * from './get-error';
 export * from './get-value';
+export * from './resolve';

@@ -1,5 +1,5 @@
 import {Trigger} from "@crikey/stores-base";
-import {DynamicResolved} from "./types";
+import {DynamicError, DynamicResolved, DynamicValue} from "./types";
 
 export function trigger_dynamic<T>(
     trigger_value: Trigger<T>,
@@ -10,15 +10,12 @@ export function trigger_dynamic<T>(
             return true;
 
         if (('error' in new_value) !== ('error' in old_value)
-        ||  ('value' in new_value) !== ('value' in old_value)
-        ||  ('subscriber' in new_value) !== ('subscriber' in old_value))
+        ||  ('value' in new_value) !== ('value' in old_value))
             return true;
 
-        if ('error' in new_value && 'error' in old_value)
-            return trigger_error(initial, new_value.error, old_value.error);
-        if ('value' in new_value && 'value' in old_value)
-            return trigger_value(initial, new_value.value, old_value.value);
-
-        return false;
+        if ('error' in new_value)
+            return trigger_error(initial, new_value.error, (<DynamicError>old_value).error);
+        else
+            return trigger_value(initial, new_value.value, (<DynamicValue<T>>old_value).value);
     };
 }
