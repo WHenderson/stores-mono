@@ -68,10 +68,12 @@ importers:
   packages/stores-dynamic:
     specifiers:
       '@crikey/stores-base': workspace:^1.0.0
+      '@crikey/stores-base-queue': workspace:^1.0.0
       '@crikey/stores-strict': workspace:^1.0.0
     dependencies:
       '@crikey/stores-base': link:../stores-base
     devDependencies:
+      '@crikey/stores-base-queue': link:../stores-base-queue
       '@crikey/stores-strict': link:../stores-strict
 
   packages/stores-immer:

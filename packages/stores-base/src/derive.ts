@@ -111,7 +111,7 @@ export function derive<T>(
 
         let pending = create_pending(stores_array.length);
         let cleanup = noop;
-        let changed = false;
+        let changed = stores_array.length === 0; // TODO: Test with an empty dependency list for coverage
 
         const sync = () => {
             if (!changed || pending.is_dirty()) {

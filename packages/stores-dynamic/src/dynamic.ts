@@ -1,7 +1,17 @@
 import {Dynamic, DynamicDependents, DynamicReadable, DynamicResolved, DynamicValue} from "./types";
-import {noop, readable, Readable, Trigger, trigger_always, Unsubscriber} from "@crikey/stores-base";
-import {ComplexSet, Invalidate, Revalidate, Subscriber, transform, Updater} from "@crikey/stores-base/src";
-import {store_stack_use} from "../../stores-base-queue/src";
+import {
+    Action,
+    ComplexSet,
+    is_readable,
+    readable,
+    Readable,
+    transform,
+    Trigger,
+    trigger_always,
+    Unsubscriber,
+    Updater
+} from "@crikey/stores-base";
+import {is_dynamic_resolved} from "./is-dynamic-resolved";
 
 export type ResolveDynamic = <V>(arg: Dynamic<V>) => V;
 export type ComplexResolveDynamic = ResolveDynamic & { resolve: ResolveDynamic };
@@ -86,7 +96,7 @@ export function dynamic<R>(
  */
 export function dynamic<R>(
     trigger: Trigger<Dynamic<R>>,
-    calculate: DeriveFn<never, Dynamic<R>, ComplexResolveDynamic, ComplexSet<DynamicResolved<R | undefined>>>,
+    calculate: DeriveFn<never, Dynamic<R>, ComplexResolveDynamic, ComplexSet<DynamicResolved<R>>>,
     initial_value: DynamicResolved<R>
 ) : DynamicReadable<R>;
 
@@ -178,7 +188,7 @@ export function dynamic<A extends Inputs, R>(
 
     const is_async = args ? calculator.length > 2 : calculator.length > 1;
 
-    const store: Readable<DynamicResolved<R>> = readable<DynamicResolved<R>>(
+    return readable<DynamicResolved<R>>(
         trigger,
         initial_value!,
         ({ set, update, invalidate, revalidate }) => {
@@ -189,6 +199,7 @@ export function dynamic<A extends Inputs, R>(
             const used = new Set<DynamicReadable<unknown>>();
 
             let tracked_dependencies: DynamicDependents | undefined;
+            let changed = true;
 
             invalidate();
 
@@ -210,13 +221,11 @@ export function dynamic<A extends Inputs, R>(
 
                     const unsubscribe = arg.subscribe(
                         (value) => {
-                            cacheValue = (value && typeof value === 'object' && (('error' in value) || ('value' in value)))
-                                ? value
-                                : { value: value };
+                            cacheValue = value;
 
                             if (cache)
                                 cache[1] = cacheValue;
-
+                            changed = true;
                             pending.delete(arg);
                             if (initialised)
                                 sync();
@@ -232,7 +241,7 @@ export function dynamic<A extends Inputs, R>(
                         }
                     );
 
-                    if (!cacheValue!)
+                    if (!cacheValue)
                         throw new ReferenceError('store did not satisfy contract');
 
                     cache = [
@@ -261,31 +270,34 @@ export function dynamic<A extends Inputs, R>(
                 }
             );
 
-            const store_dependencies = () => {
+            const get_dependencies_spread = () => {
                 if (used.size === 0)
                     tracked_dependencies = undefined;
                 else
                 if (tracked_dependencies?.size !== used.size)
                     tracked_dependencies = new Set(used.keys());
 
-                return tracked_dependencies;
+                if (tracked_dependencies)
+                    return { dependencies: tracked_dependencies }
+                else
+                    return {};
             }
 
             const local_set = (value: DynamicResolved<R>) => {
-                const dependencies = store_dependencies();
+                const dependencies_spread = get_dependencies_spread();
 
-                set(Object.assign({}, value, { dependencies }));
+                set({ ...value, ...dependencies_spread});
             }
 
             const local_update = (updater: Updater<DynamicResolved<R>>) => {
-                const dependencies = store_dependencies();
+                const dependencies_spread = get_dependencies_spread();
 
                 update(value => {
                     try {
-                        return Object.assign({}, updater(value), { dependencies });
+                        return { ...updater(value), ...dependencies_spread };
                     }
                     catch (error) {
-                        return { error, dependencies }
+                        return { error, ...dependencies_spread }
                     }
                 });
             }
@@ -300,35 +312,30 @@ export function dynamic<A extends Inputs, R>(
                 }
             );
 
-            let cleanup = noop;
+            let cleanup: Action | undefined;
 
-            const params = args
-                ? (
-                    is_async
-                    ? [args, complex_resolve, complex_set]
-                    : [args, complex_resolve]
-                )
-                : (
-                    is_async
-                    ? [complex_resolve, complex_set]
-                    : [complex_resolve]
-                );
+            const params: unknown[] = [complex_resolve];
+            if (args)
+                params.unshift(args);
+            if (is_async)
+                params.push(complex_set);
 
             const execute = (): Dynamic<R> | Unsubscriber | void => {
                 try {
                     return calculator(...params);
                 }
                 catch (ex) {
-                    return { error: ex, dependencies: store_dependencies() };
+                    return { error: ex, ...get_dependencies_spread() };
                 }
             }
 
             const sync = () => {
-                if (pending.size)
+                if (!changed || pending.size)
                     return;
 
-                cleanup();
-                cleanup = noop;
+                changed = false;
+                cleanup?.();
+                cleanup = undefined;
                 used.clear();
 
                 const result = execute();
@@ -344,39 +351,46 @@ export function dynamic<A extends Inputs, R>(
                     }
                 );
 
-                const dependencies = store_dependencies();
+                const dependencies_spread = get_dependencies_spread();
 
                 used.clear();
 
                 const is_static = !is_async
-                    && (!dependencies || [...dependencies.values()].every(store => {
+                    && (!dependencies_spread.dependencies || [...dependencies_spread.dependencies.values()].every(store => {
                         const value = subscriptions.get(store)?.[1];
                         return !value ?? value?.is_static;
                     }));
 
-                if (result === undefined) {
-                    if (!is_async)
-                        set({ error: new Error('invalid result type'), dependencies, is_static });
+                const is_static_spread = is_static ? { is_static: true } : {};
+
+                if (result === undefined && is_async) {
+                    // do nothing
                 }
                 else
-                if (typeof result === 'function') {
-                    if (is_async)
-                        cleanup = result;
-                    else
-                        set({ error: new Error('invalid result type'), dependencies, is_static });
+                if (typeof result === 'function' && is_async) {
+                    cleanup = result;
                 }
                 else
-                if ('error' in result || 'value' in result) {
-                    set(Object.assign({}, result, { dependencies, is_static }));
+                if (is_dynamic_resolved(result)) {
+                    set({ ...result, ...dependencies_spread, ...is_static_spread });
                 }
-                else {
+                else
+                if (is_readable(result)) {
+                    const extra_dependencies = new Set([
+                        ...(dependencies_spread.dependencies ?? []),
+                        result
+                    ]);
+
                     cleanup = result.subscribe(
                         (value) => {
-                            set(Object.assign({}, value, { dependencies, is_static }));
+                            set({ ...value, dependencies: extra_dependencies, ...is_static_spread });
                         },
                         invalidate,
                         revalidate
                     );
+                }
+                else {
+                    set({ error: new TypeError('invalid result type'), ...dependencies_spread, ...is_static_spread });
                 }
             }
 
@@ -389,8 +403,8 @@ export function dynamic<A extends Inputs, R>(
                 subscriptions.clear();
                 pending.clear();
                 used.clear();
-                cleanup();
-                cleanup = noop;
+                cleanup?.();
+                cleanup = undefined;
             }
 
             sync();
@@ -398,10 +412,4 @@ export function dynamic<A extends Inputs, R>(
             return stop;
         }
     );
-
-    return {
-        ...store,
-        subscribe: (run: Subscriber<DynamicResolved<R>>, invalidate?: Invalidate, revalidate?: Revalidate) : Unsubscriber =>
-            store_stack_use(store, () => store.subscribe(run, invalidate, revalidate))
-    };
 }

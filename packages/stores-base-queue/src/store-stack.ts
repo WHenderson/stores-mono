@@ -1,3 +1,5 @@
+import {RecursionError} from "./recursion-error";
+
 export const store_stack = new Set<unknown>();
 
 /**
@@ -21,5 +23,5 @@ export function store_stack_use<T = void>(store: unknown, action: () => T): T {
 
 export function store_stack_assert(store: unknown) {
     if (store_stack.has(store))
-        throw new Error('infinite recursion');
+        throw new RecursionError();
 }

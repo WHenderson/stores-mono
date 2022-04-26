@@ -1,8 +1,18 @@
-import {describe, expect, it} from 'vitest'
-import {dynamic, DynamicReadable, DynamicResolved, DynamicValue, to_dynamic} from "../src";
+import {describe, expect, it, vi} from 'vitest'
+import {dynamic, DynamicError, DynamicReadable, DynamicResolved, DynamicValue, get_value, to_dynamic} from "../src";
 import {derive, writable} from "@crikey/stores-strict";
-import {constant, get, Readable, trigger_strict_not_equal} from "@crikey/stores-base";
-import {trigger_always} from "@crikey/stores-base";
+import {
+    Action,
+    ComplexSet,
+    constant,
+    get,
+    Readable,
+    trigger_always,
+    trigger_strict_not_equal
+} from "@crikey/stores-base";
+import {RecursionError, StoreRunner} from "../../stores-base-queue";
+import {get_store_runner, set_store_runner, store_runner_throw_errors} from "@crikey/stores-base-queue";
+import {Subscriber, Unsubscriber} from "@crikey/stores-base/src";
 
 type ExactType<A,B> = [A] extends [B]
     ? (
@@ -95,6 +105,97 @@ describe('static errors', () => {
     });
 });
 
+describe('async calculations', () => {
+    it('should support empty cleanup', () => {
+        const store = writable({ value: 1 });
+        const derived = dynamic(
+            trigger_strict_not_equal,
+            (resolve, set) => {
+                set({ value: resolve(store)});
+            },
+            { value: -1 }
+        );
+
+        const watch = vi.fn();
+        derived.subscribe(watch);
+
+        // force running of cleanup code
+        store.set({ value: 2 });
+
+        expect(get_value(derived)).toBe(get_value(store));
+    });
+
+    it('should support arbitrary cleanup', () => {
+        const store = writable({ value: 1 });
+        const watch_cleanup = vi.fn();
+        const derived = dynamic(
+            trigger_strict_not_equal,
+            (resolve, set) => {
+                set({ value: resolve(store)});
+                return watch_cleanup;
+            },
+            { value: -1 }
+        );
+
+        const watch = vi.fn();
+        const unsub = derived.subscribe(watch);
+
+        // force running of cleanup code
+        store.set({ value: 2 });
+
+        expect(get_value(derived)).toBe(get_value(store));
+        expect(watch_cleanup.mock.calls).to.have.lengthOf(1);
+
+        unsub();
+        expect(watch_cleanup.mock.calls).to.have.lengthOf(2);
+    });
+
+    it('should support async update failures', () => {
+        const derived = dynamic(
+            trigger_strict_not_equal,
+            (_resolve, { update }) => {
+                update(_value => {
+                    throw new Error('explicit error')
+                });
+            },
+            { value: -1 }
+        );
+
+        expect(() => get_value(derived)).toThrow('explicit error');
+    })
+});
+
+describe('contract failures', () => {
+    it('should detect subscribe failures', () => {
+        const fake_store = {
+            subscribe(_run: Subscriber<DynamicResolved<number>>): Unsubscriber {
+                // deliberately do nothing to simulate contract failure
+                return () => {};
+            }
+        };
+
+        const derived = dynamic(
+            trigger_strict_not_equal,
+            (resolve) => {
+                return { value: resolve(fake_store) }
+            }
+        );
+
+        expect(() => get_value(derived)).toThrow(ReferenceError);
+    });
+
+    it('should detect invalid return types', () => {
+        const derived = dynamic(
+            trigger_strict_not_equal,
+            () => {
+                return <DynamicValue<number>><unknown>1;
+            }
+        );
+
+        expect(() => get_value(derived)).toThrow(TypeError);
+    });
+});
+
 describe('dynamic calculations', () => {
     it('dynamic values should resolve dynamically', () => {
         const store = writable(1);
@@ -177,7 +278,7 @@ describe('dynamic calculations', () => {
 
         const resolved = get(derived);
         expect(resolved).toHaveProperty('value', 1);
-        expect(resolved.dependencies).toBeUndefined();
+        expect(resolved.dependencies).to.have.lengthOf(1);
         expect(derived_count).to.equals(store_count);
         expect(derived_count).to.equals(dynamic_store_count);
 
@@ -264,6 +365,7 @@ describe('infinite recursion', () => {
         });
 
         expect(get(a)).toHaveProperty('error');
+        expect((<DynamicError>get(a)).error).toBeInstanceOf(RecursionError);
     });
 
     it('should handle infinite recursion between two dynamics', () => {
@@ -279,6 +381,8 @@ describe('infinite recursion', () => {
 
         expect(get(a)).toHaveProperty('error');
         expect(get(b)).toHaveProperty('error');
+        expect((<DynamicError>get(a)).error).toBeInstanceOf(RecursionError);
+        expect((<DynamicError>get(b)).error).toBeInstanceOf(RecursionError);
     });
 
 
@@ -287,7 +391,7 @@ describe('infinite recursion', () => {
 
         const stores : Readable<DynamicResolved<number>>[] = [...Array(n)].map((_, i) =>
             dynamic(trigger_always, (resolve) => {
-                return { value: resolve(stores[i + 1 % n]) };
+                return { value: resolve(stores[(i + 1) % n]) };
             })
         );
 
@@ -297,6 +401,226 @@ describe('infinite recursion', () => {
 
         stores.forEach((store) => {
             expect(get(store)).toHaveProperty('error');
+            expect((<DynamicError>get(store)).error).toBeInstanceOf(RecursionError);
         });
     });
 });
+
+describe('simulate derive', () => {
+    type ExactType<A,B> = [A] extends [B]
+        ? (
+            [B] extends [A]
+                ? true
+                : never
+            )
+        : never;
+
+    function ts_assert<T extends boolean>(_condition: T) {
+    }
+
+    it('should correctly type resolved arguments', () => {
+        const a = constant({ value: 'a' });
+        const b = constant({ value: 1 });
+
+        const derived = dynamic(
+            trigger_strict_not_equal,
+            [a,b],
+            ([arg_a, arg_b], resolve) => {
+                ts_assert<ExactType<typeof arg_a, typeof a>>(true);
+                ts_assert<ExactType<typeof arg_b, typeof b>>(true);
+
+                const resolved_a = resolve(a);
+                const resolved_b = resolve(b);
+
+                ts_assert<ExactType<typeof resolved_a, string>>(true);
+                ts_assert<ExactType<typeof resolved_b, number>>(true);
+
+                return { value: `${resolved_a}${resolved_b}` };
+            }
+        );
+
+        expect((<DynamicValue<string>>get(derived)).value).toBe('a1');
+    });
+
+    it('should only trigger once all dependencies are ready', () => {
+        // diamond dependency problem
+
+        const root = writable({ value: 1 });
+
+        const lhs = dynamic(
+            trigger_strict_not_equal,
+            (resolve) =>
+                ({ value: resolve(root) * 10 })
+        );
+
+        const rhs = dynamic(
+            trigger_strict_not_equal,
+            (resolve) =>
+                ({ value: resolve(root) * 100 })
+        );
+
+        const combined = dynamic(
+            trigger_strict_not_equal,
+            [lhs, rhs],
+            ([lhs, rhs], resolve) =>
+                ({ value: resolve(lhs) + resolve(rhs) })
+        );
+
+        const watch = vi.fn();
+        combined.subscribe(watch);
+
+        root.set({ value: 2 });
+        root.set({ value: 3 });
+        expect(watch.mock.calls.map(call => (<DynamicValue<number>>call[0]).value)).to.deep.equal([
+            110,
+            220,
+            330
+        ]);
+    });
+
+    it('should support async resolution', () => {
+        let set: ComplexSet<DynamicResolved<number>>;
+        const derived = dynamic(
+            trigger_strict_not_equal,
+            (_resolve, set_) => {
+                set = set_;
+            },
+            {  value: -1 }
+        );
+
+        const watch = vi.fn();
+        derived.subscribe(watch);
+        expect(watch.mock.calls.map(call => (<DynamicValue<number>>call[0]).value)).to.deep.equal([
+            -1
+        ]);
+
+        set!({ value: 2});
+        set!({ value: 3});
+        expect(watch.mock.calls.map(call => (<DynamicValue<number>>call[0]).value)).to.deep.equal([
+            -1,
+            2,
+            3
+        ]);
+    });
+
+    it('should support async update', () => {
+        const a = writable({ value: 1 });
+        const store = dynamic(
+            trigger_strict_not_equal,
+            (resolve, { update }) => {
+                update(
+                    current =>
+                        ({ value: resolve(current) + resolve(a) })
+                );
+            },
+            { value: 0 }
+        );
+
+        expect(get_value(store)).toBe(1);
+
+        a.set({ value: 2 });
+        expect(get_value(store)).toBe(3);
+
+        a.set({ value: 3 });
+        expect(get_value(store)).toBe(6);
+    });
+
+    it('should wait until all dependencies are valid', () => {
+        let a_set: ComplexSet<DynamicValue<number>> = undefined!;
+        const a = writable({ value: 1 }, (set) => {
+            a_set = set;
+        });
+        const b = writable({ value: 10 });
+        const derived = dynamic(
+            trigger_always,
+            (resolve) =>
+                ({ value: resolve(a) + resolve(b) })
+        );
+        const watch = vi.fn();
+
+        // initial subscription
+        derived.subscribe(watch);
+        expect(watch.mock.calls.map(call => (<DynamicValue<number>>call[0]).value)).to.deep.equal([
+            11
+        ]);
+
+        // ensure changes are propagating
+        b.set({ value: 20 });
+        expect(watch.mock.calls.map(call => (<DynamicValue<number>>call[0]).value)).to.deep.equal([
+            11,
+            21
+        ]);
+
+        // ensure deriving is delayed whilst dependencies are invalid
+        a_set.invalidate();
+        b.set({ value: 30 });
+        expect(watch.mock.calls.map(call => (<DynamicValue<number>>call[0]).value)).to.deep.equal([
+            11,
+            21
+        ]);
+
+        // ensure deriving picks up once dependencies are revalidated
+        a_set.revalidate();
+        expect(watch.mock.calls.map(call => (<DynamicValue<number>>call[0]).value)).to.deep.equal([
+            11,
+            21,
+            31
+        ]);
+
+        // ensure toggling validity doesn't automatically cause a derivation
+        a_set.invalidate();
+        a_set.revalidate();
+        expect(watch.mock.calls.map(call => (<DynamicValue<number>>call[0]).value)).to.deep.equal([
+            11,
+            21,
+            31
+        ]);
+
+        // ensure erroneous revalidation does nothing
+        a_set.revalidate();
+        a_set.revalidate();
+        expect(watch.mock.calls.map(call => (<DynamicValue<number>>call[0]).value)).to.deep.equal([
+            11,
+            21,
+            31
+        ]);
+
+        // ensure triggers cause revalidation as necessary
+        a_set.invalidate();
+        a_set.set(get(a));
+        expect(watch.mock.calls.map(call => (<DynamicValue<number>>call[0]).value)).to.deep.equal([
+            11,
+            21,
+            31
+        ]);
+    });
+
+
+    const run = (runner: StoreRunner, action: Action) => {
+        const originalRunner = set_store_runner(runner);
+        expect(get_store_runner()).to.equal(runner);
+        try {
+            action();
+        } finally {
+            expect(get_store_runner()).to.equal(runner);
+            set_store_runner(originalRunner);
+            expect(get_store_runner()).to.equal(originalRunner);
+        }
+    }
+
+    it('should perform cleanup even during an unhandled exception', () => {
+        run(store_runner_throw_errors, () => {
+            const a = writable({ value: 1});
+            const derived = dynamic(trigger_always, (resolve) => {
+                resolve(a);
+                throw Error('unhandled exception');
+            });
+
+            expect(() => get_value(derived)).toThrow('unhandled exception');
+
+            expect(() => {
+                a.set({ value: 2 });
+            }).not.toThrow();
+        });
+    });
+})

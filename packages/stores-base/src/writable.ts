@@ -2,6 +2,7 @@ import {Invalidate, Revalidate, StartNotifier, Subscriber, Trigger, Unsubscriber
 import {noop} from "./noop";
 import {enqueue_store_signals} from "@crikey/stores-base-queue";
 import {store_runner} from "@crikey/stores-base-queue";
+import {store_stack_use} from "@crikey/stores-base-queue/src";
 
 type SubscribeInvalidateTuple<T> = [Subscriber<T>, Invalidate, Revalidate];
 
@@ -73,7 +74,7 @@ export function writable<T = undefined>(trigger: Trigger<T | undefined>): Writab
 export function writable<T>(trigger: Trigger<T>, value: T, start?: StartNotifier<T>): Writable<T>;
 
 /* implementation */
-export function writable<T>(trigger: Trigger<T>, value?: T, start: StartNotifier<T> = noop): Writable<T | undefined> {
+export function writable<T>(trigger: Trigger<T>, value?: T, start: StartNotifier<T> = noop): Writable<T> {
     let initial = true;
     let stop: Unsubscriber | undefined;
     let invalidated = false;
@@ -150,35 +151,42 @@ export function writable<T>(trigger: Trigger<T>, value?: T, start: StartNotifier
     }
 
     function subscribe(run: Subscriber<T>, invalidator: Invalidate = noop, revalidator: Revalidate = noop): Unsubscriber {
-        const subscriber: SubscribeInvalidateTuple<T> = [run, invalidator, revalidator];
-        subscribers.add(subscriber);
+        return store_stack_use(
+            store,
+            () => {
+                const subscriber: SubscribeInvalidateTuple<T> = [run, invalidator, revalidator];
+                subscribers.add(subscriber);
 
-        const unsubscribe = () => {
-            subscribers.delete(subscriber);
-            if (subscribers.size === 0 && stop) {
-                stop();
-                stop = undefined;
-            }
-        };
-
-        try {
-            store_runner(
-                () => {
-                    if (subscribers.size === 1) {
-                        stop = start(complexSet) || noop;
+                const unsubscribe = () => {
+                    subscribers.delete(subscriber);
+                    if (subscribers.size === 0 && stop) {
+                        stop();
+                        stop = undefined;
                     }
-                    run(value!);
+                };
+
+                try {
+                    store_runner(
+                        () => {
+                            if (subscribers.size === 1) {
+                                stop = start(complexSet) || noop;
+                            }
+                            run(value!);
+                        }
+                    );
                 }
-            );
-        }
-        catch (ex) {
-            unsubscribe();
+                catch (ex) {
+                    unsubscribe();
 
-            throw ex;
-        }
+                    throw ex;
+                }
 
-        return unsubscribe;
+                return unsubscribe;
+            }
+        );
     }
 
-    return { set, update, subscribe };
+    const store: Writable<T> = { set, update, subscribe };
+
+    return store;
 }

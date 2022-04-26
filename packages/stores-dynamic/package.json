@@ -10,8 +10,8 @@
   "main": "src/index",
   "files": [
     "dist",
-	"package.json",
-	"README.md"
+    "package.json",
+    "README.md"
   ],
   "typedocMain": "src/index.ts",
   "publishConfig": {
@@ -36,6 +36,7 @@
     "@crikey/stores-base": "workspace:^1.0.0"
   },
   "devDependencies": {
+    "@crikey/stores-base-queue": "workspace:^1.0.0",
     "@crikey/stores-strict": "workspace:^1.0.0"
   }
 }

@@ -130,6 +130,11 @@ it('should wait until all dependencies are valid', () => {
     const derived = derive(trigger_always, [a,b], ([a,b]) => a + b);
     const watch = vi.fn();
 
+    (<any>a).name = 'a';
+    (<any>b).name = 'b';
+    (<any>derived).name = 'derived';
+
+
     // initial subscription
     derived.subscribe(watch);
     expect(watch.mock.calls).to.deep.equal([
@@ -177,13 +182,13 @@ it('should wait until all dependencies are valid', () => {
         [31],
     ]);
 
-    // ensure triggers cause revalidation as necessary
+    // ensure triggers cause revalidation as necessary (setting to same value according to trigger, so no revaluation)
     a_set.invalidate();
     a_set.set(1);
     expect(watch.mock.calls).to.deep.equal([
         [11],
         [21],
-        [31],
+        [31]
     ]);
 });
 
