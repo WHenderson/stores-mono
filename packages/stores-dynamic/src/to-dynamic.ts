@@ -21,8 +21,4 @@ export function to_dynamic<T>(store: Readable<T>): Readable<DynamicValue<T>> {
             );
         }
     }
-    /*
-    return derive(trigger_dynamic(trigger, trigger), store, value => {
-        return <DynamicValue<T>>{ value };
-    });*/
 }

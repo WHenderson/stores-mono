@@ -121,7 +121,7 @@ it('example-derive-async-update', async () => {
     auto_increment.subscribe(value => console.log('store value:', value));
 
     await new Promise(resolve => {
-        setTimeout(resolve, 3500);
+        setTimeout(resolve, 3800);
     });
 
     // > store value: 0

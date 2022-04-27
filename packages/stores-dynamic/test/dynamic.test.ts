@@ -26,6 +26,13 @@ type ExactType<A,B> = [A] extends [B]
 function ts_assert<T extends boolean>(_condition: T) {
 }
 
+describe('to dynamic', () => {
+    it('should result in the derived value', () => {
+        const derived = dynamic(writable(42));
+        expect(get(derived)).to.deep.equal({ value: 42 });
+    });
+});
+
 describe('static calculations', () => {
     it('should correctly type resolved arguments', () => {
         const a = dynamic(constant('a'));

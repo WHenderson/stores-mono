@@ -1,5 +1,4 @@
 export * from './trigger-dynamic';
-export * from './to-dynamic';
 export * from './dynamic';
 export * from './constant';
 export * from './constant-value';

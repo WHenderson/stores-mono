@@ -1,17 +1,7 @@
 import {Dynamic, DynamicDependents, DynamicReadable, DynamicResolved, DynamicValue} from "./types";
-import {
-    Action,
-    ComplexSet,
-    is_readable,
-    readable,
-    Readable,
-    transform,
-    Trigger,
-    trigger_always,
-    Unsubscriber,
-    Updater
-} from "@crikey/stores-base";
+import {Action, ComplexSet, is_readable, readable, Readable, Trigger, Unsubscriber, Updater} from "@crikey/stores-base";
 import {is_dynamic_resolved} from "./is-dynamic-resolved";
+import {to_dynamic} from "./to-dynamic";
 
 export type ResolveDynamic = <V>(arg: Dynamic<V>) => V;
 export type ComplexResolveDynamic = ResolveDynamic & { resolve: ResolveDynamic };
@@ -33,6 +23,9 @@ export type DeriveFn<A, R, SYNC, ASYNC> =
  * Transforms a regular store into a dynamic store by transforming its value into a @{link DynamicValue}
  *
  * See other signatures for alternate semantics
+ *
+ * _Example_:
+ * {@codeblock ../stores-dynamic/examples/dynamic.test.ts#example-to-dynamic}
  *
  * @param store the input store to transform
  */
@@ -171,13 +164,8 @@ export function dynamic<A extends Inputs, R>(
     calculate_or_initial_value?: Function | DynamicResolved<R>,
     maybe_initial_value?: DynamicResolved<R>)
 : DynamicReadable<R> {
-    if (typeof trigger_or_store !== 'function') {
-        return transform<R, DynamicValue<R>>(
-            trigger_always,
-            trigger_or_store,
-            value => ({ value })
-        );
-    }
+    if (typeof trigger_or_store !== 'function')
+        return to_dynamic(trigger_or_store);
 
     const trigger = trigger_or_store;
 

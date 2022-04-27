@@ -2,14 +2,14 @@ import {Dynamic, DynamicReadable} from "./types";
 import {get} from "@crikey/stores-base";
 
 /**
- * Resolve store to a static value if it has no dynamic dependencies, or keep as a store.
+ * Resolve store to a static value (on demand) if it has no dynamic dependencies, or keep as a store.
  *
- * Upon initial introspection, the store is resolved. If the resolved value is static and indicates no dependencies
- * then the resolved value is cached otherwise the original store is cached.
+ * Upon initial introspection, the store is subscribed. If the resulting value is is static
+ * then it is cached, otherwise the store is cached.
  * Future introspections operate solely on the cache.
  *
  * The net result is that values that can be calculated statically are only calculated once, but values which
- * are calculated based off of dynamic dependencies will need to be calculated again upon their first subscription.
+ * are calculated based off of dynamic dependencies will need to be calculated again upon subsequent subscriptions.
  * Thus, for a single subscription the dynamic value will be calculated at least twice.
  *
  * @param store

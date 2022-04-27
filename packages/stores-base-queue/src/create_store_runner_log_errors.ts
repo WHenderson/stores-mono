@@ -1,5 +1,8 @@
 import {Action} from "./types";
 
+/**
+ * Callback used to log errors
+ */
 export type Logger = (error: any) => void;
 
 /**
