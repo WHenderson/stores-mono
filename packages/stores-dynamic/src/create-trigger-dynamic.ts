@@ -2,7 +2,13 @@ import {Trigger} from "@crikey/stores-base";
 import {DynamicError, DynamicResolved, DynamicValue} from "./types";
 import {trigger_strict_not_equal} from "@crikey/stores-base";
 
-export function trigger_dynamic<T>(
+/**
+ * Creates a trigger function for {@link DynamicResolved} values
+ *
+ * @param trigger_value trigger function for comparing values
+ * @param trigger_error trigger function for comparing errors
+ */
+export function create_trigger_dynamic<T>(
     trigger_value: Trigger<T> = trigger_strict_not_equal,
     trigger_error: Trigger<any> = trigger_strict_not_equal
 ): Trigger<DynamicResolved<T>> {

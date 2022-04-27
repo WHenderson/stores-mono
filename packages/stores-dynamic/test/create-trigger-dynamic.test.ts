@@ -1,9 +1,9 @@
 import {expect, it} from 'vitest'
-import { trigger_dynamic } from "../src";
+import { create_trigger_dynamic } from "../src";
 import { trigger_strict_not_equal } from "@crikey/stores-base";
 
 it('should only trigger on result change', () => {
-    const trigger = trigger_dynamic(trigger_strict_not_equal, trigger_strict_not_equal);
+    const trigger = create_trigger_dynamic(trigger_strict_not_equal, trigger_strict_not_equal);
 
     expect(trigger(false, { value: 1})).toBeTruthy();
 
