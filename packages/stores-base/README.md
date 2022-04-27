@@ -1,7 +1,7 @@
 # @crikey/stores-base
 
 Types and functions for creating [Svelte](https://svelte.dev/) compatible stores.
-`@crikey/stores-base` stores further extend the the [svelte/store](https://svelte.dev/docs#run-time-svelte-store) 
+`@crikey/stores-base` stores further extend the [svelte/store](https://svelte.dev/docs#run-time-svelte-store) 
 contract to allow for additional features and extensibility. 
 
 Store creation function:
@@ -13,6 +13,10 @@ Store creation function:
 Utility functions:
 * {@link get} - Retrieve the value of a store
 * {@link read_only} - Restrict a store to the {@link Readable} interface
+
+Type Guards:
+* {@link is_writable} Type guard to determine if store is {@link Writable}
+* {@link is_readable} Type guard to determine if store is {@link Readable}
 
 Trigger functions:
 * {@link trigger_always} - Trigger at every available opportunity
@@ -157,3 +161,9 @@ graph TD
     a --> b --> d
     a --> c --> d
 ```
+
+### Infinite recursion checks
+Subscribing to a store from within its start function triggers a RecursionError rather returning the initial_value
+
+### Error handling
+Uncaught errors in subscribers, start functions or derivation functions can now be handled via @{link set_store_runner}

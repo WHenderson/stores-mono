@@ -1,4 +1,5 @@
 export * from './create-trigger-dynamic';
+export * from './smart';
 export * from './dynamic';
 export * from './constant';
 export * from './constant-value';

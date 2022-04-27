@@ -3,7 +3,7 @@ import {get} from "@crikey/stores-base";
 import {is_dynamic_error} from "./is-dynamic-error";
 
 /**
- * Uses {@link get} to retrieve the current store value and return its value property (or undefined)
+ * Uses {@link get} to retrieve the current store value and return its value property (or throw its error property)
  *
  * _Note: if the store value contains an error, the error will be thrown_
  *

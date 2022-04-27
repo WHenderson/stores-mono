@@ -1,19 +1,18 @@
 import {expect, it, vi} from "vitest";
-import {constant, constant_value, DynamicValue} from "../src";
-import {auto_resolve} from "../src/auto-resolve";
+import {constant, constant_value, DynamicValue, smart} from "../src";
 import {is_readable} from "@crikey/stores-base";
 import {readable} from "@crikey/stores-strict";
 
 it('should resolve static stores into static values', () => {
     const store = constant_value(1);
-    const resolved = auto_resolve(store);
+    const resolved = smart(store);
 
     expect(resolved).to.deep.equal({ value: 1, is_const: true });
 });
 
 it('should resolve dynamic stores into dynamic values', () => {
     const store = constant({ value: 1, is_const: false });
-    const resolved = auto_resolve(store);
+    const resolved = smart(store);
 
     expect(is_readable(resolved)).toBeTruthy();
 });
@@ -21,7 +20,7 @@ it('should resolve dynamic stores into dynamic values', () => {
 it('should resolve via the "in" operator', () => {
     const watch = vi.fn();
     const store = readable({ value: 1, is_const: true }, watch);
-    const resolved = auto_resolve(store);
+    const resolved = smart(store);
 
     expect(watch.mock.calls).toHaveLength(0);
 
@@ -37,7 +36,7 @@ it('should resolve via the "in" operator', () => {
 it('should resolve via get', () => {
     const watch = vi.fn();
     const store = readable({ value: 1, is_const: true }, watch);
-    const resolved = auto_resolve(store);
+    const resolved = smart(store);
 
     expect(watch.mock.calls).toHaveLength(0);
 
@@ -53,7 +52,7 @@ it('should resolve via get', () => {
 it('should resolve via get', () => {
     const watch = vi.fn();
     const store = readable({ value: 1, is_const: true }, watch);
-    const resolved = auto_resolve(store);
+    const resolved = smart(store);
 
     expect(watch.mock.calls).toHaveLength(0);
 
@@ -74,7 +73,7 @@ it('should resolve via get', () => {
 it('should resolve via ownKeys', () => {
     const watch = vi.fn();
     const store = readable({ value: 1, is_const: true }, watch);
-    const resolved = auto_resolve(store);
+    const resolved = smart(store);
 
     expect(watch.mock.calls).toHaveLength(0);
 
@@ -90,7 +89,7 @@ it('should resolve via ownKeys', () => {
 it('should resolve via getOwnPropertyNames', () => {
     const watch = vi.fn();
     const store = readable({ value: 1, is_const: true }, watch);
-    const resolved = auto_resolve(store);
+    const resolved = smart(store);
 
     expect(watch.mock.calls).toHaveLength(0);
 
