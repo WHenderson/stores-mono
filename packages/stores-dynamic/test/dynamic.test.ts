@@ -1,5 +1,5 @@
 import {describe, expect, it, vi} from 'vitest'
-import {dynamic, DynamicError, DynamicReadable, DynamicResolved, DynamicValue, get_value, to_dynamic} from "../src";
+import {dynamic, DynamicError, DynamicReadable, DynamicResolved, DynamicValue, get_value} from "../src";
 import {derive, writable} from "@crikey/stores-strict";
 import {
     Action,
@@ -237,7 +237,7 @@ describe('dynamic calculations', () => {
         let store_count = 0;
         store.subscribe(_ => ++store_count);
 
-        const dynamic_store = to_dynamic(store);
+        const dynamic_store = dynamic(store);
         let dynamic_store_count = 0;
         dynamic_store.subscribe(_ => ++dynamic_store_count);
 
@@ -271,7 +271,7 @@ describe('dynamic calculations', () => {
         let store_count = 0;
         store.subscribe(_ => ++store_count);
 
-        const dynamic_store = to_dynamic(store);
+        const dynamic_store = dynamic(store);
         let dynamic_store_count = 0;
         dynamic_store.subscribe(_ => ++dynamic_store_count);
 

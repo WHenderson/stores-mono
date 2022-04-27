@@ -45,11 +45,17 @@ export function dynamic<R>(
  *
  * For asynchronous usage, see alternate signatures.
  *
+ * _Example_:
+ * {@codeblock ../stores-dynamic/examples/dynamic.test.ts#example-dynamic-static}
+ *
+ * _Example_:
+ * {@codeblock ../stores-dynamic/examples/dynamic.test.ts#example-dynamic-errors}
+ *
  * @param trigger callback used to determine if subscribers should be called
  * @param calculate callback used to calculate the resulting store value
  */
 export function dynamic<R>(
-    trigger: Trigger<Dynamic<R>>,
+    trigger: Trigger<DynamicResolved<R>>,
     calculate: DeriveFn<never, Dynamic<R>, ComplexResolveDynamic, never>
 ) : DynamicReadable<R>;
 
@@ -68,7 +74,7 @@ export function dynamic<R>(
  * @param calculate callback used to calculate the resulting store value
  */
 export function dynamic<R>(
-    trigger: Trigger<Dynamic<R>>,
+    trigger: Trigger<DynamicResolved<R>>,
     calculate: DeriveFn<never, Dynamic<R>, ComplexResolveDynamic, ComplexSet<DynamicResolved<R | undefined>>>
 ) : DynamicReadable<R | undefined>;
 
@@ -88,7 +94,7 @@ export function dynamic<R>(
  * @param initial_value initial value
  */
 export function dynamic<R>(
-    trigger: Trigger<Dynamic<R>>,
+    trigger: Trigger<DynamicResolved<R>>,
     calculate: DeriveFn<never, Dynamic<R>, ComplexResolveDynamic, ComplexSet<DynamicResolved<R>>>,
     initial_value: DynamicResolved<R>
 ) : DynamicReadable<R>;
@@ -109,7 +115,7 @@ export function dynamic<R>(
  * @param calculate callback used to calculate the resulting store value
  */
 export function dynamic<A extends Inputs, R>(
-    trigger: Trigger<Dynamic<R>>,
+    trigger: Trigger<DynamicResolved<R>>,
     args: A,
     calculate: DeriveFn<A, Dynamic<R>, ComplexResolveDynamic, never>
 ) : DynamicReadable<R>;
@@ -130,7 +136,7 @@ export function dynamic<A extends Inputs, R>(
  * @param calculate callback used to calculate the resulting store value
  */
 export function dynamic<A extends Inputs, R>(
-    trigger: Trigger<Dynamic<R>>,
+    trigger: Trigger<DynamicResolved<R>>,
     args: A,
     calculate: DeriveFn<A, Dynamic<R>, ComplexResolveDynamic, ComplexSet<DynamicResolved<R | undefined>>>
 ) : DynamicReadable<R | undefined>;
@@ -152,14 +158,14 @@ export function dynamic<A extends Inputs, R>(
  * @param initial_value initial value
  */
 export function dynamic<A extends Inputs, R>(
-    trigger: Trigger<Dynamic<R>>,
+    trigger: Trigger<DynamicResolved<R>>,
     args: A,
     calculate: DeriveFn<A, Dynamic<R>, ComplexResolveDynamic, ComplexSet<DynamicResolved<R>>>,
     initial_value: DynamicResolved<R>
 ) : DynamicReadable<R>;
 
 export function dynamic<A extends Inputs, R>(
-    trigger_or_store: Trigger<Dynamic<R>> | Readable<R>,
+    trigger_or_store: Trigger<DynamicResolved<R>> | Readable<R>,
     args_or_calculator?: A | Function,
     calculate_or_initial_value?: Function | DynamicResolved<R>,
     maybe_initial_value?: DynamicResolved<R>)
