@@ -188,10 +188,15 @@ export function dynamic<A extends Inputs, R>(
 
     const is_async = args ? calculator.length > 2 : calculator.length > 1;
 
+    let is_static_cached = false;
+
     return readable<DynamicResolved<R>>(
         trigger,
         initial_value!,
         ({ set, update, invalidate, revalidate }) => {
+            if (is_static_cached)
+                return; // static value already cached, no need to recalculate
+
             type Value = DynamicResolved<unknown>;
             type Subscription = [Unsubscriber, undefined | Value];
             const subscriptions = new Map<DynamicReadable<unknown>, Subscription>();
@@ -325,7 +330,7 @@ export function dynamic<A extends Inputs, R>(
                     return calculator(...params);
                 }
                 catch (ex) {
-                    return { error: ex, ...get_dependencies_spread() };
+                    return { error: ex };
                 }
             }
 
@@ -358,7 +363,7 @@ export function dynamic<A extends Inputs, R>(
                 const is_static = !is_async
                     && (!dependencies_spread.dependencies || [...dependencies_spread.dependencies.values()].every(store => {
                         const value = subscriptions.get(store)?.[1];
-                        return !value ?? value?.is_static;
+                        return !value || value?.is_static;
                     }));
 
                 const is_static_spread = is_static ? { is_static: true } : {};
@@ -372,7 +377,9 @@ export function dynamic<A extends Inputs, R>(
                 }
                 else
                 if (is_dynamic_resolved(result)) {
-                    set({ ...result, ...dependencies_spread, ...is_static_spread });
+                    const ultimate_result = {...is_static_spread, ...result, ...dependencies_spread };
+                    is_static_cached = !!ultimate_result.is_static;
+                    set(ultimate_result);
                 }
                 else
                 if (is_readable(result)) {
@@ -382,15 +389,18 @@ export function dynamic<A extends Inputs, R>(
                     ]);
 
                     cleanup = result.subscribe(
-                        (value) => {
-                            set({ ...value, dependencies: extra_dependencies, ...is_static_spread });
+                        (result) => {
+                            const ultimate_result = { ...is_static_spread, ...result, dependencies: extra_dependencies };
+                            is_static_cached = !!ultimate_result.is_static;
+                            set(ultimate_result);
                         },
                         invalidate,
                         revalidate
                     );
                 }
                 else {
-                    set({ error: new TypeError('invalid result type'), ...dependencies_spread, ...is_static_spread });
+                    const ultimate_result = { error: new TypeError('invalid result type'), ...dependencies_spread, ...is_static_spread }
+                    set(ultimate_result);
                 }
             }
 
