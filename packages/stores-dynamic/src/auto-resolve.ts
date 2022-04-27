@@ -22,7 +22,7 @@ export function auto_resolve<R>(store: DynamicReadable<R>): Dynamic<R>  {
 
         Object.assign(
             cache,
-            result.is_static
+            result.is_const
             ? result
             : store
         );

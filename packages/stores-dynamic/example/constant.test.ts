@@ -15,7 +15,7 @@ it('example-constant', () => {
     // #endregion example-constant
 
     expect(console.log.mock.calls).to.deep.equal([
-        ['store value:', { value: 10, is_static: true }],
+        ['store value:', { value: 10, is_const: true }],
     ]);
 });
 
@@ -31,7 +31,7 @@ it('example-constant-value', () => {
     // #endregion example-constant
 
     expect(console.log.mock.calls).to.deep.equal([
-        ['store value:', { value: 10, is_static: true }],
+        ['store value:', { value: 10, is_const: true }],
     ]);
 });
 
@@ -48,6 +48,6 @@ it('example-constant-error', () => {
     // #endregion example-constant
 
     expect(console.log.mock.calls).to.deep.equal([
-        ['store value:', { error, is_static: true }],
+        ['store value:', { error, is_const: true }],
     ]);
 });

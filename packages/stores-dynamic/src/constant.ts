@@ -11,7 +11,7 @@ import {DynamicReadable, DynamicResolved} from "./types";
  * @param value the constant value of the store
  */
 export function constant<T>(value: DynamicResolved<T>): DynamicReadable<T> {
-    const fixed = Object.assign({ is_static: true }, value);
+    const fixed = Object.assign({ is_const: true }, value);
 
     return {
         subscribe(run: Subscriber<DynamicResolved<T>>): Unsubscriber {

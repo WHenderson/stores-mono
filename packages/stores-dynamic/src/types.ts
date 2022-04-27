@@ -5,7 +5,7 @@ export type DynamicDependents = ReadonlySet<DynamicReadable<any>>;
 export type DynamicDependencies = { dependencies: DynamicDependents | undefined };
 
 /** Flag Dynamic value to determine if deriving calculation is static */
-export type DynamicFlagStatic = { is_static: boolean };
+export type DynamicFlagStatic = { is_const: boolean };
 
 /** Hold an error thrown during the evaluation of a dynamic item */
 export type DynamicError = { error: any } & Partial<DynamicDependencies> & Partial<DynamicFlagStatic>;

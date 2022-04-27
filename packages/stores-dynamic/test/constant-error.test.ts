@@ -5,5 +5,5 @@ import {get} from "@crikey/stores-base";
 it('should produce a DynamicError', () => {
     const store = constant_error(1);
 
-    expect(get(store)).to.deep.equal({ error: 1, is_static: true });
+    expect(get(store)).to.deep.equal({ error: 1, is_const: true });
 });
