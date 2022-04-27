@@ -1,9 +1,10 @@
 import {expect, it} from "vitest";
 import {shim_console} from "./_util";
 import {readable} from "@crikey/stores-strict";
-import {dynamic, DynamicError, trigger_dynamic} from "../src";
+import {ComplexResolveDynamic, dynamic, DynamicError, DynamicResolved, trigger_dynamic} from "../src";
 import {get} from "@crikey/stores-base";
 import {writable} from "@crikey/stores-strict";
+import {ComplexSet} from "@crikey/stores-base/src";
 
 it('example-to-dynamic', () => {
     const console = shim_console();
@@ -89,5 +90,58 @@ it('example-dynamic-errors', () => {
     expect(console.log.mock.calls).to.deep.equal([
         ['derived value:', { value: 1, dependencies: new Set([a]) }],
         ['derived value:', { error, dependencies: new Set([a]) }],
+    ]);
+});
+
+it('example-dynamic-async', async () => {
+    const console = shim_console();
+
+    const wait = (ms: number) => new Promise(resolve => {
+        setTimeout(resolve, ms);
+    })
+
+    // #region example-to-dynamic
+
+    const a = writable({ value: 0 });
+    const derived = dynamic(
+        trigger_dynamic(),
+        (resolve: ComplexResolveDynamic, set: ComplexSet<DynamicResolved<string | undefined>>) => {
+            const id = setTimeout(
+                () => {
+                    if (resolve(a) % 2 === 0)
+                        set({ value: 'even' });
+                    else
+                        set({ value: 'odd' });
+                },
+                0
+            );
+            return () => {
+                clearTimeout(id);
+            }
+        }
+    );
+
+    derived.subscribe((value) => console.log('derived value:', value))
+
+    await wait(0);
+
+    a.set({ value: 1 });
+
+    await wait(0);
+
+    a.set({ value: 2 });
+
+    await wait(0);
+
+    // > derived value: { value: undefined }
+    // > derived value
+
+    // #endregion example-to-dynamic
+
+    expect(console.log.mock.calls).to.deep.equal([
+        ['derived value:', { value: undefined }],
+        ['derived value:', { value: 'even', dependencies: new Set([ a ]) }],
+        ['derived value:', { value: 'odd', dependencies: new Set([ a ]) }],
+        ['derived value:', { value: 'even', dependencies: new Set([ a ]) }],
     ]);
 });

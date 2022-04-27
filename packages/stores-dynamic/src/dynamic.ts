@@ -70,6 +70,10 @@ export function dynamic<R>(
  *
  * For synchronous usage, see alternate signatures.
  *
+ * _Example_:
+ * {@codeblock ../stores-dynamic/examples/dynamic.test.ts#example-dynamic-static}
+ * _Note that if a dependency changes, the entire function is reevaluated_
+ *
  * @param trigger callback used to determine if subscribers should be called
  * @param calculate callback used to calculate the resulting store value
  */
@@ -88,6 +92,10 @@ export function dynamic<R>(
  * Equivalent of {@link derive}, but store dependencies are determined dynamically as needed.
  *
  * For synchronous usage, see alternate signatures.
+ *
+ * _Example_:
+ * {@codeblock ../stores-dynamic/examples/dynamic.test.ts#example-dynamic-static}
+ * _Note that if a dependency changes, the entire function is reevaluated_
  *
  * @param trigger callback used to determine if subscribers should be called
  * @param calculate callback used to calculate the resulting store value
@@ -110,6 +118,12 @@ export function dynamic<R>(
  *
  * For asynchronous usage, see alternate signatures.
  *
+ * _Example_:
+ * {@codeblock ../stores-dynamic/examples/dynamic.test.ts#example-dynamic-static}
+ *
+ * _Example_:
+ * {@codeblock ../stores-dynamic/examples/dynamic.test.ts#example-dynamic-errors}
+ *
  * @param trigger callback used to determine if subscribers should be called
  * @param args array of arguments to be passed to the callback unchanged
  * @param calculate callback used to calculate the resulting store value
@@ -131,6 +145,10 @@ export function dynamic<A extends Inputs, R>(
  *
  * For synchronous usage, see alternate signatures.
  *
+ * _Example_:
+ * {@codeblock ../stores-dynamic/examples/dynamic.test.ts#example-dynamic-static}
+ * _Note that if a dependency changes, the entire function is reevaluated_
+ *
  * @param trigger callback used to determine if subscribers should be called
  * @param args array of arguments to be passed to the callback unchanged
  * @param calculate callback used to calculate the resulting store value
@@ -151,6 +169,10 @@ export function dynamic<A extends Inputs, R>(
  * Equivalent of {@link derive}, but store dependencies are determined dynamically as needed.
  *
  * For synchronous usage, see alternate signatures.
+ *
+ * _Example_:
+ * {@codeblock ../stores-dynamic/examples/dynamic.test.ts#example-dynamic-static}
+ * _Note that if a dependency changes, the entire function is reevaluated_
  *
  * @param trigger callback used to determine if subscribers should be called
  * @param args array of arguments to be passed to the callback unchanged
@@ -186,7 +208,7 @@ export function dynamic<A extends Inputs, R>(
 
     return readable<DynamicResolved<R>>(
         trigger,
-        initial_value!,
+        initial_value ?? { value: <R>undefined! },
         ({ set, update, invalidate, revalidate }) => {
             if (is_static_cached)
                 return; // static value already cached, no need to recalculate
@@ -414,6 +436,6 @@ export function dynamic<A extends Inputs, R>(
             sync();
 
             return stop;
-        }
+        },
     );
 }
