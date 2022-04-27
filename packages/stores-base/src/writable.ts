@@ -2,7 +2,7 @@ import {Invalidate, Revalidate, StartNotifier, Subscriber, Trigger, Unsubscriber
 import {noop} from "./noop";
 import {enqueue_store_signals} from "@crikey/stores-base-queue";
 import {store_runner} from "@crikey/stores-base-queue";
-import {store_stack_use} from "@crikey/stores-base-queue/src";
+import {RecursionError} from "./recursion-error";
 
 type SubscribeInvalidateTuple<T> = [Subscriber<T>, Invalidate, Revalidate];
 
@@ -150,40 +150,45 @@ export function writable<T>(trigger: Trigger<T>, value?: T, start: StartNotifier
         set(fn(value!));
     }
 
+    let subscribing = false;
     function subscribe(run: Subscriber<T>, invalidator: Invalidate = noop, revalidator: Revalidate = noop): Unsubscriber {
-        return store_stack_use(
-            store,
-            () => {
-                const subscriber: SubscribeInvalidateTuple<T> = [run, invalidator, revalidator];
-                subscribers.add(subscriber);
+        if (subscribing)
+            throw new RecursionError();
 
-                const unsubscribe = () => {
-                    subscribers.delete(subscriber);
-                    if (subscribers.size === 0 && stop) {
-                        stop();
-                        stop = undefined;
-                    }
-                };
+        subscribing = true;
+        try {
+            const subscriber: SubscribeInvalidateTuple<T> = [run, invalidator, revalidator];
+            subscribers.add(subscriber);
 
-                try {
-                    store_runner(
-                        () => {
-                            if (subscribers.size === 1) {
-                                stop = start(complexSet) || noop;
-                            }
-                            run(value!);
+            const unsubscribe = () => {
+                subscribers.delete(subscriber);
+                if (subscribers.size === 0 && stop) {
+                    stop();
+                    stop = undefined;
+                }
+            };
+
+            try {
+                store_runner(
+                    () => {
+                        if (subscribers.size === 1) {
+                            stop = start(complexSet) || noop;
                         }
-                    );
-                }
-                catch (ex) {
-                    unsubscribe();
-
-                    throw ex;
-                }
-
-                return unsubscribe;
+                        run(value!);
+                    }
+                );
             }
-        );
+            catch (ex) {
+                unsubscribe();
+
+                throw ex;
+            }
+
+            return unsubscribe;
+        }
+        finally {
+            subscribing = false;
+        }
     }
 
     const store: Writable<T> = { set, update, subscribe };

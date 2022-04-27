@@ -7,12 +7,13 @@ import {
     constant,
     get,
     Readable,
+    RecursionError,
+    Subscriber,
     trigger_always,
-    trigger_strict_not_equal
+    trigger_strict_not_equal,
+    Unsubscriber
 } from "@crikey/stores-base";
-import {RecursionError, StoreRunner} from "../../stores-base-queue";
-import {get_store_runner, set_store_runner, store_runner_throw_errors} from "@crikey/stores-base-queue";
-import {Subscriber, Unsubscriber} from "@crikey/stores-base/src";
+import {get_store_runner, set_store_runner, store_runner_throw_errors, StoreRunner} from "@crikey/stores-base-queue";
 
 type ExactType<A,B> = [A] extends [B]
     ? (

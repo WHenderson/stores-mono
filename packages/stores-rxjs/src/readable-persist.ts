@@ -1,6 +1,5 @@
-import {noop, Readable, writable} from '@crikey/stores-base';
+import {noop, Readable, trigger_always, writable} from '@crikey/stores-base';
 import {Observable, Subscription} from "rxjs";
-import {trigger_always} from "./trigger-always";
 
 export interface Linkable {
     link(this: void): void;

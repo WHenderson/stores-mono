@@ -1,7 +1,6 @@
 import {describe, expect, it, vi} from 'vitest'
-import {Action, get, Readable, trigger_always, writable} from "../src";
+import {Action, get, Readable, RecursionError, trigger_always, writable} from "../src";
 import {get_store_runner, set_store_runner, store_runner_throw_errors, StoreRunner} from "@crikey/stores-base-queue";
-import {RecursionError} from "@crikey/stores-base-queue/src";
 
 it('should update with each change', () => {
     const store = writable(trigger_always, 1);

@@ -1,9 +1,9 @@
 import {expect, vi, it} from 'vitest'
-import {writable} from "../../stores-strict/src";
+import {writable, trigger_always} from "@crikey/stores-base";
 import {observe_store} from "../src";
 
 it('should signal upon changing values', () => {
-    const store = writable(1);
+    const store = writable(trigger_always, 1);
     const observable = observe_store(store);
     const watcher = vi.fn();
     observable.subscribe(watcher);

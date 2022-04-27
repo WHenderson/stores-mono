@@ -13,3 +13,4 @@ export * from './trigger-safe-not-equal';
 export * from './is-readable';
 export * from './is-writable';
 export * from './transform';
+export * from './recursion-error';
