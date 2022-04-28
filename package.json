@@ -46,6 +46,7 @@
     "coverage": "vitest run --coverage",
     "coverage:watch": "vitest --coverage",
     "coverage:per-package": "pnpm -r --filter ./packages run coverage",
+    "version:bump": "pnpm changeset",
     "publish:packages": "pnpm -r --filter ./packages publish --public --dry-run"
   },
   "license": "MIT",
