@@ -1,13 +1,10 @@
 name: "Publish updated packages"
 
 on:
-  workflow_dispatch:
-    inputs:
-      otp:
-        description: 'NPM OTP'
-        required: true
+  workflow_dispatch
+
 jobs:
-  draft-new-release:
+  version-and-publish:
     name: "Publish updated packages"
     runs-on: ubuntu-latest
     steps:
@@ -52,11 +49,6 @@ jobs:
       - name: Build
         run: pnpm run build
 
-      - name: Show OTP
-        run: echo "NPM OTP=$NPM_OTP"
-        env:
-          NPM_OTP: ${{ github.event.inputs.otp }}
-
       - name: Publish Packages
         uses: changesets/action@v1
         with:
@@ -64,4 +56,3 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NPM_OTP: ${{ github.event.inputs.otp }}
