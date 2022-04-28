@@ -55,7 +55,7 @@ jobs:
       - name: Publish Packages
         uses: changesets/action@v1
         with:
-          publish: pnpm publish -r --publish-branch master --otp=$NPM_OTP
+          publish: pnpm publish -r --publish-branch=master --otp=$NPM_OTP
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
