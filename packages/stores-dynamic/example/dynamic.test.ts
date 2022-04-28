@@ -1,10 +1,8 @@
 import {expect, it} from "vitest";
 import {shim_console} from "./_util";
-import {readable} from "@crikey/stores-strict";
-import {ComplexResolveDynamic, dynamic, DynamicError, DynamicResolved, create_trigger_dynamic} from "../src";
-import {get} from "@crikey/stores-base";
-import {writable} from "@crikey/stores-strict";
-import {ComplexSet} from "@crikey/stores-base/src";
+import {readable, writable} from "@crikey/stores-strict";
+import {ComplexResolveDynamic, dynamic, DynamicError, DynamicResolved} from "../src";
+import {ComplexSet, get} from "@crikey/stores-base";
 
 it('example-to-dynamic', () => {
     const console = shim_console();
@@ -32,7 +30,6 @@ it('example-dynamic-static', () => {
     const b = writable({ value: 'b value' });
     const c = writable({ value: 'c value' });
     const derived = dynamic(
-        create_trigger_dynamic(),
         (resolve) => {
             return resolve(a) % 2 === 0
             ? { value: resolve(b) }
@@ -63,7 +60,6 @@ it('example-dynamic-errors', () => {
 
     const a = writable({ value: { prop: 1 } });
     const derived = dynamic(
-        create_trigger_dynamic(),
         (resolve) => {
             try {
                 return { value: resolve(a)['prop'] }
@@ -104,7 +100,6 @@ it('example-dynamic-async', async () => {
 
     const a = writable({ value: 0 });
     const derived = dynamic(
-        create_trigger_dynamic(),
         (resolve: ComplexResolveDynamic, set: ComplexSet<DynamicResolved<string | undefined>>) => {
             const id = setTimeout(
                 () => {

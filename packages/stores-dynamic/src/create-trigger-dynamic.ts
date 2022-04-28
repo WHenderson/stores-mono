@@ -3,6 +3,11 @@ import {DynamicError, DynamicResolved, DynamicValue} from "./types";
 import {trigger_strict_not_equal} from "@crikey/stores-base";
 
 /**
+ * Default trigger used in dynamics when none is specified
+ */
+export const default_trigger_dynamic = create_trigger_dynamic();
+
+/**
  * Creates a trigger function for {@link DynamicResolved} values
  *
  * @param trigger_value trigger function for comparing values

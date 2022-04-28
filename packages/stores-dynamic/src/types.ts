@@ -5,13 +5,13 @@ export type DynamicDependents = ReadonlySet<DynamicReadable<any>>;
 export type DynamicDependencies = { dependencies: DynamicDependents | undefined };
 
 /** Flag Dynamic value to determine if deriving calculation is static */
-export type DynamicFlagStatic = { is_const: boolean };
+export type DynamicFlagConstant = { is_const: boolean };
 
 /** Hold an error thrown during the evaluation of a dynamic item */
-export type DynamicError = { error: any } & Partial<DynamicDependencies> & Partial<DynamicFlagStatic>;
+export type DynamicError = { error: any } & Partial<DynamicDependencies> & Partial<DynamicFlagConstant>;
 
 /** Hold the resolved value of a dynamic item */
-export type DynamicValue<T> = { value: T } & Partial<DynamicDependencies> & Partial<DynamicFlagStatic>;
+export type DynamicValue<T> = { value: T } & Partial<DynamicDependencies> & Partial<DynamicFlagConstant>;
 
 /** Hold the resolved value or error of a dynamic item */
 export type DynamicResolved<T> = DynamicError | DynamicValue<T>;

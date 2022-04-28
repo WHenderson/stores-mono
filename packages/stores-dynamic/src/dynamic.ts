@@ -12,6 +12,7 @@ import {
     Updater
 } from "@crikey/stores-base";
 import {is_dynamic_resolved} from "./is-dynamic-resolved";
+import {default_trigger_dynamic} from "./create-trigger-dynamic";
 
 export type ResolveDynamic = <V>(arg: Dynamic<V>) => V;
 export type ComplexResolveDynamic = ResolveDynamic & { resolve: ResolveDynamic };
@@ -196,26 +197,208 @@ export function dynamic<A extends Inputs, R>(
     initial_value: DynamicResolved<R>
 ) : DynamicReadable<R>;
 
+// ------------------------
+
+/**
+ * Derives a store via a calculation callback. Calculations can be dependent on any number of stores
+ * and will be recalculated as needed,
+ * Note: Whilst an array of arguments can be provided to be passed to the calculation, store dependencies need
+ * not be included in this list.
+ * The only requirement is that they be resolved via the `resolve` function passed to the `calculate` callback.
+ *
+ * Equivalent of {@link derive}, but store dependencies are determined dynamically as needed.
+ *
+ * For asynchronous usage, see alternate signatures.
+ *
+ * _Example_:
+ * {@codeblock ../stores-dynamic/examples/dynamic.test.ts#example-dynamic-static}
+ *
+ * _Example_:
+ * {@codeblock ../stores-dynamic/examples/dynamic.test.ts#example-dynamic-errors}
+ *
+ * @param trigger callback used to determine if subscribers should be called
+ * @param calculate callback used to calculate the resulting store value
+ */
+export function dynamic<R>(
+    calculate: DeriveFn<never, Dynamic<R>, ComplexResolveDynamic, never>
+) : DynamicReadable<R>;
+
+/**
+ * Derives a store via a calculation callback. Calculations can be dependent on any number of stores
+ * and will be recalculated as needed,
+ * Note: Whilst an array of arguments can be provided to be passed to the calculation, store dependencies need
+ * not be included in this list.
+ * The only requirement is that they be resolved via the `resolve` function passed to the `calculate` callback.
+ *
+ * Equivalent of {@link derive}, but store dependencies are determined dynamically as needed.
+ *
+ * For synchronous usage, see alternate signatures.
+ *
+ * _Example_:
+ * {@codeblock ../stores-dynamic/examples/dynamic.test.ts#example-dynamic-static}
+ * _Note that if a dependency changes, the entire function is reevaluated_
+ *
+ * @param trigger callback used to determine if subscribers should be called
+ * @param calculate callback used to calculate the resulting store value
+ */
+export function dynamic<R>(
+    calculate: DeriveFn<never, Dynamic<R>, ComplexResolveDynamic, ComplexSet<DynamicResolved<R | undefined>>>
+) : DynamicReadable<R | undefined>;
+
+/**
+ * Derives a store via a calculation callback. Calculations can be dependent on any number of stores
+ * and will be recalculated as needed,
+ * Note: Whilst an array of arguments can be provided to be passed to the calculation, store dependencies need
+ * not be included in this list.
+ * The only requirement is that they be resolved via the `resolve` function passed to the `calculate` callback.
+ *
+ * Equivalent of {@link derive}, but store dependencies are determined dynamically as needed.
+ *
+ * For synchronous usage, see alternate signatures.
+ *
+ * _Example_:
+ * {@codeblock ../stores-dynamic/examples/dynamic.test.ts#example-dynamic-static}
+ * _Note that if a dependency changes, the entire function is reevaluated_
+ *
+ * @param trigger callback used to determine if subscribers should be called
+ * @param calculate callback used to calculate the resulting store value
+ * @param initial_value initial value
+ */
+export function dynamic<R>(
+    calculate: DeriveFn<never, Dynamic<R>, ComplexResolveDynamic, ComplexSet<DynamicResolved<R>>>,
+    initial_value: DynamicResolved<R>
+) : DynamicReadable<R>;
+
+/**
+ * Derives a store via a calculation callback. Calculations can be dependent on any number of stores
+ * and will be recalculated as needed,
+ * Note: Whilst an array of arguments can be provided to be passed to the calculation, store dependencies need
+ * not be included in this list.
+ * The only requirement is that they be resolved via the `resolve` function passed to the `calculate` callback.
+ *
+ * Equivalent of {@link derive}, but store dependencies are determined dynamically as needed.
+ *
+ * For asynchronous usage, see alternate signatures.
+ *
+ * _Example_:
+ * {@codeblock ../stores-dynamic/examples/dynamic.test.ts#example-dynamic-static}
+ *
+ * _Example_:
+ * {@codeblock ../stores-dynamic/examples/dynamic.test.ts#example-dynamic-errors}
+ *
+ * @param trigger callback used to determine if subscribers should be called
+ * @param args array of arguments to be passed to the callback unchanged
+ * @param calculate callback used to calculate the resulting store value
+ */
 export function dynamic<A extends Inputs, R>(
-    trigger_or_store: Trigger<DynamicResolved<R>> | Readable<R>,
-    args_or_calculator?: A | Function,
-    calculate_or_initial_value?: Function | DynamicResolved<R>,
+    args: A,
+    calculate: DeriveFn<A, Dynamic<R>, ComplexResolveDynamic, never>
+) : DynamicReadable<R>;
+
+/**
+ * Derives a store via a calculation callback. Calculations can be dependent on any number of stores
+ * and will be recalculated as needed,
+ * Note: Whilst an array of arguments can be provided to be passed to the calculation, store dependencies need
+ * not be included in this list.
+ * The only requirement is that they be resolved via the `resolve` function passed to the `calculate` callback.
+ *
+ * Equivalent of {@link derive}, but store dependencies are determined dynamically as needed.
+ *
+ * For synchronous usage, see alternate signatures.
+ *
+ * _Example_:
+ * {@codeblock ../stores-dynamic/examples/dynamic.test.ts#example-dynamic-static}
+ * _Note that if a dependency changes, the entire function is reevaluated_
+ *
+ * @param trigger callback used to determine if subscribers should be called
+ * @param args array of arguments to be passed to the callback unchanged
+ * @param calculate callback used to calculate the resulting store value
+ */
+export function dynamic<A extends Inputs, R>(
+    args: A,
+    calculate: DeriveFn<A, Dynamic<R>, ComplexResolveDynamic, ComplexSet<DynamicResolved<R | undefined>>>
+) : DynamicReadable<R | undefined>;
+
+/**
+ * Derives a store via a calculation callback. Calculations can be dependent on any number of stores
+ * and will be recalculated as needed,
+ * Note: Whilst an array of arguments can be provided to be passed to the calculation, store dependencies need
+ * not be included in this list.
+ * The only requirement is that they be resolved via the `resolve` function passed to the `calculate` callback.
+ *
+ * Equivalent of {@link derive}, but store dependencies are determined dynamically as needed.
+ *
+ * For synchronous usage, see alternate signatures.
+ *
+ * _Example_:
+ * {@codeblock ../stores-dynamic/examples/dynamic.test.ts#example-dynamic-static}
+ * _Note that if a dependency changes, the entire function is reevaluated_
+ *
+ * @param trigger callback used to determine if subscribers should be called
+ * @param args array of arguments to be passed to the callback unchanged
+ * @param calculate callback used to calculate the resulting store value
+ * @param initial_value initial value
+ */
+export function dynamic<A extends Inputs, R>(
+    args: A,
+    calculate: DeriveFn<A, Dynamic<R>, ComplexResolveDynamic, ComplexSet<DynamicResolved<R>>>,
+    initial_value: DynamicResolved<R>
+) : DynamicReadable<R>;
+
+
+
+// ---
+
+export function dynamic<A extends Inputs, R>(
+    store_or_trigger_or_args_or_calculate: Readable<R> | Trigger<DynamicResolved<R>> | A | Function,
+    maybe_args_or_calculate_or_initial_value?: A | Function | DynamicResolved<R>,
+    maybe_calculate_or_initial_value?: Function | DynamicResolved<R>,
     maybe_initial_value?: DynamicResolved<R>)
 : DynamicReadable<R> {
-    if (typeof trigger_or_store !== 'function') {
+    if (is_readable(store_or_trigger_or_args_or_calculate)) {
+        const store = store_or_trigger_or_args_or_calculate;
+
         return transform<R, DynamicValue<R>>(
             trigger_always,
-            trigger_or_store,
+            store,
             value => ({ value })
         );
     }
 
-    const trigger = trigger_or_store;
-
-    const [args, calculator, initial_value] =
-        (typeof args_or_calculator === 'function')
-        ? [undefined, args_or_calculator, <DynamicResolved<R> | undefined>calculate_or_initial_value]
-        : [args_or_calculator!, <Function>calculate_or_initial_value, maybe_initial_value];
+    const [trigger, args, calculator, initial_value] = (() => {
+        if (typeof store_or_trigger_or_args_or_calculate === 'function') {
+            const trigger_or_calculate = store_or_trigger_or_args_or_calculate;
+            if (Array.isArray(maybe_args_or_calculate_or_initial_value)) {
+                const trigger = <Trigger<DynamicResolved<R>>>trigger_or_calculate;
+                const args = maybe_args_or_calculate_or_initial_value;
+                const calculate = <Function>maybe_calculate_or_initial_value;
+                const initial_value = maybe_initial_value;
+                return [trigger, args, calculate, initial_value];
+            }
+            else
+            if (typeof maybe_args_or_calculate_or_initial_value === 'function') {
+                const trigger = <Trigger<DynamicResolved<R>>>trigger_or_calculate;
+                const args = undefined;
+                const calculate = maybe_args_or_calculate_or_initial_value;
+                const initial_value = <DynamicResolved<R> | undefined>maybe_calculate_or_initial_value;
+                return [trigger, args, calculate, initial_value];
+            }
+            else {
+                const trigger = default_trigger_dynamic;
+                const args = undefined;
+                const calculate = trigger_or_calculate;
+                const initial_value = <DynamicResolved<R> | undefined>maybe_args_or_calculate_or_initial_value;
+                return [trigger, args, calculate, initial_value];
+            }
+        }
+        else {
+            const trigger = default_trigger_dynamic;
+            const args = store_or_trigger_or_args_or_calculate;
+            const calculate = <Function>maybe_args_or_calculate_or_initial_value;
+            const initial_value = <DynamicResolved<R> | undefined>maybe_calculate_or_initial_value;
+            return [trigger, args, calculate, initial_value];
+        }
+    })();
 
     const is_async = args ? calculator.length > 2 : calculator.length > 1;
 
