@@ -1,6 +1,6 @@
 {
   "name": "@crikey/stores-selectable",
-  "version": "1.0.0",
+  "version": "1.0.0-alpha",
   "description": "",
   "packageManager": "pnpm",
   "engines": {
@@ -23,7 +23,8 @@
     "build": "tsc && vite build && rollup --config rollup.config.ts --configPlugin typescript",
     "build:docs": "pnpm exec typedoc --out build/docs src/index.ts",
     "build:docs:watch": "pnpm exec typedoc --watch --out build/docs src/index.ts",
-    "clean": "rimraf dist",
+    "clean": "rimraf dist build",
+    "clean:node_modules": "rimraf node_modules",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:tsc": "tsc --noEmit",
@@ -33,11 +34,12 @@
     "coverage:watch": "vitest --coverage"
   },
   "dependencies": {
-    "@crikey/stores-base": "workspace:^1.0.0"
+    "@crikey/stores-base": "workspace:^1.0.0-alpha"
   },
   "devDependencies": {
-    "@crikey/stores-immer": "workspace:^1.0.0",
-    "@crikey/stores-strict": "workspace:^1.0.0",
-    "@crikey/stores-svelte": "workspace:^1.0.0"
-  }
+    "@crikey/stores-immer": "workspace:^1.0.0-alpha",
+    "@crikey/stores-strict": "workspace:^1.0.0-alpha",
+    "@crikey/stores-svelte": "workspace:^1.0.0-alpha"
+  },
+  "license": "MIT"
 }

@@ -1,6 +1,6 @@
 {
   "name": "stores-mono",
-  "version": "1.0.0",
+  "version": "1.0.0-alpha",
   "description": "Mono repo for stores libraries",
   "packageManager": "pnpm",
   "engines": {
@@ -35,8 +35,8 @@
     "preinstall": "npx only-allow pnpm",
     "build": "pnpm run clean && pnpm -r --filter ./packages run build",
     "build:docs": "pnpm exec typedoc --options typedoc.js",
-    "clean": "pnpm -r --filter ./packages run clean",
-    "clean:modules": "rimraf \"./packages/*/node_modules\" && rimraf node_modules",
+    "clean": "rimraf build && pnpm -r --filter ./packages run clean",
+    "clean:node_modules": "rimraf node_modules && pnpm -r --filter ./packages run clean:node_modules",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:tsc": "tsc --noEmit",
@@ -47,5 +47,6 @@
     "coverage:per-package": "pnpm -r --filter ./packages run coverage",
     "publish:packages": "pnpm -r --filter ./packages publish --no-git-checks"
   },
+  "license": "MIT",
   "private": true
 }
