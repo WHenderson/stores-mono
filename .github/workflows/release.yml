@@ -40,6 +40,8 @@ jobs:
           version: pnpm changeset version
           commit: "chore: Version Packages"
           title: "chore: Version Packages"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Install modules
         run: pnpm install -r
@@ -52,4 +54,5 @@ jobs:
         with:
           publish: pnpm ci:publish
         env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
