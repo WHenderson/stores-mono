@@ -1,6 +1,6 @@
 {
   "name": "@crikey/stores-base",
-  "version": "1.0.0-alpha",
+  "version": "0.0.0",
   "description": "",
   "packageManager": "pnpm",
   "engines": {
@@ -34,10 +34,10 @@
     "coverage:watch": "vitest --coverage"
   },
   "devDependencies": {
-    "@crikey/stores-base-queue": "workspace:^1.0.0-alpha"
+    "@crikey/stores-base-queue": "workspace:^0.0.0"
   },
   "peerDependencies": {
-    "@crikey/stores-base-queue": "workspace:^1.0.0-alpha"
+    "@crikey/stores-base-queue": "workspace:^0.0.0"
   },
   "license": "MIT"
 }

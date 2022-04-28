@@ -1,6 +1,6 @@
 {
   "name": "@crikey/stores-rxjs",
-  "version": "1.0.0-alpha",
+  "version": "0.0.0",
   "description": "",
   "packageManager": "pnpm",
   "engines": {
@@ -34,7 +34,7 @@
     "coverage:watch": "vitest --coverage"
   },
   "dependencies": {
-    "@crikey/stores-base": "workspace:^1.0.0-alpha"
+    "@crikey/stores-base": "workspace:^0.0.0"
   },
   "devDependencies": {
     "rxjs": "^7.5.5"

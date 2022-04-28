@@ -1,6 +1,6 @@
 {
   "name": "@crikey/stores-temporal",
-  "version": "1.0.0-alpha",
+  "version": "0.0.0",
   "description": "",
   "packageManager": "pnpm",
   "engines": {
@@ -34,8 +34,8 @@
     "coverage:watch": "vitest --coverage"
   },
   "devDependencies": {
-    "@crikey/stores-base": "workspace:^1.0.0-alpha",
-    "@crikey/stores-rxjs": "workspace:^1.0.0-alpha"
+    "@crikey/stores-base": "workspace:^0.0.0",
+    "@crikey/stores-rxjs": "workspace:^0.0.0"
   },
   "license": "MIT"
 }

@@ -1,6 +1,6 @@
 {
   "name": "@crikey/stores-base-queue",
-  "version": "1.0.0-alpha",
+  "version": "0.0.0",
   "description": "",
   "packageManager": "pnpm",
   "engines": {

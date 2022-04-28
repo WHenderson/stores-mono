@@ -1,6 +1,6 @@
 {
   "name": "@crikey/stores-selectable",
-  "version": "1.0.0-alpha",
+  "version": "0.0.0",
   "description": "",
   "packageManager": "pnpm",
   "engines": {
@@ -34,12 +34,12 @@
     "coverage:watch": "vitest --coverage"
   },
   "dependencies": {
-    "@crikey/stores-base": "workspace:^1.0.0-alpha"
+    "@crikey/stores-base": "workspace:^0.0.0"
   },
   "devDependencies": {
-    "@crikey/stores-immer": "workspace:^1.0.0-alpha",
-    "@crikey/stores-strict": "workspace:^1.0.0-alpha",
-    "@crikey/stores-svelte": "workspace:^1.0.0-alpha"
+    "@crikey/stores-immer": "workspace:^0.0.0",
+    "@crikey/stores-strict": "workspace:^0.0.0",
+    "@crikey/stores-svelte": "workspace:^0.0.0"
   },
   "license": "MIT"
 }

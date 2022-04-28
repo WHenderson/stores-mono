@@ -1,6 +1,6 @@
 {
   "name": "stores-mono",
-  "version": "1.0.0-alpha",
+  "version": "0.0.0",
   "description": "Mono repo for stores libraries",
   "packageManager": "pnpm",
   "engines": {
