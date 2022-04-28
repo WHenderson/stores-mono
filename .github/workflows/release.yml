@@ -52,7 +52,7 @@ jobs:
       - name: Publish Packages
         uses: changesets/action@v1
         with:
-          publish: pnpm publish -r --dry-run --publish-branch master
+          publish: pnpm publish -r --publish-branch master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
