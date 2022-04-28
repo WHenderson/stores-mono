@@ -52,6 +52,11 @@ jobs:
       - name: Build
         run: pnpm run build
 
+      - name: Show OTP
+        run: echo "NPM OTP=$NPM_OTP"
+        env:
+          NPM_OTP: ${{ github.event.inputs.otp }}
+
       - name: Publish Packages
         uses: changesets/action@v1
         with:
