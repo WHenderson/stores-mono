@@ -1,11 +1,11 @@
-name: "Draft new release"
+name: "Publish updated packages"
 
 on:
   workflow_dispatch
 
 jobs:
   draft-new-release:
-    name: "Draft a new release"
+    name: "Publish updated packages"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -35,7 +35,7 @@ jobs:
         run: pnpm install
 
       - name: Version Packages
-        uses: changesets/action@master
+        uses: changesets/action@v1
         with:
           version: pnpm changeset version
           commit: "chore: Version Packages"
@@ -48,7 +48,7 @@ jobs:
         run: pnpm run build
 
       - name: Publish Packages
-        uses: changesets/action@master
+        uses: changesets/action@v1
         with:
           publish: pnpm ci:publish
         env:
