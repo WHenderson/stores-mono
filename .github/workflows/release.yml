@@ -99,6 +99,9 @@ jobs:
       - name: Build modules
         run: pnpm run build
 
+      - name: Store package lock
+        run: git commit pnpm-lock.yaml -m "Chore - Changeset Version"
+
       - name: List git state
         run: git status -b -s
 
