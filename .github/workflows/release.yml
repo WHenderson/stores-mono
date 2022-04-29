@@ -94,6 +94,12 @@ jobs:
       - name: List git state
         run: git status -b -s
 
+      - name: Finish release
+        run: git flow release finish "v$MONO_VERSION+$GITHUB_RUN_NUMBER"
+
+      - name: Push tags
+        run: git push origin --tags
+
 #      - name: Publish Packages
 #        uses: changesets/action@v1
 #        with:
