@@ -59,7 +59,7 @@ jobs:
         run: echo "recursive-install=false" >> .npmrc
 
       - name: Install git flow
-        run: apt-get install git-flow
+        run: sudo apt-get install git-flow
 
       - name: Initialise git flow
         run: git flow init
