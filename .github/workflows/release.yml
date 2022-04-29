@@ -55,17 +55,17 @@ jobs:
         with:
           version: latest
 
-      - name: Install git flow
-        run: sudo apt-get install git-flow
+      #- name: Install git flow
+      #  run: sudo apt-get install git-flow
 
-      - name: Initialise git flow
-        run: git flow init -d
+      #- name: Initialise git flow
+      #  run: git flow init -d
 
       - name: Find current package version
         run: echo "MONO_VERSION=$(node -e "console.log(require('./package.json').version.match(/^[^+]+/)[0]);")" >> $GITHUB_ENV
 
-      - name: Create release branch
-        run: git flow release start "v$MONO_VERSION+$GITHUB_RUN_NUMBER"
+      #- name: Create release branch
+      #  run: git flow release start "v$MONO_VERSION+$GITHUB_RUN_NUMBER"
 
       - name: Disable recursive install
         run: echo "recursive-install=false" >> .npmrc
@@ -111,8 +111,8 @@ jobs:
       - name: Show unpushed tags
         run: git push --tags --dry-run
 
-      - name: Finish release
-        run: git flow release finish "v$MONO_VERSION+$GITHUB_RUN_NUMBER" -m "Chore - Version release"
+      #- name: Finish release
+      #  run: git flow release finish "v$MONO_VERSION+$GITHUB_RUN_NUMBER" -m "Chore - Version release"
 
       - name: Push tags
         run: git push origin --tags
