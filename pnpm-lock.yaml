@@ -53,10 +53,7 @@ importers:
       vitest: 0.9.4_c8@7.11.0
 
   packages/stores-base:
-    specifiers:
-      '@crikey/stores-base-queue': workspace:^0.0.0
-    devDependencies:
-      '@crikey/stores-base-queue': link:../stores-base-queue
+    specifiers: {}
 
   packages/stores-base-queue:
     specifiers: {}
