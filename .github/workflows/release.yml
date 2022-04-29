@@ -91,7 +91,7 @@ jobs:
           jq -R -s -c 'scan("(?<=packages/)[^/]+(?=/)")' |
           uniq |
           xargs -L1 node -e "const process = require('process'); console.log(process.argv[1] + '/v' + require('./packages/' + process.argv[1] + '/package.json').version + '+' + process.env.GITHUB_RUN_NUMBER)" |
-          xargs -L1 git tag-
+          xargs -L1 git tag
 
       - name: Install modules
         run: pnpm install -r
