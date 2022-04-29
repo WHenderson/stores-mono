@@ -66,8 +66,10 @@ jobs:
         run: git flow init
 
       - name: Find current package version
-        uses: gagle/package-version@v1
-        id: package-version
+        run: echo "MONO_VERSION=$(node -e "console.log(require('./package.json').version.match(/^[^+]+/)[0]);")" >> $GITHUB_ENV
+
+      - name: Create release branch
+        run: git flow release start "$MONO_VERSION+$GITHUB_RUN_NUMBER"
 
       - name: Install workspace modules
         run: pnpm install
@@ -83,9 +85,6 @@ jobs:
 
       - name: Install modules
         run: pnpm install -r
-
-      - name: Create release branch
-        run: git flow release start ${{ steps.package-version.outputs.version }}+$GITHUB_RUN_NUMBER
 
       - name: Build modules
         run: pnpm run build
