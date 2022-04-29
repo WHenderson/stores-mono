@@ -1,6 +1,6 @@
 {
   "name": "@crikey/stores-strict",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "",
   "packageManager": "pnpm",
   "engines": {
@@ -10,8 +10,8 @@
   "main": "src/index",
   "files": [
     "dist",
-	"package.json",
-	"README.md"
+    "package.json",
+    "README.md"
   ],
   "typedocMain": "src/index.ts",
   "publishConfig": {
@@ -34,7 +34,7 @@
     "coverage:watch": "vitest --coverage"
   },
   "dependencies": {
-    "@crikey/stores-base": "workspace:^0.0.0"
+    "@crikey/stores-base": "workspace:^0.0.1"
   },
   "license": "MIT"
 }

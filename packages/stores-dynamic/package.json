@@ -1,6 +1,6 @@
 {
   "name": "@crikey/stores-dynamic",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "",
   "packageManager": "pnpm",
   "engines": {
@@ -34,11 +34,11 @@
     "coverage:watch": "vitest --coverage"
   },
   "dependencies": {
-    "@crikey/stores-base": "workspace:^0.0.0"
+    "@crikey/stores-base": "workspace:^0.0.1"
   },
   "devDependencies": {
-    "@crikey/stores-base-queue": "workspace:^0.0.0",
-    "@crikey/stores-strict": "workspace:^0.0.0"
+    "@crikey/stores-base-queue": "workspace:^0.0.1",
+    "@crikey/stores-strict": "workspace:^0.0.1"
   },
   "license": "MIT"
 }
