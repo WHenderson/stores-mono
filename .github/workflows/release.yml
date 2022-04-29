@@ -96,8 +96,8 @@ jobs:
       - name: Install modules
         run: pnpm install -r
 
-      - name: Build modules
-        run: pnpm run build
+      #- name: Build modules
+      #  run: pnpm run build
 
       - name: Store package lock
         run: git commit pnpm-lock.yaml -m "Chore - Changeset Version"
