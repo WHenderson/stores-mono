@@ -1,14 +1,45 @@
 name: "Publish updated packages"
 
 on:
-  workflow_dispatch
+  workflow_dispatch:
+    inputs:
+      confirm_outside_develop:
+        description: 'Tick to confirm if intentionally running outside of develop'
+        required: true
+        type: boolean
 
 jobs:
-  version-and-publish:
-    name: "Publish updated packages"
+  # Ensure we are running on the expected branch
+  validate:
+    name: 'Validate'
     runs-on: ubuntu-latest
     steps:
+      - name: Validate
+        if: github.ref != 'refs/heads/develop'
+        env:
+          CONFIRM_OUTSIDE: ${{ github.event.inputs.confirm_outside_develop }}
+        run: |
+          if [ "$CONFIRM_OUTSIDE" == 'false' ]; then
+            echo "It looks like you've accidentally tried to run this action outside of develop. Either: "
+            echo " - Re-run the pipeline and select develop, or"
+            echo " - If you really do want to run on this branch, then re-run and tick the box to confirm"
+            exit 1
+          fi
+
+  version-and-publish:
+    needs: validate
+    name: "Publish updated packages"
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [16.x]
+
+    steps:
       - uses: actions/checkout@v3
+        with:
+          # This makes Actions fetch all Git history so that Changesets can generate changelogs with the correct commits
+          fetch-depth: 0
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
@@ -31,6 +62,13 @@ jobs:
       - name: Disable recursive install
         run: echo "recursive-install=false" >> .npmrc
 
+      - name: Initialise git flow
+        run: git flow init
+
+      - name: Find current package version
+        uses: gagle/package-version@v1
+        id: package-version
+
       - name: Install workspace modules
         run: pnpm install
 
@@ -46,13 +84,19 @@ jobs:
       - name: Install modules
         run: pnpm install -r
 
-      - name: Build
+      - name: Create release branch
+        run: git flow release start ${{ steps.package-version.outputs.version }}+$GITHUB_RUN_NUMBER
+
+      - name: Build modules
         run: pnpm run build
 
-      - name: Publish Packages
-        uses: changesets/action@v1
-        with:
-          publish: pnpm publish -r --publish-branch master --otp $NPM_OTP
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: List git state
+        run: git status -b -s
+
+#      - name: Publish Packages
+#        uses: changesets/action@v1
+#        with:
+#          publish: pnpm publish -r --publish-branch master
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
