@@ -55,9 +55,6 @@ jobs:
         with:
           version: latest
 
-      - name: Disable recursive install
-        run: echo "recursive-install=false" >> .npmrc
-
       - name: Install git flow
         run: sudo apt-get install git-flow
 
@@ -70,8 +67,14 @@ jobs:
       - name: Create release branch
         run: git flow release start "$MONO_VERSION+$GITHUB_RUN_NUMBER"
 
-      - name: Install workspace modules
+      - name: Disable recursive install
+        run: echo "recursive-install=false" >> .npmrc
+
+      - name: Install /just/ workspace modules
         run: pnpm install
+
+      - name: Revert .npmrc
+        run: git chckout -- .npmrc
 
       - name: Version Packages
         uses: changesets/action@v1
