@@ -59,13 +59,13 @@ jobs:
         run: sudo apt-get install git-flow
 
       - name: Initialise git flow
-        run: git flow init
+        run: git flow init -d
 
       - name: Find current package version
         run: echo "MONO_VERSION=$(node -e "console.log(require('./package.json').version.match(/^[^+]+/)[0]);")" >> $GITHUB_ENV
 
       - name: Create release branch
-        run: git flow release start "$MONO_VERSION+$GITHUB_RUN_NUMBER"
+        run: git flow release start "v$MONO_VERSION+$GITHUB_RUN_NUMBER"
 
       - name: Disable recursive install
         run: echo "recursive-install=false" >> .npmrc
