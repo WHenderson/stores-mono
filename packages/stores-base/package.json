@@ -1,6 +1,6 @@
 {
   "name": "@crikey/stores-base",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "",
   "packageManager": "pnpm",
   "engines": {
@@ -10,8 +10,8 @@
   "main": "src/index",
   "files": [
     "dist",
-	"package.json",
-	"README.md"
+    "package.json",
+    "README.md"
   ],
   "typedocMain": "src/index.ts",
   "publishConfig": {
@@ -35,10 +35,10 @@
     "publish:ifnew": "pnpm view $npm_package_name@$npm_package_version version || pnpm publish --access public"
   },
   "devDependencies": {
-    "@crikey/stores-base-queue": "workspace:^0.0.0"
+    "@crikey/stores-base-queue": "workspace:^0.0.1"
   },
   "peerDependencies": {
-    "@crikey/stores-base-queue": "workspace:^0.0.0"
+    "@crikey/stores-base-queue": "workspace:^0.0.1"
   },
   "license": "MIT"
 }
