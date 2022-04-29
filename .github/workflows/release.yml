@@ -102,6 +102,12 @@ jobs:
       - name: List git state
         run: git status -b -s
 
+      - name: List git diff
+        run: git diff
+
+      - name: Show unpushed tags
+        run: git push --tags --dry-run
+
       - name: Finish release
         run: git flow release finish "v$MONO_VERSION+$GITHUB_RUN_NUMBER" -m "Chore - Version release"
 
