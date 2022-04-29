@@ -1,7 +1,7 @@
-import {expect, vi, it} from "vitest";
+import {expect, it, vi} from "vitest";
 import {selectable} from "../../src";
 import {writable} from "@crikey/stores-svelte";
-import {trigger_safe_not_equal} from "@crikey/stores-base/src";
+import {trigger_safe_not_equal} from "@crikey/stores-base";
 
 it('strict derive should only trigger on change', () => {
     type Root = Record<string, Record<string, number>>;

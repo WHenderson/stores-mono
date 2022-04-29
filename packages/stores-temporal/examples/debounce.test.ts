@@ -1,7 +1,6 @@
 import {expect, it} from "vitest";
 import {shim_console} from "@crikey/stores-base/examples/_util";
-import {writable} from "@crikey/stores-base";
-import {trigger_strict_not_equal} from "@crikey/stores-base/src";
+import {trigger_strict_not_equal, writable} from "@crikey/stores-base";
 import {debounce} from "../src";
 
 it('example-debounce', async () => {

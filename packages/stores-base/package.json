@@ -33,6 +33,9 @@
     "coverage": "vitest run --coverage",
     "coverage:watch": "vitest --coverage"
   },
+  "devDependencies": {
+    "@crikey/stores-base-queue": "workspace:^0.0.0"
+  },
   "peerDependencies": {
     "@crikey/stores-base-queue": "workspace:^0.0.0"
   },
