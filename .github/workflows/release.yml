@@ -95,7 +95,7 @@ jobs:
         run: git status -b -s
 
       - name: Finish release
-        run: git flow release finish "v$MONO_VERSION+$GITHUB_RUN_NUMBER"
+        run: git flow release finish "v$MONO_VERSION+$GITHUB_RUN_NUMBER" -m "Chore - Version release"
 
       - name: Push tags
         run: git push origin --tags
