@@ -117,8 +117,16 @@ jobs:
       #- name: Finish release
       #  run: git flow release finish "v$MONO_VERSION+$GITHUB_RUN_NUMBER" -m "Chore - Version release"
 
+      - name: Push changes
+        run: git push origin
+
       - name: Push tags
         run: git push origin --tags
+
+      - run: git merge develop
+      - run: git checkout develop
+      - run: git merge --no-ff changeset-release/develop
+      - run: git push origin develop
 
 #      - name: Publish Packages
 #        uses: changesets/action@v1
