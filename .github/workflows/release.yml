@@ -102,13 +102,16 @@ jobs:
       - name: Store package lock
         run: git commit pnpm-lock.yaml -m "Chore - Changeset Version"
 
-      - name: List git state
+      - name: Git branch
+        run: git branch --show-current
+
+      - name: Git status
         run: git status -b -s
 
-      - name: List git diff
+      - name: Git diff
         run: git diff
 
-      - name: Show unpushed tags
+      - name: Git tags
         run: git push --tags --dry-run
 
       #- name: Finish release
