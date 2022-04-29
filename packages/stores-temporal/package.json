@@ -33,8 +33,10 @@
     "coverage": "vitest run --coverage",
     "coverage:watch": "vitest --coverage"
   },
+  "dependencies": {
+    "@crikey/stores-base": "workspace:^0.0.0"
+  },
   "devDependencies": {
-    "@crikey/stores-base": "workspace:^0.0.0",
     "@crikey/stores-rxjs": "workspace:^0.0.0"
   },
   "license": "MIT"

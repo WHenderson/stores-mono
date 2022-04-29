@@ -1,6 +1,6 @@
 import {ComplexSet, Readable, Trigger, Unsubscriber} from "./types";
 import {readable} from "./readable";
-import {Action} from "@crikey/stores-base-queue/src";
+import {Action} from "@crikey/stores-base-queue";
 
 
 /** Synchronous callback for deriving a value from resolved input value */

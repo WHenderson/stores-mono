@@ -1,19 +1,46 @@
 name: "Publish updated packages"
 
 on:
-  workflow_dispatch
+  workflow_dispatch:
+    inputs:
+      confirm_outside_develop:
+        description: 'Tick to confirm if intentionally running outside of develop'
+        required: true
+        type: boolean
 
 jobs:
-  version-and-publish:
-    name: "Publish updated packages"
+  # Ensure we are running on the expected branch
+  validate:
+    name: 'Validate'
     runs-on: ubuntu-latest
     steps:
+      - name: Validate
+        if: github.ref != 'refs/heads/develop'
+        env:
+          CONFIRM_OUTSIDE: ${{ github.event.inputs.confirm_outside_develop }}
+        run: |
+          if [ "$CONFIRM_OUTSIDE" == 'false' ]; then
+            echo "It looks like you've accidentally tried to run this action outside of develop. Either: "
+            echo " - Re-run the pipeline and select develop, or"
+            echo " - If you really do want to run on this branch, then re-run and tick the box to confirm"
+            exit 1
+          fi
+
+  version-and-publish:
+    needs: validate
+    name: "Publish updated packages"
+    runs-on: ubuntu-latest
+
+    steps:
       - uses: actions/checkout@v3
+        with:
+          # This makes Actions fetch all Git history so that Changesets can generate changelogs with the correct commits
+          fetch-depth: 0
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 16.x
 
       - name: Cache pnpm modules
         uses: actions/cache@v2
@@ -28,11 +55,26 @@ jobs:
         with:
           version: latest
 
+      - name: Install git flow
+        run: sudo apt-get install git-flow
+
+      - name: Initialise git flow
+        run: git flow init -d
+
+      - name: Find current package version
+        run: echo "MONO_VERSION=$(node -e "console.log(require('./package.json').version.match(/^[^+]+/)[0]);")" >> $GITHUB_ENV
+
+      - name: Create release branch
+        run: git flow release start "v$MONO_VERSION+$GITHUB_RUN_NUMBER"
+
       - name: Disable recursive install
         run: echo "recursive-install=false" >> .npmrc
 
-      - name: Install workspace modules
+      - name: Install /just/ workspace modules
         run: pnpm install
+
+      - name: Revert .npmrc
+        run: git checkout -- .npmrc
 
       - name: Version Packages
         uses: changesets/action@v1
@@ -43,16 +85,42 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Tag changed modules
+        run: >
+          git diff-tree -r --name-only HEAD |
+          jq -R -s -c 'scan("(?<=packages/)[^/]+(?=/)")' |
+          uniq |
+          xargs -L1 node -e "const process = require('process'); console.log(process.argv[1] + '/v' + require('./packages/' + process.argv[1] + '/package.json').version + '+' + process.env.GITHUB_RUN_NUMBER)" |
+          xargs -L1 git tag
+
       - name: Install modules
         run: pnpm install -r
 
-      - name: Build
+      - name: Build modules
         run: pnpm run build
 
-      - name: Publish Packages
-        uses: changesets/action@v1
-        with:
-          publish: pnpm publish -r --publish-branch master --otp $NPM_OTP
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Store package lock
+        run: git commit pnpm-lock.yaml -m "Chore - Changeset Version"
+
+      - name: List git state
+        run: git status -b -s
+
+      - name: List git diff
+        run: git diff
+
+      - name: Show unpushed tags
+        run: git push --tags --dry-run
+
+      - name: Finish release
+        run: git flow release finish "v$MONO_VERSION+$GITHUB_RUN_NUMBER" -m "Chore - Version release"
+
+      - name: Push tags
+        run: git push origin --tags
+
+#      - name: Publish Packages
+#        uses: changesets/action@v1
+#        with:
+#          publish: pnpm publish -r --publish-branch master
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

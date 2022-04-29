@@ -1,6 +1,5 @@
 import {ReadablePromise, State, Stateful, StatefulFulfilled, StatefulRejected} from "./types";
-import {writable, read_only, constant} from "@crikey/stores-base";
-import {trigger_strict_not_equal} from "@crikey/stores-base/src";
+import {constant, read_only, trigger_strict_not_equal, writable} from "@crikey/stores-base";
 
 /**
  * Create a readable store that resolves according to the provided promise

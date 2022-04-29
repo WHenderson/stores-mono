@@ -96,7 +96,7 @@ it('example-dynamic-async', async () => {
         setTimeout(resolve, ms);
     })
 
-    // #region example-to-dynamic
+    // #region example-dynamic-async
 
     const a = writable({ value: 0 });
     const derived = dynamic(
@@ -131,7 +131,7 @@ it('example-dynamic-async', async () => {
     // > derived value: { value: undefined }
     // > derived value
 
-    // #endregion example-to-dynamic
+    // #endregion example-dynamic-async
 
     expect(console.log.mock.calls).to.deep.equal([
         ['derived value:', { value: undefined }],

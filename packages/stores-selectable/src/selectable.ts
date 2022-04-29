@@ -1,10 +1,9 @@
-import {derive, is_writable, Readable, Trigger, Writable} from "@crikey/stores-base";
+import {derive, is_writable, Readable, Trigger, trigger_strict_not_equal, Writable} from "@crikey/stores-base";
 import {ReadOrWrite, ResolveSelector, Selectable, TraverseDelete, TraverseGet, TraverseUpdate} from "./types";
 import {traverse_get} from "./traverse-get";
 import {traverse_update} from "./traverse-update";
 import {traverse_delete} from "./traverse-delete";
 import {resolve_selector} from "./resolve-selector";
-import {trigger_strict_not_equal} from "@crikey/stores-base/src";
 
 export interface SelectableOptions<T, P> {
     /**

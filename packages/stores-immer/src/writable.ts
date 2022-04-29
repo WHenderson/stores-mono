@@ -1,7 +1,6 @@
-import {noop, StartNotifier, Updater, Writable} from "@crikey/stores-base";
+import {ComplexSet, noop, StartNotifier, Updater, Writable} from "@crikey/stores-base";
 import {writable as strictWritable} from "@crikey/stores-strict";
-import {produce, Draft, nothing} from "immer";
-import {ComplexSet} from "@crikey/stores-base/src";
+import {Draft, nothing, produce} from "immer";
 
 /**
  * Create a writable store with an initial value of `undefined`.

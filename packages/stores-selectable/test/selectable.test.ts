@@ -3,15 +3,14 @@ import {readable, writable} from "@crikey/stores-strict";
 import {
     create_path_proxy,
     PathProxy,
-    SelectableDelete,
     selectable,
+    SelectableDelete,
     sym_path,
     traverse_delete,
     traverse_get,
     traverse_update
 } from "../src";
-import {get, Readable, Writable} from "@crikey/stores-base";
-import {trigger_strict_not_equal} from "@crikey/stores-base/src";
+import {get, Readable, trigger_strict_not_equal, Writable} from "@crikey/stores-base";
 
 function isWritable<T>(store: Readable<T> | Writable<T>): store is Writable<T> {
     return ('set' in store && 'update' in store);
