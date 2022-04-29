@@ -55,17 +55,8 @@ jobs:
         with:
           version: latest
 
-      #- name: Install git flow
-      #  run: sudo apt-get install git-flow
-
-      #- name: Initialise git flow
-      #  run: git flow init -d
-
       - name: Find current package version
         run: echo "MONO_VERSION=$(node -e "console.log(require('./package.json').version.match(/^[^+]+/)[0]);")" >> $GITHUB_ENV
-
-      #- name: Create release branch
-      #  run: git flow release start "v$MONO_VERSION+$GITHUB_RUN_NUMBER"
 
       - name: Disable recursive install
         run: echo "recursive-install=false" >> .npmrc
@@ -85,6 +76,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Install modules
+        run: pnpm install -r
+
+      - name: Store package lock
+        run: git commit pnpm-lock.yaml -m "Chore - Changeset Version"
+
       - name: Tag changed modules
         run: >
           git diff-tree -r --name-only HEAD |
@@ -93,14 +90,8 @@ jobs:
           xargs -L1 node -e "const process = require('process'); console.log(process.argv[1] + '/v' + require('./packages/' + process.argv[1] + '/package.json').version + '+' + process.env.GITHUB_RUN_NUMBER)" |
           xargs -L1 git tag
 
-      - name: Install modules
-        run: pnpm install -r
-
       #- name: Build modules
       #  run: pnpm run build
-
-      - name: Store package lock
-        run: git commit pnpm-lock.yaml -m "Chore - Changeset Version"
 
       - name: Git branch
         run: git branch --show-current
@@ -114,9 +105,6 @@ jobs:
       - name: Git tags
         run: git push --tags --dry-run
 
-      #- name: Finish release
-      #  run: git flow release finish "v$MONO_VERSION+$GITHUB_RUN_NUMBER" -m "Chore - Version release"
-
       - name: Push changes
         run: git push origin
 
@@ -128,10 +116,10 @@ jobs:
       - run: git merge --no-ff changeset-release/develop
       - run: git push origin develop
 
-#      - name: Publish Packages
-#        uses: changesets/action@v1
-#        with:
-#          publish: pnpm run publish:packages
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Publish Packages
+        uses: changesets/action@v1
+        with:
+          publish: pnpm run publish:packages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
