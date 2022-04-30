@@ -1,5 +1,11 @@
 # @crikey/stores-base-queue
 
+## 0.0.2
+
+### Patch Changes
+
+- 6216fe6: bump to test publishing
+
 ## 0.0.1
 
 ### Patch Changes

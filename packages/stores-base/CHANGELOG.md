@@ -1,5 +1,12 @@
 # @crikey/stores-base
 
+## 0.0.2
+
+### Patch Changes
+
+- Updated dependencies [6216fe6]
+  - @crikey/stores-base-queue@0.0.2
+
 ## 0.0.1
 
 ### Patch Changes
