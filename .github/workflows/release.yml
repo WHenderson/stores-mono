@@ -1,4 +1,4 @@
-name: "Publish updated packages"
+name: "Publish"
 
 on:
   workflow_dispatch:
