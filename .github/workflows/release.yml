@@ -117,7 +117,8 @@ jobs:
 
       - run: git merge develop
       - run: git checkout develop
-      - run: git merge --no-ff changeset-release/develop
+      - continue-on-error: true
+        run: git merge --no-ff changeset-release/develop
       - run: git push origin develop
 
       - name: Publish Docs
