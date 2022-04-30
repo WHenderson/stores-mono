@@ -80,6 +80,7 @@ jobs:
         run: pnpm install -r
 
       - name: Store package lock
+        continue-on-error: true
         run: git commit pnpm-lock.yaml -m "Chore - Changeset Version"
 
       - name: Tag changed modules
