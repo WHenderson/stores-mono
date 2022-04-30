@@ -1,5 +1,7 @@
 # Mono-Repo for Svelte compatible Store packages
 
+See [stores-mono](https://whenderson.github.io/stores-mono/) for full documentation.
+
 ## Packages
 
 * {@link @crikey/stores-base-queue} - Internal peer dependency for managing execution queue between packages 
