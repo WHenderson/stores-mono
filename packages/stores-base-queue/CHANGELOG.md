@@ -1,5 +1,11 @@
 # @crikey/stores-base-queue
 
+## 0.0.5
+
+### Patch Changes
+
+- cc7f032: force release
+
 ## 0.0.4
 
 ### Patch Changes
