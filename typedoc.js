@@ -5,7 +5,13 @@ module.exports = {
     entryPoints: [
         'packages/*',
     ],
-    readme: 'README.TYPEDOC.md'
+    readme: 'README.TYPEDOC.md',
+    pluginPages: {
+
+    },
+    pluginMonorepoReadmes: {
+        readme: ['README.TYPEDOC.md', 'README.md']
+    }
     /*
     pluginPages: {
         pages: [
