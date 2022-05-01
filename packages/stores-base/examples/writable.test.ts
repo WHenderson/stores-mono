@@ -181,3 +181,23 @@ it('example-writable-start-update', async () => {
         ['store value:', 5000],
     ]);
 });
+
+
+it('example-writable-trigger', async () => {
+    const console = shim_console();
+
+    // #region example-writable-trigger
+
+    const value = {};
+    const store = writable(trigger_strict_not_equal, value); // only trigger if old_value !== new_value
+    store.subscribe(_value => console.log('changed'));
+    store.set(value);
+
+    // > changed
+
+    // #endregion example-writable-trigger
+
+    expect(console.log.mock.calls).to.deep.equal([
+        ['changed'],
+    ]);
+});

@@ -12,7 +12,7 @@ See [@crikey/stores-base](https://whenderson.github.io/stores-mono/modules/_crik
 * {@link constant} - Create a {@link Readable} store with a fixed value
 * {@link readable} - Create a {@link Readable} store
 * {@link writable} - Create a {@link Writable} store
-* {@link derive | derived} - Create a {@link Readable} store derived from the resolved values of other stores
+* {@link derive}   - Create a {@link Readable} store derived from the resolved values of other stores
 
 ### Utility functions:
 * {@link get} - Retrieve the value of a store
@@ -69,21 +69,11 @@ called for each {@link Writable.set} and {@link Writable.update} call, allowing 
 comparisons between the old value and the new value to determine if subscribers should be notified.
 
 e.g.
-
-```ts
-import {writable, trigger_strict_not_equal } from '@crikey/stores-base';
-
-const value = {};
-const store = writable(trigger_strict_not_equal, value); // only trigger if old_value !== new_value
-store.subscribe(value => console.log('changed'));
-store.set(value);
-
-// > changed
-```
+{@codeblock ./examples/writable.test.ts#example-writable-trigger}
 
 ### Asynchronous `update` as well as `set`
 
-@crikey stores extend the {@link readable}, {@link writable}, and {@link derive | derived} signatures
+@crikey stores extend the {@link readable}, {@link writable}, and {@link derive} signatures
 allowing calculations to asynchronously `update` as well as `set` their values.
 
 e.g.
@@ -100,7 +90,7 @@ Svelte does not expose this queue and thus extensions are not able to maintain a
 As a natural result, when mixing svelte stores and `@crikey/stores`, execution order will not be strictly FIFO.
 
 ### Unlimited dependencies
-To avoid erroneous recalculations, {@link derive | derived} store types keep track of which inputs are being
+To avoid erroneous recalculations, {@link derive} store types keep track of which inputs are being
 recalculated (see _Premature evaluation_ below). `@crikey/stores-base` determines the most efficient approach
 to this problem based on the number of inputs required.
 

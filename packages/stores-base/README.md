@@ -1,27 +1,31 @@
 # @crikey/stores-base
 
 Types and functions for creating [Svelte](https://svelte.dev/) compatible stores.
-`@crikey/stores-base` stores further extend the [svelte/store](https://svelte.dev/docs#run-time-svelte-store) 
-contract to allow for additional features and extensibility. 
+`@crikey/stores-base` stores further extend the [svelte/store](https://svelte.dev/docs#run-time-svelte-store)
+contract to allow for additional features and extensibility.
 
-Store creation function:
-* {@link constant} - Create a {@link Readable} store with a fixed value 
-* {@link readable} - Create a {@link Readable} store
-* {@link writable} - Create a {@link Writable} store
-* {@link derive | derived} - Create a {@link Readable} store derived from the resolved values of other stores
+See [@crikey/stores-base](https://whenderson.github.io/stores-mono/modules/_crikey_stores_base.html) for full documentation.
 
-Utility functions:
-* {@link get} - Retrieve the value of a store
-* {@link read_only} - Restrict a store to the {@link Readable} interface
+## API
 
-Type Guards:
-* {@link is_writable} Type guard to determine if store is {@link Writable}
-* {@link is_readable} Type guard to determine if store is {@link Readable}
+### Store creation functions:
+* `constant` - Create a `Readable` store with a fixed constant value
+* `readable` - Create a `Readable` store
+* `writable` - Create a `Writable` store
+* `derive`   - Create a `Readable` store derived from the resolved values of other stores
 
-Trigger functions:
-* {@link trigger_always} - Trigger at every available opportunity
-* {@link trigger_strict_not_equal} - Trigger based on strict inequality
-* {@link trigger_safe_not_equal} - Svelte compatible trigger - Trigger when not equal or value is complex
+### Utility functions:
+* `get` - Retrieve the value of a store
+* `read_only` - Restrict a store to the `Readable` interface
+
+### Type guards:
+* `is_writable` - Type guard to determine if store is `Writable`
+* `is_readable` - Type guard to determine if store is `Readable`
+
+### Trigger functions:
+* `trigger_always` - Trigger at every available opportunity
+* `trigger_strict_not_equal` - Trigger based on strict inequality
+* `trigger_safe_not_equal` - Svelte compatible trigger - Trigger when not equal or value is complex
 
 ## Installation
 
@@ -40,7 +44,9 @@ $ yarn add @crikey/stores-base
 
 This package is predominantly intended for internal use.
 
-## Differences with Svelte stores 
+See individual APIs for strict usage instructions or browse the unit tests and usage from other packages in the mono repository.
+
+## Differences with Svelte stores
 
 ### Definable trigger semantics
 Svelte stores use a greedy change detection system to, whereby complex types are always considered to have changed.
@@ -59,8 +65,8 @@ store.set(value);
 ```
 
 `@crikey/stores-base` stores allow for user defined trigger functions. This trigger function is
-called for each {@link Writable.set} and {@link Writable.update} call, allowing for comparison between
-the old value and the new value to determine if subscribers should be notified.
+called for each `Writable.set` and `Writable.update` call, allowing for user defined
+comparisons between the old value and the new value to determine if subscribers should be notified.
 
 e.g.
 
@@ -75,18 +81,47 @@ store.set(value);
 // > changed
 ```
 
-### Asynchronous `update` as well as `set` 
+### Asynchronous `update` as well as `set`
 
-@crikey stores extend the {@link readable}, {@link writable}, and {@link derive | derived} signatures 
+@crikey stores extend the `readable`, `writable`, and `derive` signatures
 allowing calculations to asynchronously `update` as well as `set` their values.
 
 e.g.
-{@codeblock ./examples/derive.test.ts#example-derive-async-update}
+```ts
+const store_a = writable(trigger_strict_not_equal, 1);
+
+const auto_increment = derive(
+    trigger_strict_not_equal,
+    store_a,
+    (a, { update }) => {
+        const intervalId = setInterval(
+            () => { update(value => value + a); },
+            1000
+        );
+
+        return () => {
+            clearTimeout(intervalId);
+        }
+    },
+    0
+);
+
+auto_increment.subscribe(value => console.log('store value:', value));
+
+await new Promise(resolve => {
+    setTimeout(resolve, 3800);
+});
+
+// > store value: 0
+// > store value: 1
+// > store value: 2
+// > store value: 3
+```
 
 ### Subscriber execution order
 In order to ensure reliable and predictable execution order for subscribers, stores utilize an internal action queue.
-Whenever a store is changed, its active subscriptions are pushed onto a queue and executed in order. If more changes 
-result in more subscriptions being pushed onto the queue, they are added to the end of the current queue and everything 
+Whenever a store is changed, its active subscriptions are pushed onto a queue and executed in order. If more changes
+result in more subscriptions being pushed onto the queue, they are added to the end of the current queue and everything
 continues to be executed in FIFO order.
 
 Svelte does not expose this queue and thus extensions are not able to maintain a pure FIFO order when mixed.
@@ -95,7 +130,7 @@ As a natural result, when mixing svelte stores and `@crikey/stores`, execution o
 
 ### Unlimited dependencies
 To avoid erroneous recalculations, {@link derive | derived} store types keep track of which inputs are being
-recalculated (see _Premature evaluation_ below). `@crikey/stores-base` determines the most efficient approach 
+recalculated (see _Premature evaluation_ below). `@crikey/stores-base` determines the most efficient approach
 to this problem based on the number of inputs required.
 
 `svelte` store implementation details use a fixed tracking system allowing for a maximum of 32 inputs. Additional
@@ -136,7 +171,7 @@ graph TD
 ```
 
 _d) Diamond dependency_
-* As soon as `a` changes, `b` and `c` are recalculated. 
+* As soon as `a` changes, `b` and `c` are recalculated.
 * As soon as `b` or `c` changes, `d` is recalculated.
 
 ```mermaid
@@ -150,11 +185,11 @@ e) Diamond+ dependency
 * As soon as `b` or `c` changes, `d` is recalculated.
 
 _svelte_:
-A change to `a` may result in `d` being recalculated multiple times, sometimes using partially atrophied data from its 
+A change to `a` may result in `d` being recalculated multiple times, sometimes using partially atrophied data from its
 dependencies.
 
 _@crikey_:
-A change to `a` will at most result in `d` being recalculated once, after all its dependencies have been resolved. 
+A change to `a` will at most result in `d` being recalculated once, after all its dependencies have been resolved.
 ```mermaid
 graph TD
     a       --> d
