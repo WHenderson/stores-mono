@@ -67,6 +67,9 @@ jobs:
       - name: Revert .npmrc
         run: git checkout -- .npmrc
 
+      - run: git status
+      - run: git diff
+
       - name: Version Packages
         uses: changesets/action@v1
         with:
