@@ -11,6 +11,7 @@ See [stores-mono](https://whenderson.github.io/stores-mono/) for full documentat
 * [@crikey/stores-selectable](./packages/stores-selectable/README.md)<br> Extend stores with selection semantics, allowing for the easy creation of type safe sub-stores 
 * [@crikey/stores-dynamic](./packages/stores-dynamic/README.md)<br> Derived stores with dynamic dependency support and natural error handling/propagation 
 * [@crikey/stores-temporal](./packages/stores-temporal/README.md)<br> Simple time based higher order svelte stores such as debounce and throttle 
+* [@crikey/stores-rxjs](./packages/stores-rxjs/README.md)<br> Simple conversion functions to allow interop of [Svelte](https://svelte.dev/) style stores with [RxJS](https://rxjs.dev/) style stores
 
 ## Internal
 Internal packages providing basic types, utilities and reusable implementations

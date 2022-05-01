@@ -9,6 +9,7 @@
 * {@link @crikey/stores-selectable}<br> Extend stores with selection semantics, allowing for the easy creation of type safe sub-stores
 * {@link @crikey/stores-dynamic}<br> Derived stores with dynamic dependency support and natural error handling/propagation
 * {@link @crikey/stores-temporal}<br> Simple time based higher order svelte stores such as debounce and throttle
+* {@link @crikey/stores-rxjs}<br> Simple conversion functions to allow interop of [Svelte](https://svelte.dev/) style stores with [RxJS](https://rxjs.dev/) style stores
 
 ## Internal
 
