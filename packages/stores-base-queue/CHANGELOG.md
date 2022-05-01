@@ -1,5 +1,11 @@
 # @crikey/stores-base-queue
 
+## 0.0.6
+
+### Patch Changes
+
+- 12729ec: force publish
+
 ## 0.0.5
 
 ### Patch Changes
