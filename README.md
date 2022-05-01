@@ -4,13 +4,17 @@ See [stores-mono](https://whenderson.github.io/stores-mono/) for full documentat
 
 ## Packages
 
-* {@link @crikey/stores-base-queue} - Internal peer dependency for managing execution queue between packages 
-* {@link @crikey/stores-base} - Types and functions for creating [Svelte](https://svelte.dev/) compatible stores
-* {@link @crikey/stores-strict}
-* {@link @crikey/stores-svelte}
-* {@link @crikey/stores-promise}
-* {@link @crikey/stores-immer}
-* {@link @crikey/stores-selectable}
-* {@link @crikey/stores-dynamic}
-* {@link @crikey/stores-temporal}
+* [@crikey/stores-strict](./packages/stores-strict/README.md)<br> [Svelte](https://svelte.dev/) compatible stores using strict inequality checking
+* [@crikey/stores-svelte](./packages/stores-svelte/README.md)<br> Drop in replacement for [Svelte](https://svelte.dev/) stores
+* [@crikey/stores-promise](./packages/stores-promise/README.md)<br> [Svelte](https://svelte.dev/) compatible stores from promises
+* [@crikey/stores-immer](./packages/stores-immer/README.md)<br> Immutable [Svelte](https://svelte.dev/) compatible stores using the [Immer](https://immerjs.github.io/immer/)
+* [@crikey/stores-selectable](./packages/stores-selectable/README.md)<br> Extend stores with selection semantics, allowing for the easy creation of type safe sub-stores 
+* [@crikey/stores-dynamic](./packages/stores-dynamic/README.md)<br> Derived stores with dynamic dependency support and natural error handling/propagation 
+* [@crikey/stores-temporal](./packages/stores-temporal/README.md)<br> Simple time based higher order svelte stores such as debounce and throttle 
+
+## Internal
+Internal packages providing basic types, utilities and reusable implementations
+
+* [@crikey/stores-base-queue](./packages/stores-base-queue/README.md)<br> Internal peer dependency for managing execution queue between store implementations
+* [@crikey/stores-base](./packages/stores-base/README.md)<br> Types and functions for creating [Svelte](https://svelte.dev/) compatible stores
 

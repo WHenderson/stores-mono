@@ -5,6 +5,7 @@ module.exports = {
     entryPoints: [
         'packages/*',
     ],
+    readme: 'README.TYPEDOC.md'
     /*
     pluginPages: {
         pages: [
