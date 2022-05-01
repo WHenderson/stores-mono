@@ -1,28 +1,26 @@
 # @crikey/stores-strict
 
-Provide [svelte](https://svelte.dev/docs#run-time-svelte-store) compatible implementations of `readable`, `writable`, `derived` 
-and `get` with strict inequality triggering semantics.
+Provide [svelte](https://svelte.dev/docs#run-time-svelte-store) compatible implementations of {@link readable}, {@link writable}, {@link derived}
+and {@link get} with strict inequality triggering semantics.
 
 Strict inequality triggering semantics provide a store version of the functionality seen with
-[<svelte:options immutable={true} />](https://svelte.dev/docs#template-syntax-svelte-options) 
+[<svelte:options immutable={true} />](https://svelte.dev/docs#template-syntax-svelte-options)
 in the svelte compiler.
 
 Strict equality stores make the most sense when programming with strict immutability rules and functional programming.
 
-For complex structured immutable types, try `@crikey/stores-immer` 
-
-See [@crikey/stores-strict](https://whenderson.github.io/stores-mono/modules/_crikey_stores_strict.html) for full documentation.
+For complex structured immutable types, try {@link @crikey/stores-immer}
 
 ## API
 
 ### Store creation functions:
-* `constant` - Create a `Readable` store with a fixed value
-* `readable` - Create a `Readable` store
-* `writable` - Create a `Writable` store
-* `derive`   - Create a `Readable` store derived from the resolved values of other stores
+* {@link constant} - Create a {@link Readable} store with a fixed value
+* {@link readable} - Create a {@link Readable} store
+* {@link writable} - Create a {@link Writable} store
+* {@link derive}   - Create a {@link Readable} store derived from the resolved values of other stores
 
 ### Utility functions:
-* `get` - Retrieve the value of a store
+* {@link get} - Retrieve the value of a store
 
 ## Installation
 
@@ -38,11 +36,11 @@ $ yarn add @crikey/stores-strict
 ```
 ## Usage
 
-Standard usage should be a drop in replacement for `svelte/store`, with the exception of when subscriptions are 
+Standard usage should be a drop in replacement for `svelte/store`, with the exception of when subscriptions are
 triggered.
 
 ## Differences from svelte stores
-Classic svelte stores signal for changes greedily. If a store value is updated and either the old or new value are 
+Classic svelte stores signal for changes greedily. If a store value is updated and either the old or new value are
 complex types, then svelte will signal a change even if those values are strictly equal.
 
 Strict stores use a simple referential inequality check (`!==`) to determine if a change signal should be sent.
