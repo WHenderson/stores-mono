@@ -32,7 +32,7 @@
     "debug": "vitest run --no-threads --no-isolate",
     "coverage": "vitest run --coverage",
     "coverage:watch": "vitest --coverage",
-    "publish:ifnew": "pnpm view $npm_package_name@$npm_package_version version || pnpm publish --access public"
+    "publish:ifnew": "test "$(pnpm view $npm_package_name@$npm_package_version version)" = "$npm_package_version" || pnpm publish --access public"
   },
   "dependencies": {
     "@crikey/stores-base": "workspace:^0.0.5"
