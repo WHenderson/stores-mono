@@ -33,10 +33,10 @@
   },
   "scripts": {
     "preinstall": "npx only-allow pnpm",
-    "build": "pnpm run clean && pnpm -r --filter ./packages run build",
+    "build": "pnpm run clean && pnpm -r run build",
     "build:docs": "pnpm exec typedoc --options typedoc.js",
-    "clean": "rimraf build && pnpm -r --filter ./packages run clean",
-    "clean:node_modules": "pnpm -r --filter ./packages run clean:node_modules && rimraf node_modules",
+    "clean": "rimraf build && pnpm -r run clean",
+    "clean:node_modules": "pnpm -r run clean:node_modules && rimraf node_modules",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:tsc": "tsc --noEmit",
@@ -44,9 +44,9 @@
     "debug": "vitest run --no-threads --no-isolate",
     "coverage": "vitest run --coverage",
     "coverage:watch": "vitest --coverage",
-    "coverage:per-package": "pnpm -r --filter ./packages run coverage",
+    "coverage:per-package": "pnpm -r run coverage",
     "version:bump": "pnpm changeset",
-    "publish:packages": "pnpm -r --filter ./packages run publish:ifnew"
+    "publish:packages": "pnpm -r run publish:ifnew"
   },
   "license": "MIT",
   "private": true,
