@@ -1,5 +1,13 @@
 # @crikey/stores-selectable
 
+## 0.0.7
+
+### Patch Changes
+
+- 7036b2f: Better check for existing packages during publish
+- Updated dependencies [7036b2f]
+  - @crikey/stores-base@0.0.7
+
 ## 0.0.6
 
 ### Patch Changes
