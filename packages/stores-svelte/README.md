@@ -1,10 +1,23 @@
 # @crikey/stores-svelte
 
-Provide svelte compatible implementations of {@link readable}, {@link writable}, {@link derived} 
-and {@link get}.
+Provide svelte compatible implementations of `readable`, `writable`, `derived` 
+and `get`.
 
-This package is a simple convenience wrapper around {@link @crikey/stores-base} utilising the 
-{@link trigger_safe_not_equal} trigger function to mirror svelte greedy signaling semantics.
+This package is a simple convenience wrapper around `@crikey/stores-base` utilising the 
+`trigger_safe_not_equal` trigger function to mirror svelte greedy signaling semantics.
+
+See [@crikey/stores-svelte](https://whenderson.github.io/stores-mono/modules/_crikey_stores_svelte.html) for full documentation.
+
+## API
+
+### Store creation functions:
+* `constant` - Create a `Readable` store with a fixed value
+* `readable` - Create a `Readable` store
+* `writable` - Create a `Writable` store
+* `derive`   - Create a `Readable` store derived from the resolved values of other stores
+
+### Utility functions:
+* `get` - Retrieve the value of a store
 
 ## Installation
 
@@ -23,9 +36,3 @@ $ yarn add @crikey/stores-svelte
 
 Standard usage should be a drop in replacement for `svelte/store`.
 
-See:
-* {@link writable}
-* {@link readable}
-* {@link derived}
-* {@link get}
-* {@link constant}
