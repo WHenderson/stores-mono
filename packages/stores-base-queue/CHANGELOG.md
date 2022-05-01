@@ -1,5 +1,11 @@
 # @crikey/stores-base-queue
 
+## 0.0.4
+
+### Patch Changes
+
+- 295ab5f: force version bump for publishing
+
 ## 0.0.3
 
 ### Patch Changes
