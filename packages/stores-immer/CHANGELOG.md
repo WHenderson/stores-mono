@@ -1,5 +1,14 @@
 # @crikey/stores-immer
 
+## 0.0.6
+
+### Patch Changes
+
+- 12729ec: force publish
+- Updated dependencies [12729ec]
+  - @crikey/stores-base@0.0.6
+  - @crikey/stores-strict@0.0.6
+
 ## 0.0.5
 
 ### Patch Changes
