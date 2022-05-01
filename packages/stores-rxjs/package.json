@@ -1,6 +1,6 @@
 {
   "name": "@crikey/stores-rxjs",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "",
   "packageManager": "pnpm",
   "engines": {
@@ -35,7 +35,7 @@
     "publish:ifnew": "pnpm view $npm_package_name@$npm_package_version version || pnpm publish --access public"
   },
   "dependencies": {
-    "@crikey/stores-base": "workspace:^0.0.2"
+    "@crikey/stores-base": "workspace:^0.0.3"
   },
   "devDependencies": {
     "rxjs": "^7.5.5"
