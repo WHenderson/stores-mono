@@ -1,5 +1,13 @@
 # @crikey/stores-rxjs
 
+## 0.0.5
+
+### Patch Changes
+
+- cc7f032: force release
+- Updated dependencies [cc7f032]
+  - @crikey/stores-base@0.0.5
+
 ## 0.0.4
 
 ### Patch Changes
