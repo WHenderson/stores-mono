@@ -109,6 +109,14 @@ jobs:
       - name: Git diff
         run: git diff
 
+      - name: Publish Packages
+        uses: changesets/action@v1
+        with:
+          publish: pnpm run publish:packages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
       - name: Git tags
         run: git push --tags --dry-run
 
@@ -129,11 +137,3 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./build/docs
-
-      - name: Publish Packages
-        uses: changesets/action@v1
-        with:
-          publish: pnpm run publish:packages
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
