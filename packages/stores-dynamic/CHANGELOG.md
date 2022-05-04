@@ -1,5 +1,11 @@
 # @crikey/stores-dynamic
 
+## 0.0.8
+
+### Patch Changes
+
+- 0b994b0: Correct readme link
+
 ## 0.0.7
 
 ### Patch Changes
