@@ -1,5 +1,11 @@
 # @crikey/stores-base-queue
 
+## 0.0.7
+
+### Patch Changes
+
+- 7036b2f: Better check for existing packages during publish
+
 ## 0.0.6
 
 ### Patch Changes
