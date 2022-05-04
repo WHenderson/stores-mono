@@ -58,6 +58,11 @@ jobs:
       - name: Find current package version
         run: echo "MONO_VERSION=$(node -e "console.log(require('./package.json').version.match(/^[^+]+/)[0]);")" >> $GITHUB_ENV
 
+      - name: Setup git details
+        run: |
+          git config --local user.email "whenderson+github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+
       - run: echo "Install only root workspace dependencies"
       - run: echo "recursive-install=false" >> .npmrc
       - run: pnpm install
