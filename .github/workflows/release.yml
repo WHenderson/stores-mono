@@ -58,33 +58,47 @@ jobs:
       - name: Find current package version
         run: echo "MONO_VERSION=$(node -e "console.log(require('./package.json').version.match(/^[^+]+/)[0]);")" >> $GITHUB_ENV
 
-      - name: Disable recursive install
-        run: echo "recursive-install=false" >> .npmrc
+      - name: Install only root workspace dependencies
+      - run: echo "recursive-install=false" >> .npmrc
+      - run: pnpm install
+      - run: git checkout -- .npmrc
 
-      - name: Install /just/ workspace modules
-        run: pnpm install
-
-      - name: Revert .npmrc
-        run: git checkout -- .npmrc
-
-      - run: git status
+      - name: Git status
+      - run: git branch --show-current
+      - run: git status -b -s
       - run: git diff
 
-      - name: Version Packages
-        uses: changesets/action@v1
-        with:
-          version: pnpm changeset version
-          commit: "chore: Version Packages"
-          title: "chore: Version Packages"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Commit package lock if necessary
+      - run: git add pnpm-lock.yaml
+      - run: git commit -m "Chore - Changeset Version"
+        continue-on-error: true
 
-      - name: Install modules
+      - name: Apply changesets
+        run: pnpm changeset version
+
+      - name: Get commit message and roll back local commits
+      - run: echo "MONO_COMMIT=$(git log -1 --pretty=%B)" >> $GITHUB_ENV
+      - run: git reset --soft @{u}
+
+      - name: Install dependencies
         run: pnpm install -r
 
-      - name: Store package lock
-        continue-on-error: true
-        run: git commit pnpm-lock.yaml -m "Chore - Changeset Version"
+      - name: Add package lock if necessary
+        run: git add pnpm-lock.yaml
+
+      - name: Commit changes
+        run: git commit -m $MONO_COMMIT
+
+      - name: Build modules
+        run: pnpm run build
+
+      - name: Build docs
+        run: pnpm run build:docs
+
+      - name: Git status
+      - run: git branch --show-current
+      - run: git status -b -s
+      - run: git diff
 
       - name: Tag changed modules
         run: >
@@ -94,20 +108,8 @@ jobs:
           xargs -L1 node -e "const process = require('process'); console.log(process.argv[1] + '/v' + require('./packages/' + process.argv[1] + '/package.json').version + '+' + process.env.GITHUB_RUN_NUMBER)" |
           xargs -L1 git tag
 
-      - name: Build modules
-        run: pnpm run build
-
-      - name: Build docs
-        run: pnpm run build:docs
-
-      - name: Git branch
-        run: git branch --show-current
-
-      - name: Git status
-        run: git status -b -s
-
-      - name: Git diff
-        run: git diff
+      - name: Show git tags
+        run: git push --tags --dry-run
 
       - name: Publish Packages
         uses: changesets/action@v1
@@ -117,19 +119,15 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Git tags
-        run: git push --tags --dry-run
+      - name: Push
+      - run: git push origin
+      - run: git push origin --tags
 
-      - name: Push changes
-        run: git push origin
-
-      - name: Push tags
-        run: git push origin --tags
-
+      - name: merge PR
       - run: git merge develop
       - run: git checkout develop
-      - continue-on-error: true
-        run: git merge --no-ff changeset-release/develop
+      - run: git merge --no-ff changeset-release/develop
+        continue-on-error: true
       - run: git push origin develop
 
       - name: Publish Docs
