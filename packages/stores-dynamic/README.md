@@ -5,7 +5,7 @@ Types and functions for creating [Svelte](https://svelte.dev/) compatible stores
 `@crikey/stores-dynamic` stores further extend the [svelte/store](https://svelte.dev/docs#run-time-svelte-store)
 contract to allow for dynamic dependencies and natural error handling.
 
-See [@crikey/stores-base-queue](https://whenderson.github.io/stores-mono/modules/_crikey_stores_base_queue.html) for full documentation.
+See [@crikey/stores-dynamic](https://whenderson.github.io/stores-mono/modules/_crikey_stores_dynamic.html) for full documentation.
 
 ## API
 
