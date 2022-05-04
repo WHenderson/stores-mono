@@ -81,13 +81,15 @@ jobs:
       - name: Apply changesets
         run: pnpm changeset version
 
-      - run: echo "Get commit message and roll back local commits"
-      - run: |
+      - name: Get commit message
+        run: |
           echo "MONO_COMMIT<<EOF" >> $GITHUB_ENV
           echo "$(git log -1 --pretty=%B)" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
-      - run: echo "Message - $MONO_COMMIT"
-      - run: git reset --soft @{u}
+          echo "Message - $MONO_COMMIT"
+
+      - name: Reset local commits
+        run: git reset --soft @{u}
 
       - name: Install dependencies
         run: pnpm install -r
@@ -128,16 +130,10 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - run: echo "Push"
-      - run: git push origin
-      - run: git push origin --tags
-
-      - run: echo "merge PR"
-      - run: git merge develop
-      - run: git checkout develop
-      - run: git merge --no-ff changeset-release/develop
-        continue-on-error: true
-      - run: git push origin develop
+      - name: Push
+      - run: |
+          git push origin
+          git push origin --tags
 
       - name: Publish Docs
         uses: peaceiris/actions-gh-pages@v3
