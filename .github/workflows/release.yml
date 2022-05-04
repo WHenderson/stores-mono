@@ -58,17 +58,17 @@ jobs:
       - name: Find current package version
         run: echo "MONO_VERSION=$(node -e "console.log(require('./package.json').version.match(/^[^+]+/)[0]);")" >> $GITHUB_ENV
 
-      - name: Install only root workspace dependencies
+      - run: echo "Install only root workspace dependencies"
       - run: echo "recursive-install=false" >> .npmrc
       - run: pnpm install
       - run: git checkout -- .npmrc
 
-      - name: Git status
+      - run: echo "Git status"
       - run: git branch --show-current
       - run: git status -b -s
       - run: git diff
 
-      - name: Commit package lock if necessary
+      - run: echo "Commit package lock if necessary"
       - run: git add pnpm-lock.yaml
       - run: git commit -m "Chore - Changeset Version"
         continue-on-error: true
@@ -76,7 +76,7 @@ jobs:
       - name: Apply changesets
         run: pnpm changeset version
 
-      - name: Get commit message and roll back local commits
+      - run: echo "Get commit message and roll back local commits"
       - run: echo "MONO_COMMIT=$(git log -1 --pretty=%B)" >> $GITHUB_ENV
       - run: git reset --soft @{u}
 
@@ -95,7 +95,7 @@ jobs:
       - name: Build docs
         run: pnpm run build:docs
 
-      - name: Git status
+      - run: echo "Git status"
       - run: git branch --show-current
       - run: git status -b -s
       - run: git diff
@@ -119,11 +119,11 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Push
+      - run: echo "Push"
       - run: git push origin
       - run: git push origin --tags
 
-      - name: merge PR
+      - run: echo "merge PR"
       - run: git merge develop
       - run: git checkout develop
       - run: git merge --no-ff changeset-release/develop
