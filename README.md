@@ -2,6 +2,8 @@
 
 See [stores-mono](https://whenderson.github.io/stores-mono/) for full documentation.
 
+[![codecov](https://codecov.io/gh/WHenderson/stores-mono/branch/master/graph/badge.svg?token=RD1EUK6Y04)](https://codecov.io/gh/WHenderson/stores-mono)
+
 ## Packages
 
 * [@crikey/stores-strict](./packages/stores-strict/README.md)<br> [Svelte](https://svelte.dev/) compatible stores using strict inequality checking

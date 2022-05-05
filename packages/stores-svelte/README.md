@@ -8,6 +8,8 @@ This package is a simple convenience wrapper around `@crikey/stores-base` utilis
 
 See [@crikey/stores-svelte](https://whenderson.github.io/stores-mono/modules/_crikey_stores_svelte.html) for full documentation.
 
+[![codecov](https://codecov.io/gh/WHenderson/stores-mono/branch/master/graph/badge.svg?token=RD1EUK6Y04&flag=stores-svelte)](https://codecov.io/gh/WHenderson/stores-mono)
+
 ## API
 
 ### Store creation functions:

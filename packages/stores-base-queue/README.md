@@ -5,6 +5,8 @@ even as stores and subscriptions are changed.
 
 See [@crikey/stores-base-queue](https://whenderson.github.io/stores-mono/modules/_crikey_stores_base_queue.html) for full documentation.
 
+[![codecov](https://codecov.io/gh/WHenderson/stores-mono/branch/master/graph/badge.svg?token=RD1EUK6Y04&flag=stores-base-queue)](https://codecov.io/gh/WHenderson/stores-mono)
+
 ## API
 
 ### Queue functions

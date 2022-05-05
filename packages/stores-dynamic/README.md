@@ -7,6 +7,8 @@ contract to allow for dynamic dependencies and natural error handling.
 
 See [@crikey/stores-dynamic](https://whenderson.github.io/stores-mono/modules/_crikey_stores_dynamic.html) for full documentation.
 
+[![codecov](https://codecov.io/gh/WHenderson/stores-mono/branch/master/graph/badge.svg?token=RD1EUK6Y04&flag=stores-dynamic)](https://codecov.io/gh/WHenderson/stores-mono)
+
 ## API
 
 ### Store creation functions:

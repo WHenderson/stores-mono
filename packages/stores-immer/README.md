@@ -12,6 +12,8 @@ during updates.
 
 See [@crikey/stores-immer](https://whenderson.github.io/stores-mono/modules/_crikey_stores_immer.html) for full documentation.
 
+[![codecov](https://codecov.io/gh/WHenderson/stores-mono/branch/master/graph/badge.svg?token=RD1EUK6Y04&flag=stores-immer)](https://codecov.io/gh/WHenderson/stores-mono)
+
 ## API
 
 ### Store creation functions:

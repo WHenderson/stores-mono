@@ -6,6 +6,8 @@ contract to allow for additional features and extensibility.
 
 See [@crikey/stores-base](https://whenderson.github.io/stores-mono/modules/_crikey_stores_base.html) for full documentation.
 
+[![codecov](https://codecov.io/gh/WHenderson/stores-mono/branch/master/graph/badge.svg?token=RD1EUK6Y04&flag=stores-base)](https://codecov.io/gh/WHenderson/stores-mono)
+
 ## API
 
 ### Store creation functions:
