@@ -1,7 +1,16 @@
-import {Invalidate, Revalidate, StartNotifier, Subscriber, Trigger, Unsubscriber, Updater, Writable} from "./types";
+import {
+    Invalidate,
+    Revalidate,
+    StartNotifier,
+    Subscriber,
+    Trigger,
+    Unsubscriber,
+    UpdaterAsync,
+    UpdaterSync,
+    Writable
+} from "./types";
 import {noop} from "./noop";
-import {enqueue_store_signals} from "@crikey/stores-base-queue";
-import {store_runner} from "@crikey/stores-base-queue";
+import {enqueue_store_signals, store_runner} from "@crikey/stores-base-queue";
 import {RecursionError} from "./recursion-error";
 
 type SubscribeInvalidateTuple<T> = [Subscriber<T>, Invalidate, Revalidate];
@@ -146,8 +155,11 @@ export function writable<T>(trigger: Trigger<T>, value?: T, start: StartNotifier
         }
     );
 
-    function update(fn: Updater<T> | Updater<T | undefined>): void {
-        set(fn(value!));
+    function update(fn: UpdaterSync<T> | UpdaterSync<T | undefined> | UpdaterAsync<T> | UpdaterAsync<T | undefined>): void {
+        if (fn.length <= 1)
+            set((<UpdaterSync<T>>fn)(value!)); // sync
+        else
+            fn(value!, set); // async
     }
 
     let subscribing = false;
@@ -191,7 +203,5 @@ export function writable<T>(trigger: Trigger<T>, value?: T, start: StartNotifier
         }
     }
 
-    const store: Writable<T> = { set, update, subscribe };
-
-    return store;
+    return {set, update, subscribe};
 }

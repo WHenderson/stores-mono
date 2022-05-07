@@ -1,5 +1,5 @@
 import { expect, it } from 'vitest'
-import {Invalidate, read_only, Subscriber, Unsubscriber, Updater, Writable} from '../src';
+import {Invalidate, read_only, Subscriber, Unsubscriber, UpdaterSync, Writable} from '../src';
 
 it('should remove everything but the subscribe method', () => {
     const store: Writable<number> = {
@@ -9,7 +9,7 @@ it('should remove everything but the subscribe method', () => {
         },
         set(_value: number) {
         },
-        update(_updater: Updater<number>) {
+        update(_updater: UpdaterSync<number>) {
         }
     }
 

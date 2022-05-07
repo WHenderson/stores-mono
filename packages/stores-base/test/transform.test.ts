@@ -1,47 +1,87 @@
 import {expect, vi, it} from "vitest";
-import {ComplexSet, transform, trigger_always, trigger_strict_not_equal, writable} from "../src";
+import {ComplexSet, transform, trigger_always, trigger_strict_not_equal, writable, Set} from "../src";
 
 it('should transform values', () => {
     const input = writable(trigger_strict_not_equal, 1);
-    const derived = transform(
+    const transformed = transform(
         trigger_always,
         input,
-        (value) => `#${value}`
+        (value) => `#${value}`,
+        (value : string) => parseInt(value.slice(1), 10)
     );
 
-    const watch = vi.fn();
-    derived.subscribe(watch);
+    const watch_i = vi.fn();
+    input.subscribe(watch_i);
+
+    const watch_t = vi.fn();
+    transformed.subscribe(watch_t);
 
     input.set(2);
     input.set(3);
 
-    expect(watch.mock.calls).to.deep.equal([
+    transformed.set('#139');
+
+    // TODO: Create example of this inference issue and ask about it on typescript forum/discord
+
+    transformed.update((value : string) => value + '0');
+
+    expect(watch_i.mock.calls).to.deep.equal([
+        [1],
+        [2],
+        [3],
+        [139],
+        [1390]
+    ]);
+
+    expect(watch_t.mock.calls).to.deep.equal([
         ['#1'],
         ['#2'],
-        ['#3']
+        ['#3'],
+        ['#139'],
+        ['#1390']
     ]);
 });
 
 it('should transform values async', () => {
     const input = writable(trigger_strict_not_equal, 1);
-    const derived = transform(
+    const transformed = transform(
         trigger_always,
         input,
         (value, set: ComplexSet<string | undefined>) => {
             set(`#${value}`)
+        },
+        (value : string | undefined, set: Set<number>) => {
+            set(parseInt((value ?? '').slice(1), 10))
         }
     );
 
-    const watch = vi.fn();
-    derived.subscribe(watch);
+    const watch_i = vi.fn();
+    input.subscribe(watch_i);
+
+    const watch_t = vi.fn();
+    transformed.subscribe(watch_t);
 
     input.set(2);
     input.set(3);
 
-    expect(watch.mock.calls).to.deep.equal([
+    transformed.set('#139');
+
+    transformed.update((value : string | undefined) => (value ?? '') + '0');
+
+    expect(watch_i.mock.calls).to.deep.equal([
+        [1],
+        [2],
+        [3],
+        [139],
+        [1390]
+    ]);
+
+    expect(watch_t.mock.calls).to.deep.equal([
         ['#1'],
         ['#2'],
-        ['#3']
+        ['#3'],
+        ['#139'],
+        ['#1390']
     ]);
 });
 
@@ -50,7 +90,7 @@ it('should transform values via chain', () => {
     const a = writable(trigger_strict_not_equal, 'a');
     const b = writable(trigger_strict_not_equal, 'b');
 
-    const derived = transform(
+    const transformed = transform(
         trigger_always,
         input,
         (value, set: ComplexSet<string | undefined>) => {
@@ -58,22 +98,46 @@ it('should transform values via chain', () => {
                 return a.subscribe(set);
             else
                 return b.subscribe(set);
+        },
+        (value: string | undefined) => {
+            return (value ?? '').length;
         }
     );
 
-    const watch = vi.fn();
-    const unsub = derived.subscribe(watch);
+    const watch_i = vi.fn();
+    input.subscribe(watch_i);
+
+    const watch_t = vi.fn();
+    transformed.subscribe(watch_t);
 
     input.set(2);
-    input.set(3);
-    b.set('bb');
+    a.set('even');
 
-    expect(watch.mock.calls).to.deep.equal([
-        ['b'],
-        ['a'],
-        ['b'],
-        ['bb']
+    input.set(3);
+    b.set('odd');
+
+    transformed.set('even');
+    transformed.set('odd');
+
+    transformed.update((value : string | undefined) => (value ?? '') + '_');
+
+    expect(watch_i.mock.calls).to.deep.equal([
+        [1],
+        [2],
+        [3],
+        [4],
+        [3],
+        [4]
     ]);
 
-    unsub();
+    expect(watch_t.mock.calls).to.deep.equal([
+        ['b'],
+        ['a'],
+        ['even'],
+        ['b'],
+        ['odd'],
+        ['even'],
+        ['odd'],
+        ['even'],
+    ]);
 });

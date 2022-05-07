@@ -8,7 +8,10 @@ export type Action = () => void;
 export type Unsubscriber = Action;
 
 /** Callback to update a value. */
-export type Updater<T> = (value: T) => T;
+export type UpdaterSync<T> = (value: T) => T;
+
+/** Callback to update a value. */
+export type UpdaterAsync<T> = (value: T, set: Set<T>) => void;
 
 /** Callback to inform that a value is undergoing change. Helps solve the diamond dependency problem */
 export type Invalidate = Action;
@@ -23,7 +26,7 @@ export type StopNotifier = Action;
 export type Set<T> = (this: void, value: T) => void;
 
 /** Signature of the {@link Writable.update} function */
-export type Update<T> = (this: void, updater: Updater<T>) => void;
+export type Update<T> = (this: void, updater: UpdaterAsync<T> | UpdaterSync<T>) => void;
 
 export type ComplexSet<T> =
     Set<T> &
