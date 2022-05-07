@@ -1,5 +1,11 @@
 # @crikey/stores-base-queue
 
+## 0.0.8
+
+### Patch Changes
+
+- d4c2584: Adding code coverage badges
+
 ## 0.0.7
 
 ### Patch Changes

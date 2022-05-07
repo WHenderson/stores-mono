@@ -1,5 +1,14 @@
 # @crikey/stores-immer
 
+## 0.0.8
+
+### Patch Changes
+
+- d4c2584: Adding code coverage badges
+- Updated dependencies [d4c2584]
+  - @crikey/stores-base@0.0.8
+  - @crikey/stores-strict@0.0.8
+
 ## 0.0.7
 
 ### Patch Changes
