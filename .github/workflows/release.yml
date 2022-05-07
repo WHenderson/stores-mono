@@ -63,20 +63,17 @@ jobs:
           git config --local user.email "whenderson+github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
 
-      - run: echo "Install only root workspace dependencies"
-      - run: echo "recursive-install=false" >> .npmrc
-      - run: pnpm install
-      - run: git checkout -- .npmrc
+      - name: Create release branch
+        run: |
+          git branch "release/v${MONO_VERSION}+${GITHUB_RUN_NUMBER}"
+          git checkout "release/v${MONO_VERSION}+${GITHUB_RUN_NUMBER}"
 
-      - run: echo "Git status"
-      - run: git branch --show-current
-      - run: git status -b -s
-      - run: git diff
-
-      - run: echo "Commit package lock if necessary"
-      - run: git add pnpm-lock.yaml
-      - run: git commit -m "Chore - Changeset Version"
-        continue-on-error: true
+      - name: echo "Install only root workspace dependencies"
+        run: |
+          echo "recursive-install=false" >> .npmrc
+          pnpm install
+          git add pnpm-lock.yaml
+          git checkout -- .npmrc
 
       - name: Apply changesets
         run: pnpm changeset version
@@ -89,10 +86,10 @@ jobs:
           echo "Message - $MONO_COMMIT"
 
       - name: Reset local commits
-        run: git reset --soft @{u}
+        run: git reset --soft develop
 
       - name: Install dependencies
-        run: pnpm install -r
+        run: pnpm install
 
       - name: Add package lock if necessary
         run: git add pnpm-lock.yaml
@@ -122,6 +119,19 @@ jobs:
       - name: Show git tags
         run: git push --tags --dry-run
 
+      - name: Merge
+        run: |
+          git checkout develop
+          git merge "release/v${MONO_VERSION}+${GITHUB_RUN_NUMBER}"
+          git checkout master
+          git merge "release/v${MONO_VERSION}+${GITHUB_RUN_NUMBER}"
+          git branch -D "release/v${MONO_VERSION}+${GITHUB_RUN_NUMBER}"
+
+      - name: Push
+        run: |
+          git push origin --all
+          git push origin --tags
+
       - name: Publish Packages
         uses: changesets/action@v1
         with:
@@ -129,11 +139,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-      - name: Push
-      - run: |
-          git push origin
-          git push origin --tags
 
       - name: Publish Docs
         uses: peaceiris/actions-gh-pages@v3
