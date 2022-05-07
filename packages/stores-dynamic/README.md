@@ -49,7 +49,7 @@ $ yarn add @crikey/stores-dynamic
 
 Dynamic stores store more than just a simple value, instead they store a `DynamicResolved` which
 can itself contain a value via `DynamicValue`, or an error via `DynamicError`. Storing values
-and errors separately facilities' error handling.
+and errors separately facilitates error handling.
 
 Any `Readable` containing an object with either a `value` or `error` property is considered a 
 `DynamicReadable` and can safely be mixed with this library.
