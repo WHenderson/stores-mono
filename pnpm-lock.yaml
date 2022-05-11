@@ -1,4 +1,4 @@
-lockfileVersion: 5.3
+lockfileVersion: 5.4
 
 importers:
 
@@ -29,11 +29,11 @@ importers:
       vitest: ^0.9.4
     devDependencies:
       '@changesets/cli': 2.22.0
-      '@knodes/typedoc-plugin-code-blocks': 0.22.3_lodash@4.17.21+typedoc@0.22.13
-      '@knodes/typedoc-plugin-monorepo-readmes': '@gitpkg.now.sh/WHenderson/knodes-typedoc-plugins/packages/plugin-monorepo-readmes?2a8a09d63098852076dde326e0075760bde46b05_lodash@4.17.21+typedoc@0.22.13'
-      '@knodes/typedoc-plugin-pages': 0.22.3_60939e6596ac615e6dbcf8be987ab9ed
+      '@knodes/typedoc-plugin-code-blocks': 0.22.3_j6vlc3y2sdhwb25eg6w3itgcgq
+      '@knodes/typedoc-plugin-monorepo-readmes': '@gitpkg.now.sh/WHenderson/knodes-typedoc-plugins/packages/plugin-monorepo-readmes?2a8a09d63098852076dde326e0075760bde46b05_j6vlc3y2sdhwb25eg6w3itgcgq'
+      '@knodes/typedoc-plugin-pages': 0.22.3_mcjz4zmwvrqv43n47c7jq6vz5u
       '@rollup/plugin-node-resolve': 13.1.3_rollup@2.70.2
-      '@rollup/plugin-typescript': 8.3.1_4a24bde9c77b6cb2b1da67564afd9101
+      '@rollup/plugin-typescript': 8.3.1_jisl32ohpnwlfmo2m5lev7mrae
       '@types/node': 17.0.21
       c8: 7.11.0
       chalk: 5.0.0
@@ -43,7 +43,7 @@ importers:
       rimraf: 3.0.2
       rollup: 2.70.2
       rollup-plugin-auto-external: 2.0.0_rollup@2.70.2
-      rollup-plugin-dts: 4.2.0_rollup@2.70.2+typescript@4.6.4
+      rollup-plugin-dts: 4.2.0_gyp7lzt7cikvbn7tj7irl46mdu
       tslib: 2.3.1
       typedoc: 0.22.13_typescript@4.6.4
       typedoc-plugin-mermaid: github.com/WHenderson/typedoc-plugin-mermaid/84916332611884ef70767d4b075cdbd94a1c28bf_typedoc@0.22.13
@@ -54,7 +54,7 @@ importers:
 
   packages/stores-base:
     specifiers:
-      '@crikey/stores-base-queue': workspace:^0.0.8
+      '@crikey/stores-base-queue': workspace:^0.0.9
     devDependencies:
       '@crikey/stores-base-queue': link:../stores-base-queue
 
@@ -63,9 +63,9 @@ importers:
 
   packages/stores-dynamic:
     specifiers:
-      '@crikey/stores-base': workspace:^0.0.8
-      '@crikey/stores-base-queue': workspace:^0.0.8
-      '@crikey/stores-strict': workspace:^0.0.8
+      '@crikey/stores-base': workspace:^0.0.9
+      '@crikey/stores-base-queue': workspace:^0.0.9
+      '@crikey/stores-strict': workspace:^0.0.9
     dependencies:
       '@crikey/stores-base': link:../stores-base
     devDependencies:
@@ -74,8 +74,8 @@ importers:
 
   packages/stores-immer:
     specifiers:
-      '@crikey/stores-base': workspace:^0.0.8
-      '@crikey/stores-strict': workspace:^0.0.8
+      '@crikey/stores-base': workspace:^0.0.9
+      '@crikey/stores-strict': workspace:^0.0.9
       immer: ^9.0.12
     dependencies:
       '@crikey/stores-base': link:../stores-base
@@ -85,13 +85,13 @@ importers:
 
   packages/stores-promise:
     specifiers:
-      '@crikey/stores-base': workspace:^0.0.8
+      '@crikey/stores-base': workspace:^0.0.9
     dependencies:
       '@crikey/stores-base': link:../stores-base
 
   packages/stores-rxjs:
     specifiers:
-      '@crikey/stores-base': workspace:^0.0.8
+      '@crikey/stores-base': workspace:^0.0.9
       rxjs: ^7.5.5
     dependencies:
       '@crikey/stores-base': link:../stores-base
@@ -100,10 +100,10 @@ importers:
 
   packages/stores-selectable:
     specifiers:
-      '@crikey/stores-base': workspace:^0.0.8
-      '@crikey/stores-immer': workspace:^0.0.8
-      '@crikey/stores-strict': workspace:^0.0.8
-      '@crikey/stores-svelte': workspace:^0.0.8
+      '@crikey/stores-base': workspace:^0.0.9
+      '@crikey/stores-immer': workspace:^0.0.9
+      '@crikey/stores-strict': workspace:^0.0.9
+      '@crikey/stores-svelte': workspace:^0.0.9
     dependencies:
       '@crikey/stores-base': link:../stores-base
     devDependencies:
@@ -113,14 +113,14 @@ importers:
 
   packages/stores-strict:
     specifiers:
-      '@crikey/stores-base': workspace:^0.0.8
+      '@crikey/stores-base': workspace:^0.0.9
     dependencies:
       '@crikey/stores-base': link:../stores-base
 
   packages/stores-svelte:
     specifiers:
-      '@crikey/stores-base': workspace:^0.0.8
-      '@crikey/stores-rxjs': workspace:^0.0.8
+      '@crikey/stores-base': workspace:^0.0.9
+      '@crikey/stores-rxjs': workspace:^0.0.9
       rxjs: ^7.5.5
     dependencies:
       '@crikey/stores-base': link:../stores-base
@@ -130,8 +130,8 @@ importers:
 
   packages/stores-temporal:
     specifiers:
-      '@crikey/stores-base': workspace:^0.0.8
-      '@crikey/stores-rxjs': workspace:^0.0.8
+      '@crikey/stores-base': workspace:^0.0.9
+      '@crikey/stores-rxjs': workspace:^0.0.9
     dependencies:
       '@crikey/stores-base': link:../stores-base
     devDependencies:
@@ -359,31 +359,31 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
-  /@knodes/typedoc-plugin-code-blocks/0.22.3_lodash@4.17.21+typedoc@0.22.13:
+  /@knodes/typedoc-plugin-code-blocks/0.22.3_j6vlc3y2sdhwb25eg6w3itgcgq:
     resolution: {integrity: sha512-3ZV3LqWQELkSMKAnpf0WD1NtFKz++vQpyZ0I9v2nI7LPHnLrCVgCsngep+bFIDitPjN3Xv8mk0BKK9BiPZULiQ==}
     peerDependencies:
       lodash: ^4.17.0
       typedoc: ^0.22.0
     dependencies:
-      '@knodes/typedoc-pluginutils': 0.22.3_lodash@4.17.21+typedoc@0.22.13
+      '@knodes/typedoc-pluginutils': 0.22.3_j6vlc3y2sdhwb25eg6w3itgcgq
       lodash: 4.17.21
       typedoc: 0.22.13_typescript@4.6.4
     dev: true
 
-  /@knodes/typedoc-plugin-pages/0.22.3_60939e6596ac615e6dbcf8be987ab9ed:
+  /@knodes/typedoc-plugin-pages/0.22.3_mcjz4zmwvrqv43n47c7jq6vz5u:
     resolution: {integrity: sha512-ezXvKbbUQo8JnymBFu6iAxsmDDQxOmn8QVT/i47R18Jx+hlfrSa6OJ1vugioyTZhmvzPY4ZktsJZxC+jYGOFOg==}
     peerDependencies:
       lodash: ^4.17.0
       lunr: ^2.3.0
       typedoc: ^0.22.0
     dependencies:
-      '@knodes/typedoc-pluginutils': 0.22.3_lodash@4.17.21+typedoc@0.22.13
+      '@knodes/typedoc-pluginutils': 0.22.3_j6vlc3y2sdhwb25eg6w3itgcgq
       lodash: 4.17.21
       lunr: 2.3.9
       typedoc: 0.22.13_typescript@4.6.4
     dev: true
 
-  /@knodes/typedoc-pluginutils/0.22.3_lodash@4.17.21+typedoc@0.22.13:
+  /@knodes/typedoc-pluginutils/0.22.3_j6vlc3y2sdhwb25eg6w3itgcgq:
     resolution: {integrity: sha512-prWSEWShXh1rMBFsAf2VG4Jro9YcIM7DciJduZKWh/U8z8oU9O1JmzqIPpssZObHbcme+YzZon1ev22/8smOrw==}
     peerDependencies:
       lodash: ^4.17.0
@@ -395,7 +395,7 @@ packages:
       typedoc: 0.22.13_typescript@4.6.4
     dev: true
 
-  /@knodes/typedoc-pluginutils/0.22.5_lodash@4.17.21+typedoc@0.22.13:
+  /@knodes/typedoc-pluginutils/0.22.5_j6vlc3y2sdhwb25eg6w3itgcgq:
     resolution: {integrity: sha512-527UEx8EKL0hS69KiyS/M+lPECyyAsiBKM9aCoWrcq2wuVDvgpYdmPtWYaNvjcq+L4e29soAk3PsHNDTJhP3/w==}
     peerDependencies:
       lodash: ^4.17.0
@@ -463,7 +463,7 @@ packages:
       rollup: 2.70.2
     dev: true
 
-  /@rollup/plugin-typescript/8.3.1_4a24bde9c77b6cb2b1da67564afd9101:
+  /@rollup/plugin-typescript/8.3.1_jisl32ohpnwlfmo2m5lev7mrae:
     resolution: {integrity: sha512-84rExe3ICUBXzqNX48WZV2Jp3OddjTMX97O2Py6D1KJaGSwWp0mDHXj+bCGNJqWHIEKDIT2U0sDjhP4czKi6cA==}
     engines: {node: '>=8.0.0'}
     peerDependencies:
@@ -2152,7 +2152,7 @@ packages:
       semver: 5.7.1
     dev: true
 
-  /rollup-plugin-dts/4.2.0_rollup@2.70.2+typescript@4.6.4:
+  /rollup-plugin-dts/4.2.0_gyp7lzt7cikvbn7tj7irl46mdu:
     resolution: {integrity: sha512-lx6irWVhz/x4//tIqRhzk4FOqGQ0n37ZM2wpPCn4uafl/EmiV92om7ZdAsq7Bzho6C+Xh5GfsyuP9H+Udv72Lg==}
     engines: {node: '>=v12.22.10'}
     peerDependencies:
@@ -2712,7 +2712,7 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
-  '@gitpkg.now.sh/WHenderson/knodes-typedoc-plugins/packages/plugin-monorepo-readmes?2a8a09d63098852076dde326e0075760bde46b05_lodash@4.17.21+typedoc@0.22.13':
+  '@gitpkg.now.sh/WHenderson/knodes-typedoc-plugins/packages/plugin-monorepo-readmes?2a8a09d63098852076dde326e0075760bde46b05_j6vlc3y2sdhwb25eg6w3itgcgq':
     resolution: {tarball: https://gitpkg.now.sh/WHenderson/knodes-typedoc-plugins/packages/plugin-monorepo-readmes?2a8a09d63098852076dde326e0075760bde46b05}
     id: '@gitpkg.now.sh/WHenderson/knodes-typedoc-plugins/packages/plugin-monorepo-readmes?2a8a09d63098852076dde326e0075760bde46b05'
     name: '@knodes/typedoc-plugin-monorepo-readmes'
@@ -2721,7 +2721,7 @@ packages:
       lodash: ^4.17.0
       typedoc: ^0.22.0
     dependencies:
-      '@knodes/typedoc-pluginutils': 0.22.5_lodash@4.17.21+typedoc@0.22.13
+      '@knodes/typedoc-pluginutils': 0.22.5_j6vlc3y2sdhwb25eg6w3itgcgq
       find-up: 4.1.0
       lodash: 4.17.21
       typedoc: 0.22.13_typescript@4.6.4

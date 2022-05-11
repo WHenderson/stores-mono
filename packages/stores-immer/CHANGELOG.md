@@ -1,5 +1,14 @@
 # @crikey/stores-immer
 
+## 0.0.9
+
+### Patch Changes
+
+- 351febf: Update can now be async. Transform semantics have been changed.
+- Updated dependencies [351febf]
+  - @crikey/stores-base@0.0.9
+  - @crikey/stores-strict@0.0.9
+
 ## 0.0.8
 
 ### Patch Changes

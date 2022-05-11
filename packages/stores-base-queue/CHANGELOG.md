@@ -1,5 +1,11 @@
 # @crikey/stores-base-queue
 
+## 0.0.9
+
+### Patch Changes
+
+- 351febf: Update can now be async. Transform semantics have been changed.
+
 ## 0.0.8
 
 ### Patch Changes
