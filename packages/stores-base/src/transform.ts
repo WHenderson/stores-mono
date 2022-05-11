@@ -12,6 +12,11 @@ export type ReadFnSync<I,O> = (values: I) => O;
 export type ReadFnAsyncComplex<I,O> =
     ((values: I, set: ComplexSet<O>) => Unsubscriber | void);
 
+export type ReadFn<I,O> = {
+    (values: I) : O;
+    (values: I, set: ComplexSet<O>) : Unsubscriber | void;
+}
+
 /** Synchronous callback for deriving a value from resolved input value */
 export type WriteFnSync<I,O> = (values: I) => O;
 
@@ -19,15 +24,29 @@ export type WriteFnSync<I,O> = (values: I) => O;
 export type WriteFnAsync<I,O> =
     ((values: I, set: Set<O>) => void);
 
+export type WriteFn<I,O> = {
+    (values: I) : O;
+    (values: I, set: Set<O>) : void;
+}
+
 /**
- * Creates a new store by applying a transform callback to values from the input store.
- * Resulting store values can be provided via the set argument in the transformer callback.
+ * Creates a new {@link Writable} store by applying transform functions on both read and write.
  *
- * Whilst {@link derive} can be used to provide the same utility, transform has less overhead.
+ * _transform data flow_
+ * ```mermaid
+ *
+ * graph LR
+ *   set --> write
+ *   cache.set --> |changed?| subscribers
+ *   subgraph implementation
+ *     write --> inner.set --> |inner.changed?| read --> cache.set
+ *   end
+ * ```
  *
  * @param trigger callback used to determine if subscribers should be called
  * @param store input store
- * @param transformer callback used to transfrom values from the input into values for the output store
+ * @param read callback used to transform values from the input store into values for the output store
+ * @param write callback used setting the value of the output store. result is applied to the input store.
  */
 export function transform<T, R>(
     trigger: Trigger<R | undefined>,
@@ -37,14 +56,23 @@ export function transform<T, R>(
 ) : Writable<R | undefined>;
 
 /**
- * Creates a new store by applying a transform callback to values from the input store.
- * Resulting store values can be provided via the set argument in the transformer callback.
+ * Creates a new {@link Writable} store by applying transform functions on both read and write.
  *
- * Whilst {@link derive} can be used to provide the same utility, transform has less overhead.
+ * _transform data flow_
+ * ```mermaid
+ *
+ * graph LR
+ *   set --> write
+ *   cache.set --> |changed?| subscribers
+ *   subgraph implementation
+ *     write --> inner.set --> |inner.changed?| read --> cache.set
+ *   end
+ * ```
  *
  * @param trigger callback used to determine if subscribers should be called
  * @param store input store
- * @param transformer callback used to transfrom values from the input into values for the output store
+ * @param read callback used to transform values from the input store into values for the output store
+ * @param write callback used setting the value of the output store. result is applied to the input store.
  * @param initial_value Initial value of the resulting store
  */
 export function transform<T, R>(
@@ -56,13 +84,23 @@ export function transform<T, R>(
 ) : Writable<R>;
 
 /**
- * Creates a new store by applying a transform callback to values from the input store.
+ * Creates a new {@link Writable} store by applying transform functions on both read and write.
  *
- * Whilst {@link derive} can be used to provide the same utility, transform has less overhead.
+ * _transform data flow_
+ * ```mermaid
+ *
+ * graph LR
+ *   set --> write
+ *   cache.set --> |changed?| subscribers
+ *   subgraph implementation
+ *     write --> inner.set --> |inner.changed?| read --> cache.set
+ *   end
+ * ```
  *
  * @param trigger callback used to determine if subscribers should be called
  * @param store input store
- * @param transformer callback used to transfrom values from the input into values for the output store
+ * @param read callback used to transform values from the input store into values for the output store
+ * @param write callback used setting the value of the output store. result is applied to the input store.
  */
 export function transform<T, R>(
     trigger: Trigger<R>,
@@ -70,8 +108,6 @@ export function transform<T, R>(
     read: ReadFnSync<T, R>,
     write: WriteFnSync<R, T>
 ) : Writable<R>;
-
-// TODO: Probably no good reason to assume io are both sync or both async
 
 export function transform<T, R>(
     trigger: Trigger<R>,
@@ -115,47 +151,26 @@ export function transform<T, R>(
 
     const write_is_sync = write.length <= 1;
 
-    // TODO: Writable store contract should not _require_ update in the contract. It's just a nice to have... man some things may wind up with soo many signatures without it though...
-    // TODO: Update signature should support async, then this becomes possible
-
-    if (write_is_sync) {
-        function set(value: R) {
-            store.set((<WriteFnSync<R, T>>write)(value));
-        }
-
-        function update(updater: UpdaterSync<R> | UpdaterAsync<R>) {
-            cache.update((value, _set) => {
-                if (updater.length <= 1)
-                    set((<UpdaterSync<R>>updater)(value))
-                else
-                    updater(value, set);
-            });
-        }
-
-        return {
-            subscribe: cache.subscribe,
-            set,
-            update
-        }
+    const set = write_is_sync
+    ? (value: R) => {
+        store.set((<WriteFnSync<R, T>>write)(value));
     }
-    else {
-        function set(value: R) {
-            write(value, store.set);
-        }
+    : (value: R) => {
+        write(value, store.set);
+    }
 
-        function update(updater: UpdaterSync<R> | UpdaterAsync<R>) {
-            cache.update((value, _set) => {
-                if (updater.length <= 1)
-                    set((<UpdaterSync<R>>updater)(value))
-                else
-                    updater(value, set);
-            });
-        }
+    const update = (updater: UpdaterSync<R> | UpdaterAsync<R>) => {
+        cache.update((value, _set) => {
+            if (updater.length <= 1)
+                set((<UpdaterSync<R>>updater)(value))
+            else
+                updater(value, set);
+        });
+    }
 
-        return {
-            subscribe: cache.subscribe,
-            set,
-            update
-        }
+    return {
+        subscribe: cache.subscribe,
+        set,
+        update
     }
 }

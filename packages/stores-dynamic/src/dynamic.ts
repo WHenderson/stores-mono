@@ -2,14 +2,15 @@ import {Dynamic, DynamicDependents, DynamicReadable, DynamicResolved, DynamicVal
 import {
     Action,
     ComplexSet,
+    derive,
     is_readable,
     readable,
     Readable,
-    transform,
     Trigger,
     trigger_always,
     Unsubscriber,
-    Updater
+    UpdaterAsync,
+    UpdaterSync
 } from "@crikey/stores-base";
 import {is_dynamic_resolved} from "./is-dynamic-resolved";
 import {default_trigger_dynamic} from "./create-trigger-dynamic";
@@ -358,7 +359,7 @@ export function dynamic<A extends Inputs, R>(
     if (is_readable(store_or_trigger_or_args_or_calculate)) {
         const store = store_or_trigger_or_args_or_calculate;
 
-        return transform<R, DynamicValue<R>>(
+        return derive(
             trigger_always,
             store,
             value => ({ value })
@@ -508,12 +509,17 @@ export function dynamic<A extends Inputs, R>(
                 set({ ...value, ...dependencies_spread});
             }
 
-            const local_update = (updater: Updater<DynamicResolved<R>>) => {
+            const local_update = (updater: UpdaterAsync<DynamicResolved<R>> | UpdaterSync<DynamicResolved<R>>) => {
                 const dependencies_spread = get_dependencies_spread();
 
                 update(value => {
                     try {
-                        return { ...updater(value), ...dependencies_spread };
+                        if (updater.length <= 1)
+                            return { ...(<UpdaterSync<DynamicResolved<R>>>updater)(value), ...dependencies_spread };
+                        else {
+                            (<UpdaterAsync<DynamicResolved<R>>>updater)(value, local_set);
+                            return;
+                        }
                     }
                     catch (error) {
                         return { error, ...dependencies_spread }

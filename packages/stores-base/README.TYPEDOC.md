@@ -13,6 +13,7 @@ See [@crikey/stores-base](https://whenderson.github.io/stores-mono/modules/_crik
 * {@link readable} - Create a {@link Readable} store
 * {@link writable} - Create a {@link Writable} store
 * {@link derive}   - Create a {@link Readable} store derived from the resolved values of other stores
+* {@link transform}- Create a {@link Writable} store by applying transform functions when reading and writing values
 
 ### Utility functions:
 * {@link get} - Retrieve the value of a store

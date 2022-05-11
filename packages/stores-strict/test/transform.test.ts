@@ -3,7 +3,11 @@ import {transform, writable} from "../src";
 
 it('should trigger on !==', () => {
     const store = writable(2);
-    const derived = transform(store, value => Math.floor(value / 2));
+    const derived = transform(
+        store,
+        value => Math.floor(value / 2),
+        (value: number) => value * 2 // TODO: Can we have this type inferred?
+    );
     const watch = vi.fn();
 
     derived.subscribe(watch);

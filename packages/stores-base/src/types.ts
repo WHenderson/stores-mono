@@ -26,7 +26,10 @@ export type StopNotifier = Action;
 export type Set<T> = (this: void, value: T) => void;
 
 /** Signature of the {@link Writable.update} function */
-export type Update<T> = (this: void, updater: UpdaterAsync<T> | UpdaterSync<T>) => void;
+export type Update<T> = {
+    (this: void, updater: UpdaterAsync<T>) : void;
+    (this: void, updater: UpdaterSync<T>) : void;
+}
 
 export type ComplexSet<T> =
     Set<T> &

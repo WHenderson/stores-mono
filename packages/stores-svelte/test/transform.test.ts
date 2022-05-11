@@ -4,10 +4,14 @@ import {transform, writable} from "../src";
 it('should trigger on safe not equal', () => {
     const result = [0];
     const store = writable(2);
-    const derived = transform(store, value => {
-        result[0] = Math.floor(value / 2);
-        return result;
-    });
+    const derived = transform(
+        store,
+        value => {
+            result[0] = Math.floor(value / 2);
+            return result;
+        },
+        (value: number[]) => value[0]
+    );
     const watch = vi.fn();
 
     derived.subscribe(watch);

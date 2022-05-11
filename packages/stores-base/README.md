@@ -15,6 +15,7 @@ See [@crikey/stores-base](https://whenderson.github.io/stores-mono/modules/_crik
 * `readable` - Create a `Readable` store
 * `writable` - Create a `Writable` store
 * `derive`   - Create a `Readable` store derived from the resolved values of other stores
+* `transform`- Create a `Writable` store by applying transform functions when reading and writing values
 
 ### Utility functions:
 * `get` - Retrieve the value of a store

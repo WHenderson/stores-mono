@@ -1,6 +1,6 @@
-import {ComplexSet, noop, StartNotifier, Updater, Writable} from "@crikey/stores-base";
+import {ComplexSet, noop, StartNotifier, UpdaterSync, UpdaterAsync, Writable} from "@crikey/stores-base";
 import {writable as strictWritable} from "@crikey/stores-strict";
-import {Draft, nothing, produce} from "immer";
+import {createDraft, Draft, finishDraft, isDraft, nothing, produce} from "immer";
 
 /**
  * Create a writable store with an initial value of `undefined`.
@@ -81,22 +81,46 @@ export function writable<T>(value?: T, start: StartNotifier<T> = noop): Writable
             (value: T) => set(value),
             {
                 set,
-                update: (fn: Updater<T>) => {
-                    return update(
-                        (value: T) => {
-                            return produce(
-                                value,
-                                draft => {
-                                    const result = fn(<T>draft);
+                update: (fn: UpdaterAsync<T> | UpdaterSync<T>) => {
+                    if (fn.length <= 1) {
+                        const updater = <UpdaterSync<T>>fn;
 
-                                    return <Draft<T>>((result !== undefined)
-                                            ? result
-                                            : nothing
+                        update(
+                            (value: T) => {
+                                return produce(
+                                    value,
+                                    draft => {
+                                        const result = updater(<T>draft);
+
+                                        return <Draft<T>>((result !== undefined)
+                                                ? result
+                                                : nothing
+                                        );
+                                    }
+                                );
+                            }
+                        )
+                    }
+                    else {
+                        const updater = <UpdaterAsync<T>>fn;
+
+                        update(
+                            (value: T, set) => {
+                                const draft = createDraft(value);
+
+                                const local_set = (value: T): void => {
+                                    set(
+                                        isDraft(value)
+                                        ? <T>finishDraft(value)
+                                        : value
                                     );
-                                }
-                            );
-                        }
-                    )
+                                };
+
+                                updater(<T>draft, local_set);
+                            }
+                        );
+                    }
+
                 },
                 invalidate,
                 revalidate
@@ -106,22 +130,45 @@ export function writable<T>(value?: T, start: StartNotifier<T> = noop): Writable
         return start(complexSet);
     });
 
-    function update(fn: Updater<T>): void {
-        store.update(
-            (value : T) => {
-                return produce(
-                    value,
-                    draft => {
-                        const result = fn(<T>draft);
+    function update(fn: UpdaterAsync<T> | UpdaterSync<T>): void {
+        if (fn.length <= 1) {
+            const updater = <UpdaterSync<T>>fn;
 
-                        return <Draft<T>>((result !== undefined)
-                                ? result
-                                : nothing
+            store.update(
+                (value : T) => {
+                    return produce(
+                        value,
+                        draft => {
+                            const result = updater(<T>draft);
+
+                            return <Draft<T>>((result !== undefined)
+                                    ? result
+                                    : nothing
+                            );
+                        }
+                    );
+                }
+            );
+        }
+        else {
+            const updater = <UpdaterAsync<T>>fn;
+
+            store.update(
+                (value: T, set) => {
+                    const draft = createDraft(value);
+
+                    const local_set = (value: T): void => {
+                        set(
+                            isDraft(value)
+                                ? <T>finishDraft(value)
+                                : value
                         );
-                    }
-                );
-            }
-        );
+                    };
+
+                    updater(<T>draft, local_set);
+                }
+            );
+        }
     }
 
     return {

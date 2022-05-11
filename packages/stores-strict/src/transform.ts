@@ -1,58 +1,92 @@
 import {
-    Readable,
+    ReadFnAsyncComplex,
+    ReadFnSync,
     transform as transformBase,
-    TransformFnAsyncComplex,
-    TransformFnSync,
-    trigger_strict_not_equal
+    trigger_strict_not_equal,
+    Writable,
+    WriteFnAsync,
+    WriteFnSync
 } from "@crikey/stores-base";
 
 /**
- * Creates a new store by applying a transform callback to values from the input store.
- * Resulting store values can be provided via the set argument in the transformer callback.
+ * Creates a new {@link Writable} store by applying transform functions on both read and write.
  *
- * Whilst {@link derive} can be used to provide the same utility, transform has less overhead.
+ * _transform data flow_
+ * ```mermaid
+ *
+ * graph LR
+ *   set --> write
+ *   cache.set --> |changed?| subscribers
+ *   subgraph implementation
+ *     write --> inner.set --> |inner.changed?| read --> cache.set
+ *   end
+ * ```
  *
  * @param store input store
- * @param transformer callback used to transfrom values from the input into values for the output store
+ * @param read callback used to transform values from the input store into values for the output store
+ * @param write callback used setting the value of the output store. result is applied to the input store.
  */
 export function transform<T, R>(
-    store: Readable<T>,
-    transformer: TransformFnAsyncComplex<T, R | undefined>
-) : Readable<R | undefined>;
+    store: Writable<T>,
+    read: ReadFnAsyncComplex<T, R | undefined>,
+    write: WriteFnAsync<R | undefined, T>
+) : Writable<R | undefined>;
 
 /**
- * Creates a new store by applying a transform callback to values from the input store.
- * Resulting store values can be provided via the set argument in the transformer callback.
+ * Creates a new {@link Writable} store by applying transform functions on both read and write.
  *
- * Whilst {@link derive} can be used to provide the same utility, transform has less overhead.
+ * _transform data flow_
+ * ```mermaid
+ *
+ * graph LR
+ *   set --> write
+ *   cache.set --> |changed?| subscribers
+ *   subgraph implementation
+ *     write --> inner.set --> |inner.changed?| read --> cache.set
+ *   end
+ * ```
  *
  * @param store input store
- * @param transformer callback used to transfrom values from the input into values for the output store
+ * @param read callback used to transform values from the input store into values for the output store
+ * @param write callback used setting the value of the output store. result is applied to the input store.
  * @param initial_value Initial value of the resulting store
  */
 export function transform<T, R>(
-    store: Readable<T>,
-    transformer: TransformFnAsyncComplex<T, R>,
+    store: Writable<T>,
+    read: ReadFnAsyncComplex<T, R>,
+    write: WriteFnAsync<R, T>,
     initial_value: R
-) : Readable<R>;
+) : Writable<R>;
 
 /**
- * Creates a new store by applying a transform callback to values from the input store.
+ * Creates a new {@link Writable} store by applying transform functions on both read and write.
  *
- * Whilst {@link derive} can be used to provide the same utility, transform has less overhead.
+ * _transform data flow_
+ * ```mermaid
+ *
+ * graph LR
+ *   set --> write
+ *   cache.set --> |changed?| subscribers
+ *   subgraph implementation
+ *     write --> inner.set --> |inner.changed?| read --> cache.set
+ *   end
+ * ```
  *
  * @param store input store
- * @param transformer callback used to transfrom values from the input into values for the output store
+ * @param read callback used to transform values from the input store into values for the output store
+ * @param write callback used setting the value of the output store. result is applied to the input store.
  */
 export function transform<T, R>(
-    store: Readable<T>,
-    transformer: TransformFnSync<T, R>
-) : Readable<R>;
+    store: Writable<T>,
+    read: ReadFnSync<T, R>,
+    write: WriteFnSync<R, T>
+) : Writable<R>;
 
 export function transform<T, R>(
-    store: Readable<T>,
-    transformer: TransformFnSync<T, R> | TransformFnAsyncComplex<T, R>,
+    store: Writable<T>,
+    read: ReadFnSync<T, R> | ReadFnAsyncComplex<T, R>,
+    write: WriteFnSync<R, T> | WriteFnAsync<R, T>,
     initial_value?: R
-) : Readable<R>  {
-    return transformBase(trigger_strict_not_equal, store, <TransformFnAsyncComplex<T, R>>transformer, initial_value!);
+) : Writable<R> {
+    return transformBase(trigger_strict_not_equal, store, <ReadFnAsyncComplex<T, R>>read, write, initial_value!);
 }
