@@ -1,5 +1,14 @@
 # @crikey/stores-svelte
 
+## 0.0.10
+
+### Patch Changes
+
+- 04a9921: Expanded semantics of transform function
+- Updated dependencies [b0ca37d]
+- Updated dependencies [04a9921]
+  - @crikey/stores-base@0.0.10
+
 ## 0.0.9
 
 ### Patch Changes

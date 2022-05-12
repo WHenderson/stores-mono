@@ -1,5 +1,14 @@
 # @crikey/stores-immer
 
+## 0.0.10
+
+### Patch Changes
+
+- Updated dependencies [b0ca37d]
+- Updated dependencies [04a9921]
+  - @crikey/stores-base@0.0.10
+  - @crikey/stores-strict@0.0.10
+
 ## 0.0.9
 
 ### Patch Changes

@@ -1,5 +1,12 @@
 # @crikey/stores-base
 
+## 0.0.10
+
+### Patch Changes
+
+- b0ca37d: Added skip utility function
+- 04a9921: Expanded semantics of transform function
+
 ## 0.0.9
 
 ### Patch Changes

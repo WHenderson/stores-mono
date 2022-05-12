@@ -1,5 +1,13 @@
 # @crikey/stores-dynamic
 
+## 0.0.11
+
+### Patch Changes
+
+- Updated dependencies [b0ca37d]
+- Updated dependencies [04a9921]
+  - @crikey/stores-base@0.0.10
+
 ## 0.0.10
 
 ### Patch Changes
