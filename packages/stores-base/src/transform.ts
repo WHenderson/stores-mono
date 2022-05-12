@@ -1,9 +1,9 @@
-import {ComplexSet, Set, Trigger, Unsubscriber, UpdaterAsync, UpdaterSync, Writable} from "./types";
-import {Action} from "@crikey/stores-base-queue";
+import {Action, ComplexSet, Readable, Trigger, Unsubscriber, UpdaterAsync, UpdaterSync, Writable} from "./types";
 import {writable} from "./writable";
-
-// TODO: Should merge any efficiencies into derived and turn `transform` into a read/write version of derived which has functions for input/output transformations
-//  Is there a way to have a syntax where the `write` transform is optional leaving us with a readonly store..
+import {derive} from "./derive";
+import {skip} from "./skip";
+import {read_only} from "./read-only";
+import {noop} from "./noop";
 
 /** Synchronous callback for deriving a value from resolved input value */
 export type ReadFnSync<I,O> = (values: I) => O;
@@ -12,164 +12,282 @@ export type ReadFnSync<I,O> = (values: I) => O;
 export type ReadFnAsyncComplex<I,O> =
     ((values: I, set: ComplexSet<O>) => Unsubscriber | void);
 
-export type ReadFn<I,O> = {
-    (values: I) : O;
-    (values: I, set: ComplexSet<O>) : Unsubscriber | void;
-}
-
 /** Synchronous callback for deriving a value from resolved input value */
 export type WriteFnSync<I,O> = (values: I) => O;
 
 /** Asynchronous callback for deriving a value from resolved input value */
 export type WriteFnAsync<I,O> =
-    ((values: I, set: Set<O>) => void);
-
-export type WriteFn<I,O> = {
-    (values: I) : O;
-    (values: I, set: Set<O>) : void;
-}
+    ((values: I, set: ComplexSet<O>) => void);
 
 /**
- * Creates a new {@link Writable} store by applying transform functions on both read and write.
+ * A {@link Writable} store which contains the most recent of either:
+ * * An input store transformed via a matching `read` transform
+ * * A value set directly via `set` or `update`
  *
- * _transform data flow_
- * ```mermaid
- *
- * graph LR
- *   set --> write
- *   cache.set --> |changed?| subscribers
- *   subgraph implementation
- *     write --> inner.set --> |inner.changed?| read --> cache.set
- *   end
- * ```
+ * Additionally contains two other stores:
+ * {@link derived$}
+ * {@link smart$}
+ */
+export type TransformedStore<O> = Writable<O> & {
+    /**
+     * Contains the value of the input store transformed via a matching `read` transform
+     */
+    derived$: Readable<O | undefined>,
+
+    /**
+     * Contains the most recent value which was successfully transformed via either `read` or `write`
+     */
+    smart$: Readable<O | undefined>
+};
+
+/**
+ * Creates a new {@link TransformedStore} store by applying transform functions on both read and write.
  *
  * @param trigger callback used to determine if subscribers should be called
- * @param store input store
+ * @param store$ input store
  * @param read callback used to transform values from the input store into values for the output store
  * @param write callback used setting the value of the output store. result is applied to the input store.
  */
-export function transform<T, R>(
-    trigger: Trigger<R | undefined>,
-    store: Writable<T>,
-    read: ReadFnAsyncComplex<T, R | undefined>,
-    write: WriteFnAsync<R | undefined, T>
-) : Writable<R | undefined>;
+export function transform<I, O>(
+    trigger: Trigger<O | undefined>,
+    store$: Writable<I>,
+    read: ReadFnAsyncComplex<I, O | undefined>,
+    write: WriteFnAsync<O | undefined, I>
+) : TransformedStore<O | undefined>;
 
 /**
- * Creates a new {@link Writable} store by applying transform functions on both read and write.
- *
- * _transform data flow_
- * ```mermaid
- *
- * graph LR
- *   set --> write
- *   cache.set --> |changed?| subscribers
- *   subgraph implementation
- *     write --> inner.set --> |inner.changed?| read --> cache.set
- *   end
- * ```
+ * Creates a new {@link TransformedStore} store by applying transform functions on both read and write.
  *
  * @param trigger callback used to determine if subscribers should be called
- * @param store input store
+ * @param store$ input store
+ * @param read callback used to transform values from the input store into values for the output store
+ * @param write callback used setting the value of the output store. result is applied to the input store.
+ */
+export function transform<I, O>(
+    trigger: Trigger<O | undefined>,
+    store$: Writable<I>,
+    read: ReadFnAsyncComplex<I, O | undefined>,
+    write: WriteFnSync<O | undefined, I>
+) : TransformedStore<O | undefined>;
+
+/**
+ * Creates a new {@link TransformedStore} store by applying transform functions on both read and write.
+ *
+ * @param trigger callback used to determine if subscribers should be called
+ * @param store$ input store
  * @param read callback used to transform values from the input store into values for the output store
  * @param write callback used setting the value of the output store. result is applied to the input store.
  * @param initial_value Initial value of the resulting store
  */
-export function transform<T, R>(
-    trigger: Trigger<R>,
-    store: Writable<T>,
-    read: ReadFnAsyncComplex<T, R>,
-    write: WriteFnAsync<R, T>,
-    initial_value: R
-) : Writable<R>;
+export function transform<I, O>(
+    trigger: Trigger<O>,
+    store$: Writable<I>,
+    read: ReadFnAsyncComplex<I, O>,
+    write: WriteFnAsync<O, I>,
+    initial_value: O
+) : TransformedStore<O>;
 
 /**
- * Creates a new {@link Writable} store by applying transform functions on both read and write.
- *
- * _transform data flow_
- * ```mermaid
- *
- * graph LR
- *   set --> write
- *   cache.set --> |changed?| subscribers
- *   subgraph implementation
- *     write --> inner.set --> |inner.changed?| read --> cache.set
- *   end
- * ```
+ * Creates a new {@link TransformedStore} store by applying transform functions on both read and write.
  *
  * @param trigger callback used to determine if subscribers should be called
- * @param store input store
+ * @param store$ input store
+ * @param read callback used to transform values from the input store into values for the output store
+ * @param write callback used setting the value of the output store. result is applied to the input store.
+ * @param initial_value Initial value of the resulting store
+ */
+export function transform<I, O>(
+    trigger: Trigger<O>,
+    store$: Writable<I>,
+    read: ReadFnAsyncComplex<I, O>,
+    write: WriteFnSync<O, I>,
+    initial_value: O
+) : TransformedStore<O>;
+
+
+/**
+ * Creates a new {@link TransformedStore} store by applying transform functions on both read and write.
+ *
+ * @param trigger callback used to determine if subscribers should be called
+ * @param store$ input store
  * @param read callback used to transform values from the input store into values for the output store
  * @param write callback used setting the value of the output store. result is applied to the input store.
  */
-export function transform<T, R>(
-    trigger: Trigger<R>,
-    store: Writable<T>,
-    read: ReadFnSync<T, R>,
-    write: WriteFnSync<R, T>
-) : Writable<R>;
+export function transform<I, O>(
+    trigger: Trigger<O>,
+    store$: Writable<I>,
+    read: ReadFnSync<I, O>,
+    write: WriteFnAsync<O, I>
+) : TransformedStore<O>;
 
-export function transform<T, R>(
-    trigger: Trigger<R>,
-    store: Writable<T>,
-    read: ReadFnSync<T, R> | ReadFnAsyncComplex<T, R>,
-    write: WriteFnSync<R, T> | WriteFnAsync<R, T>,
-    initial_value?: R
-) : Writable<R>  {
+/**
+ * Creates a new {@link TransformedStore} store by applying transform functions on both read and write.
+ *
+ * @param trigger callback used to determine if subscribers should be called
+ * @param store$ input store
+ * @param read callback used to transform values from the input store into values for the output store
+ * @param write callback used setting the value of the output store. result is applied to the input store.
+ */
+export function transform<I, O>(
+    trigger: Trigger<O>,
+    store$: Writable<I>,
+    read: ReadFnSync<I, O>,
+    write: WriteFnSync<O, I>
+) : TransformedStore<O>;
 
-    const cache = writable<R>(
+
+export function transform<I, O>(
+    trigger: Trigger<O>,
+    store$: Writable<I>,
+    read: ReadFnSync<I, O> | ReadFnAsyncComplex<I, O>,
+    write: WriteFnSync<O, I> | WriteFnAsync<O, I>,
+    initial_value?: O
+) : TransformedStore<O>  {
+
+    // Derive the formal outer_value
+    // Note: This intermediary allows us to subscribe and unsubscribe without changing the evaluation order
+    const derived$ = derive(
         trigger,
-        <R>initial_value!,
-        (complexSet) => {
-            let async_cleanup: Action | undefined;
-            let store_unsub: Action | undefined = store.subscribe(
-                value => {
-                    if (read.length > 1) {
-                        async_cleanup?.();
-                        async_cleanup = undefined;
+        store$,
+        (inner_value, set) => {
+            if (read.length <= 1) {
+                const outer_value = (<ReadFnSync<I, O>>read)(inner_value);
+                set(outer_value);
+                return;
+            }
+            else {
+                return (<ReadFnAsyncComplex<I, O>>read)(inner_value, set);
+            }
+        },
+        <O>initial_value
+    );
 
-                        const unsub = (<ReadFnAsyncComplex<T, R>>read)(value, complexSet); // async
-                        if (unsub)
-                            async_cleanup = unsub;
-                    }
-                    else
-                        complexSet((<WriteFnSync<T, R>>read)(value)); // sync
-                },
-                complexSet.invalidate,
-                complexSet.revalidate
+    let verbatim$_set: ComplexSet<O>;
+
+    const verbatim$ = writable<O>(
+        trigger,
+        <O>initial_value,
+        set => {
+            verbatim$_set = set;
+
+            bind(true);
+
+            return unbind;
+        }
+    );
+
+    let unsub: Action | undefined = undefined;
+    let smart$_set: ComplexSet<O>;
+
+    const outer_set = (value: O) => {
+        smart$.set(value);
+        verbatim$.set(value);
+    }
+
+    const bind = (initial: boolean) => {
+        if (!unsub) {
+            unsub = derived$.subscribe(
+                initial ? outer_set : skip(outer_set),
+                smart$_set?.invalidate,
+                smart$_set?.revalidate
             );
+        }
+    };
 
-            return () => {
-                async_cleanup?.();
-                async_cleanup = undefined;
+    const unbind = () => {
+        unsub?.();
+        unsub = undefined;
+    }
 
-                store_unsub?.();
-                store_unsub = undefined;
-            };
+    const smart$ = writable<O>(
+        trigger,
+        <O>initial_value,
+        (set) => {
+            smart$_set = set;
+
+            bind(true);
+
+            return unbind;
         }
     );
 
     const write_is_sync = write.length <= 1;
 
     const set = write_is_sync
-    ? (value: R) => {
-        store.set((<WriteFnSync<R, T>>write)(value));
+    ? (outer_value: O) => {
+        verbatim$_set.invalidate();
+
+        const inner_value = (<WriteFnSync<O, I>>write)(outer_value);
+
+        // keep derived active
+        const unsub_fake_bind = derived$.subscribe(() => {});
+
+        unbind();
+        smart$_set?.invalidate();
+        store$.set(inner_value);
+        smart$.set(outer_value);
+        bind(false);
+
+        unsub_fake_bind();
+
+        verbatim$.set(outer_value);
     }
-    : (value: R) => {
-        write(value, store.set);
+    : (outer_value: O) => {
+        verbatim$_set.invalidate();
+
+        const local_set = (inner_value: I) => {
+            // keep derived active
+            const unsub_fake_bind = derived$.subscribe(() => {});
+
+            unbind();
+            smart$_set?.invalidate();
+            store$.set(inner_value);
+            smart$.set(outer_value);
+            bind(false);
+
+            unsub_fake_bind();
+        };
+
+        const local_update = (updater: UpdaterAsync<I> | UpdaterSync<I>) => {
+            store$.update(
+                (current_inner_value, _set) => {
+                    if (updater.length <= 1) {
+                        const inner_value = (<UpdaterSync<I>>updater)(current_inner_value);
+                        local_set(inner_value);
+                    }
+                    else {
+                        (<UpdaterAsync<I>>updater)(current_inner_value, local_set)
+                    }
+                }
+            );
+        }
+
+        write(outer_value, Object.assign(
+            (value: I) => local_set(value),
+            {
+                set: local_set,
+                update: local_update,
+                invalidate: smart$_set?.invalidate ?? noop,
+                revalidate: smart$_set?.revalidate ?? noop
+            }
+        ));
+
+        verbatim$.set(outer_value);
     }
 
-    const update = (updater: UpdaterSync<R> | UpdaterAsync<R>) => {
-        cache.update((value, _set) => {
+    const update = (updater: UpdaterSync<O> | UpdaterAsync<O>) => {
+        smart$.update((value, _set) => {
             if (updater.length <= 1)
-                set((<UpdaterSync<R>>updater)(value))
+                set((<UpdaterSync<O>>updater)(value))
             else
                 updater(value, set);
         });
     }
 
     return {
-        subscribe: cache.subscribe,
+        ...read_only(verbatim$),
+        derived$: derived$,
+        smart$: read_only(smart$),
         set,
         update
     }
