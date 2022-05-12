@@ -14,3 +14,4 @@ export * from './is-readable';
 export * from './is-writable';
 export * from './transform';
 export * from './recursion-error';
+export * from './skip';
