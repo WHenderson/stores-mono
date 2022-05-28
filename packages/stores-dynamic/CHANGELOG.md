@@ -1,5 +1,11 @@
 # @crikey/stores-dynamic
 
+## 0.0.12
+
+### Patch Changes
+
+- 98845a9: adding dirty transformations
+
 ## 0.0.11
 
 ### Patch Changes
