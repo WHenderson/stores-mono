@@ -14,6 +14,7 @@ import {
 } from "@crikey/stores-base";
 import {is_dynamic_resolved} from "./is-dynamic-resolved";
 import {default_trigger_dynamic} from "./create-trigger-dynamic";
+import {Invalidate, noop, Revalidate, Subscriber} from "@crikey/stores-base/src";
 
 export type ResolveDynamic = <V>(arg: Dynamic<V>) => V;
 export type ComplexResolveDynamic = ResolveDynamic & { resolve: ResolveDynamic };
@@ -40,9 +41,11 @@ export type DeriveFn<A, R, SYNC, ASYNC> =
  * {@codeblock ../stores-dynamic/examples/dynamic.test.ts#example-to-dynamic}
  *
  * @param store the input store to transform
+ * @param dirty if true, creates a cheap wrapper around each subscription instead of a fully derived store
  */
 export function dynamic<R>(
-    store: Readable<R>
+    store: Readable<R>,
+    dirty?: boolean
 ): Readable<DynamicValue<R>>;
 
 
@@ -352,35 +355,45 @@ export function dynamic<A extends Inputs, R>(
 
 export function dynamic<A extends Inputs, R>(
     store_or_trigger_or_args_or_calculate: Readable<R> | Trigger<DynamicResolved<R>> | A | Function,
-    maybe_args_or_calculate_or_initial_value?: A | Function | DynamicResolved<R>,
+    dirty_or_maybe_args_or_calculate_or_initial_value?: A | Function | DynamicResolved<R> | boolean,
     maybe_calculate_or_initial_value?: Function | DynamicResolved<R>,
     maybe_initial_value?: DynamicResolved<R>)
 : DynamicReadable<R> {
     if (is_readable(store_or_trigger_or_args_or_calculate)) {
         const store = store_or_trigger_or_args_or_calculate;
+        const dirty = <boolean | undefined>dirty_or_maybe_args_or_calculate_or_initial_value ?? false;
 
-        return derive(
-            trigger_always,
-            store,
-            value => ({ value })
-        );
+        if (!dirty) {
+            return derive(
+                trigger_always,
+                store,
+                value => ({value})
+            );
+        }
+        else {
+            return {
+                subscribe: (run: Subscriber<DynamicResolved<R>>, invalidator: Invalidate = noop, revalidator: Revalidate = noop): Unsubscriber => {
+                    return store.subscribe((value) => run({ value }), invalidator, revalidator);
+                }
+            }
+        }
     }
 
     const [trigger, args, calculator, initial_value] = (() => {
         if (typeof store_or_trigger_or_args_or_calculate === 'function') {
             const trigger_or_calculate = store_or_trigger_or_args_or_calculate;
-            if (Array.isArray(maybe_args_or_calculate_or_initial_value)) {
+            if (Array.isArray(dirty_or_maybe_args_or_calculate_or_initial_value)) {
                 const trigger = <Trigger<DynamicResolved<R>>>trigger_or_calculate;
-                const args = maybe_args_or_calculate_or_initial_value;
+                const args = dirty_or_maybe_args_or_calculate_or_initial_value;
                 const calculate = <Function>maybe_calculate_or_initial_value;
                 const initial_value = maybe_initial_value;
                 return [trigger, args, calculate, initial_value];
             }
             else
-            if (typeof maybe_args_or_calculate_or_initial_value === 'function') {
+            if (typeof dirty_or_maybe_args_or_calculate_or_initial_value === 'function') {
                 const trigger = <Trigger<DynamicResolved<R>>>trigger_or_calculate;
                 const args = undefined;
-                const calculate = maybe_args_or_calculate_or_initial_value;
+                const calculate = dirty_or_maybe_args_or_calculate_or_initial_value;
                 const initial_value = <DynamicResolved<R> | undefined>maybe_calculate_or_initial_value;
                 return [trigger, args, calculate, initial_value];
             }
@@ -388,14 +401,14 @@ export function dynamic<A extends Inputs, R>(
                 const trigger = default_trigger_dynamic;
                 const args = undefined;
                 const calculate = trigger_or_calculate;
-                const initial_value = <DynamicResolved<R> | undefined>maybe_args_or_calculate_or_initial_value;
+                const initial_value = <DynamicResolved<R> | undefined>dirty_or_maybe_args_or_calculate_or_initial_value;
                 return [trigger, args, calculate, initial_value];
             }
         }
         else {
             const trigger = default_trigger_dynamic;
             const args = store_or_trigger_or_args_or_calculate;
-            const calculate = <Function>maybe_args_or_calculate_or_initial_value;
+            const calculate = <Function>dirty_or_maybe_args_or_calculate_or_initial_value;
             const initial_value = <DynamicResolved<R> | undefined>maybe_calculate_or_initial_value;
             return [trigger, args, calculate, initial_value];
         }
