@@ -162,7 +162,7 @@ export function transform<I, O>(
         <O>initial_value
     );
 
-    let verbatim$_set: ComplexSet<O>;
+    let verbatim$_set: ComplexSet<O> | undefined;
 
     const verbatim$ = writable<O>(
         trigger,
@@ -215,7 +215,7 @@ export function transform<I, O>(
 
     const set = write_is_sync
     ? (outer_value: O) => {
-        verbatim$_set.invalidate();
+        verbatim$_set?.invalidate?.();
 
         const inner_value = (<WriteFnSync<O, I>>write)(outer_value);
 
@@ -233,7 +233,7 @@ export function transform<I, O>(
         verbatim$.set(outer_value);
     }
     : (outer_value: O) => {
-        verbatim$_set.invalidate();
+        verbatim$_set?.invalidate?.();
 
         const local_set = (inner_value: I) => {
             // keep derived active

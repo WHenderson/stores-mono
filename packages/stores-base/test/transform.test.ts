@@ -175,4 +175,26 @@ it('should allow asymmetric transforms', () => {
         [[1000, 'invalid', '#1000', '1,000']],
         [[500, '#500', '#500', '#500']],
     ]);
-})
+});
+
+it('should update correctly when not subscribed', () => {
+    const root = writable<Record<string, number>>(trigger_strict_not_equal, { a: 1});
+    const transformed = transform<Record<string, number>, number>(
+        trigger_strict_not_equal,
+        root,
+        (parent, set) => {
+            set(parent['a']);
+        },
+        (child, { update }) => {
+            update(parent => {
+                parent['a'] = child;
+                return parent;
+            })
+        },
+        <any>undefined
+    );
+
+    transformed.update(_value => {
+    return 2;
+    })
+});
