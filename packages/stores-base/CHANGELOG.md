@@ -1,5 +1,11 @@
 # @crikey/stores-base
 
+## 0.0.11
+
+### Patch Changes
+
+- 0f1d595: Bug Fix: transform stores no longer calling attempting to invalidate with undefined function
+
 ## 0.0.10
 
 ### Patch Changes
