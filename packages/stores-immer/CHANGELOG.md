@@ -1,5 +1,12 @@
 # @crikey/stores-immer
 
+## 0.0.12
+
+### Patch Changes
+
+- 2ba706f: Correcting tests
+- f5aab00: Adding readable and transform store types to immer library
+
 ## 0.0.11
 
 ### Patch Changes
