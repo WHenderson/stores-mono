@@ -1,5 +1,5 @@
 import {writable} from "./writable";
-import {read_only, Readable, StartNotifier} from "@crikey/stores-base/src";
+import {read_only, Readable, StartNotifier} from "@crikey/stores-base";
 
 /**
  * Creates a readable store with the value of `undefined`.

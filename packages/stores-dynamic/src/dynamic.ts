@@ -14,7 +14,7 @@ import {
 } from "@crikey/stores-base";
 import {is_dynamic_resolved} from "./is-dynamic-resolved";
 import {default_trigger_dynamic} from "./create-trigger-dynamic";
-import {Invalidate, noop, Revalidate, Subscriber} from "@crikey/stores-base/src";
+import {Invalidate, noop, Revalidate, Subscriber} from "@crikey/stores-base";
 
 export type ResolveDynamic = <V>(arg: Dynamic<V>) => V;
 export type ComplexResolveDynamic = ResolveDynamic & { resolve: ResolveDynamic };

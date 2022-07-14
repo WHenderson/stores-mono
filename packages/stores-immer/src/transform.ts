@@ -9,7 +9,7 @@ import {
     UpdaterAsync,
     UpdaterSync,
     Writable
-} from "@crikey/stores-base/src";
+} from "@crikey/stores-base";
 import {finishDraft, isDraft} from "immer";
 
 /** Synchronous callback for deriving a value from resolved input value */

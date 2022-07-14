@@ -1,6 +1,6 @@
 import {expect, vi, it} from "vitest";
 import {derive, writable, transform} from "../src";
-import {ComplexSet, Set} from "@crikey/stores-base/src";
+import {ComplexSet, Set} from "@crikey/stores-base";
 
 it('should transform values (sync read, sync write)', () => {
     const input = writable( 1);
