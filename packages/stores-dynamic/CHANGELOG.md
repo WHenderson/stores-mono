@@ -1,5 +1,11 @@
 # @crikey/stores-dynamic
 
+## 0.0.14
+
+### Patch Changes
+
+- 9e29086: Fix improper imports between modules
+
 ## 0.0.13
 
 ### Patch Changes

@@ -101,7 +101,7 @@ importers:
   packages/stores-selectable:
     specifiers:
       '@crikey/stores-base': workspace:^0.0.11
-      '@crikey/stores-immer': workspace:^0.0.12
+      '@crikey/stores-immer': workspace:^0.0.13
       '@crikey/stores-strict': workspace:^0.0.11
       '@crikey/stores-svelte': workspace:^0.0.11
     dependencies:
