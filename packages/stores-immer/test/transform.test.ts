@@ -191,9 +191,7 @@ it('should update correctly when not subscribed', () => {
     });
 });
 
-import { inspect } from 'util';
-
-it.only('should chain complex immer objects', () => {
+it('should chain complex immer objects', () => {
     const root$ = writable<any>();
 
     const is_object = (value: any) : value is Record<string,any> =>
@@ -274,6 +272,14 @@ it.only('should chain complex immer objects', () => {
     //a$.set({ msg: 'hmm '});
     b_length$.set(3);
 
-    console.log(inspect(watch_root.mock.calls, { depth: 4}));
-    console.log(inspect(watch_a.mock.calls, { depth: 3}));
+    expect(watch_root.mock.calls).to.deep.equal([
+        [ undefined ],
+        [
+            {
+                a: {
+                    b: Array(3)
+                }
+            }
+        ]
+    ]);
 })
