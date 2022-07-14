@@ -28,6 +28,12 @@ it('should be able to update to undefined', () => {
     expect(get(store)).toBeUndefined();
 });
 
+it('should be able to update to undefined using async', () => {
+    const store = writable<number | undefined>(1);
+    store.update((_, set) => set(undefined));
+    expect(get(store)).toBeUndefined();
+});
+
 it('should use immer when update through start', () => {
     const store = writable<{ a: number, b: {}} | undefined>(
         { a: 1, b: {} },

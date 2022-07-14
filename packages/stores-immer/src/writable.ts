@@ -1,6 +1,6 @@
 import {ComplexSet, noop, StartNotifier, UpdaterSync, UpdaterAsync, Writable} from "@crikey/stores-base";
 import {writable as strictWritable} from "@crikey/stores-strict";
-import {createDraft, Draft, finishDraft, isDraft, nothing, produce} from "immer";
+import {createDraft, Draft, finishDraft, isDraft, isDraftable, nothing, produce} from "immer";
 
 /**
  * Create a writable store with an initial value of `undefined`.
@@ -106,7 +106,9 @@ export function writable<T>(value?: T, start: StartNotifier<T> = noop): Writable
 
                         update(
                             (value: T, set) => {
-                                const draft = createDraft(value);
+                                const draft = isDraftable(value)
+                                ? createDraft(value)
+                                : value;
 
                                 const local_set = (value: T): void => {
                                     set(
@@ -155,7 +157,9 @@ export function writable<T>(value?: T, start: StartNotifier<T> = noop): Writable
 
             store.update(
                 (value: T, set) => {
-                    const draft = createDraft(value);
+                    const draft = isDraftable(value)
+                        ? createDraft(value)
+                        : value;
 
                     const local_set = (value: T): void => {
                         set(
