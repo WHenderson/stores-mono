@@ -1,5 +1,14 @@
 # @crikey/stores-selectable
 
+## 0.0.12
+
+### Patch Changes
+
+- f0a2ef0: added is_selectable guard
+- Updated dependencies [54195fe]
+- Updated dependencies [7046f2d]
+  - @crikey/stores-base@0.0.12
+
 ## 0.0.11
 
 ### Patch Changes

@@ -1,5 +1,12 @@
 # @crikey/stores-base
 
+## 0.0.12
+
+### Patch Changes
+
+- 54195fe: correctly propagate revalidations
+- 7046f2d: Adding tests for propagation of revalidation
+
 ## 0.0.11
 
 ### Patch Changes
