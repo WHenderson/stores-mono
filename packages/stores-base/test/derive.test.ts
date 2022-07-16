@@ -223,3 +223,52 @@ it('should perform cleanup even during an unhandled exception', () => {
         }).not.toThrow();
     });
 });
+
+it.only('should chain revalidation', () => {
+    const trigger$ = writable(trigger_always, { a: 1, b: 20, c: 300 });
+
+    const a$ = derive(
+        trigger_strict_not_equal,
+        trigger$,
+        (t) => t.a
+    );
+
+    const b$ = derive(
+        trigger_strict_not_equal,
+        trigger$,
+        (t) => t.b
+    );
+
+    const c$ = derive(
+        trigger_strict_not_equal,
+        trigger$,
+        (t) => t.c
+    );
+
+    const ab$ = derive(
+        trigger_strict_not_equal,
+        [a$, b$],
+        ([a,b]) => a + b
+    );
+
+    const outer$ = derive(
+        trigger_strict_not_equal,
+        [ab$, c$],
+        ([ab, c]) => ab + c
+    )
+
+    const watch = vi.fn();
+
+    outer$.subscribe(watch);
+
+    trigger$.set({
+        a: 1,
+        b: 20,
+        c: 400
+    });
+    
+    expect(watch.mock.calls).to.deep.equal([
+        [321],
+        [421]
+    ]);
+});
