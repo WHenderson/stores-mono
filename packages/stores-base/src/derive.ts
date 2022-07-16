@@ -104,7 +104,7 @@ export function derive<T>(
     const auto = fn.length < 2;
 
     return readable<T>(trigger, initial_value!, (complexSet) => {
-        const {set, invalidate} = complexSet;
+        const {set, invalidate, revalidate} = complexSet;
 
         let initiated = false;
         const values: unknown[] = [];
@@ -145,6 +145,9 @@ export function derive<T>(
             // revalidated
             () => {
                 pending.validate(i);
+                if (!changed && !pending.is_dirty())
+                    revalidate();
+                else
                 if (initiated) {
                     sync();
                 }
