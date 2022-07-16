@@ -224,7 +224,7 @@ it('should perform cleanup even during an unhandled exception', () => {
     });
 });
 
-it.only('should chain revalidation', () => {
+it('should chain revalidation', () => {
     const trigger$ = writable(trigger_always, { a: 1, b: 20, c: 300 });
 
     const a$ = derive(
