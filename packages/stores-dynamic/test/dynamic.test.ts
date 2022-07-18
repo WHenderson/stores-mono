@@ -1,5 +1,5 @@
 import {describe, expect, it, vi} from 'vitest'
-import {dynamic, DynamicError, DynamicReadable, DynamicResolved, DynamicValue, get_value} from "../src";
+import {dynamic, DynamicError, DynamicReadable, DynamicResolved, DynamicValue, get_value, resolve} from "../src";
 import {derive, writable} from "@crikey/stores-strict";
 import {
     Action,
@@ -169,7 +169,7 @@ describe('async calculations', () => {
             { value: -1 }
         );
 
-        expect(() => get_value(derived)).toThrow('explicit error');
+        expect(() => resolve(derived)).toThrow('explicit error');
     })
 });
 
@@ -189,7 +189,7 @@ describe('contract failures', () => {
             }
         );
 
-        expect(() => get_value(derived)).toThrow(ReferenceError);
+        expect(() => resolve(derived)).toThrow(ReferenceError);
     });
 
     it('should detect invalid return types', () => {
@@ -200,7 +200,7 @@ describe('contract failures', () => {
             }
         );
 
-        expect(() => get_value(derived)).toThrow(TypeError);
+        expect(() => resolve(derived)).toThrow(TypeError);
     });
 });
 
@@ -624,7 +624,7 @@ describe('simulate derive', () => {
                 throw Error('unhandled exception');
             });
 
-            expect(() => get_value(derived)).toThrow('unhandled exception');
+            expect(() => resolve(derived)).toThrow('unhandled exception');
 
             expect(() => {
                 a.set({ value: 2 });
