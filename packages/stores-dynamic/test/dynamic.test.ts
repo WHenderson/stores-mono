@@ -633,8 +633,8 @@ describe('simulate derive', () => {
     });
 })
 
-describe.only('nesting dynamic', () => {
-    it.only('inner errors', () => {
+describe('nesting dynamic', () => {
+    it('inner errors', () => {
         const trigger_a$ = writable(1);
         const trigger_b$ = writable(1);
 
