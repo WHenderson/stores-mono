@@ -1,13 +1,17 @@
-import {DynamicReadable} from "./types";
+import {Dynamic} from "./types";
 import {get} from "@crikey/stores-base";
 import {is_dynamic_error} from "./is-dynamic-error";
+import {is_dynamic_resolved} from "./is-dynamic-resolved";
 
 /**
- * Uses {@link get} to retrieve the current store value and return its error property (or undefined)
+ * Uses {@link get} to retrieve the current dynamic value and return its error property (or undefined)
  *
- * @param store
+ * @param dynamic
  */
-export function get_error(store: DynamicReadable<unknown>): any {
-    const resolved = get(store);
+export function get_error(dynamic: Dynamic<unknown>): any {
+    const resolved = is_dynamic_resolved(dynamic)
+    ? dynamic
+    : get(dynamic);
+
     return is_dynamic_error(resolved) ? resolved.error : undefined;
 }

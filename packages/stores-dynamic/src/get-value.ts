@@ -1,19 +1,29 @@
-import {DynamicReadable} from "./types";
+import {Dynamic} from "./types";
 import {get} from "@crikey/stores-base";
-import {is_dynamic_error} from "./is-dynamic-error";
+import {is_dynamic_resolved} from "./is-dynamic-resolved";
+import {is_dynamic_value} from "./is-dynamic-value";
 
 /**
- * Uses {@link get} to retrieve the current store value and return its value property (or throw its error property)
+ * Uses {@link get} to retrieve the current dynamic value and return its value property (or undefined)
  *
- * _Note: if the store value contains an error, the error will be thrown_
- *
- * @throws Will throw any error property contained within the store value
- * @param store
+ * @param dynamic
  */
-export function get_value<T>(store: DynamicReadable<T>): T {
-    const resolved = get(store);
-    if (is_dynamic_error(resolved))
-        throw resolved.error;
+export function get_value<T>(dynamic: Dynamic<T>): T | undefined;
 
-    return resolved.value;
+/**
+ * Uses {@link get} to retrieve the current dynamic value and return its value property (or default_)
+ *
+ * @param dynamic
+ * @param default_ The value to return if no value is present
+ */
+export function get_value<T,R>(dynamic: Dynamic<T>, default_: R): T | R;
+
+export function get_value<T, R = undefined>(dynamic: Dynamic<T>, default_?: R): T | R {
+    const resolved = is_dynamic_resolved(dynamic)
+        ? dynamic
+        : get(dynamic);
+
+    return is_dynamic_value(resolved)
+    ? resolved.value
+    : default_!;
 }

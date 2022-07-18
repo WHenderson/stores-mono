@@ -632,3 +632,32 @@ describe('simulate derive', () => {
         });
     });
 })
+
+describe.only('nesting dynamic', () => {
+    it.only('inner errors', () => {
+        const trigger_a$ = writable(1);
+        const trigger_b$ = writable(1);
+
+        const inner$ = derive(
+            [trigger_a$, trigger_b$],
+            ([a,b]) => {
+                if ((a + b) % 2 === 0)
+                    return {value: a+b}
+                else
+                    return {error: new Error('a test')}
+            }
+        );
+
+        const outer$ = dynamic(resolve => {
+            return {value: resolve(inner$)}
+        });
+
+        const watch_outer = vi.fn();
+        outer$.subscribe(watch_outer);
+
+        trigger_b$.update(x => x+1);
+        trigger_b$.update(x => x+1);
+        trigger_b$.update(x => x+1);
+        trigger_b$.update(x => x+1); 
+    });
+})
