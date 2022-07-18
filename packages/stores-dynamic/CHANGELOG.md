@@ -1,5 +1,11 @@
 # @crikey/stores-dynamic
 
+## 0.0.16
+
+### Patch Changes
+
+- 8ebfe35: adding/fixing utility functions get, get_value, get_error, subscribe, resolve
+
 ## 0.0.15
 
 ### Patch Changes

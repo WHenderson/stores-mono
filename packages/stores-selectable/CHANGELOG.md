@@ -1,5 +1,11 @@
 # @crikey/stores-selectable
 
+## 0.0.13
+
+### Patch Changes
+
+- 7e7322d: fix: incorrect import
+
 ## 0.0.12
 
 ### Patch Changes
