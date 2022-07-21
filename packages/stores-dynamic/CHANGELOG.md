@@ -1,5 +1,11 @@
 # @crikey/stores-dynamic
 
+## 0.0.17
+
+### Patch Changes
+
+- b6dc83d: fix: typo causing type resolution failure
+
 ## 0.0.16
 
 ### Patch Changes
