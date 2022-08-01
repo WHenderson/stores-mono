@@ -2,7 +2,7 @@
   "name": "stores-mono",
   "version": "0.0.0",
   "description": "Mono repo for stores libraries",
-  "packageManager": "pnpm",
+  "packageManager": "pnpm@6.0.0",
   "engines": {
     "node": ">=14.0.0",
     "pnpm": ">=6.0.0"

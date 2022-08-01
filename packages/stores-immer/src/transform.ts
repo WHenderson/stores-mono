@@ -2,7 +2,9 @@ import {writable} from "./writable";
 import {derive} from "./index";
 import {
     Action,
-    ComplexSet, noop, read_only,
+    ComplexSet,
+    noop,
+    read_only,
     Readable,
     skip,
     Unsubscriber,
@@ -10,7 +12,7 @@ import {
     UpdaterSync,
     Writable
 } from "@crikey/stores-base";
-import {finishDraft, isDraft} from "immer";
+import {current, enableES5, isDraft} from "immer";
 
 /** Synchronous callback for deriving a value from resolved input value */
 export type ReadFnSync<I,O> = (values: I) => O;
@@ -228,8 +230,10 @@ export function transform<I, O>(
         verbatim$_set?.invalidate?.();
 
         const local_set = (inner_value: I) => {
+            enableES5();
+
             const undrafted_inner_value = isDraft(inner_value)
-            ? <I>finishDraft(inner_value)
+            ? <I>current(inner_value)
             : inner_value;
 
             // keep derived active
@@ -273,10 +277,16 @@ export function transform<I, O>(
 
     const update = (updater: UpdaterSync<O> | UpdaterAsync<O>) => {
         smart$.update((value, _set) => {
+            const local_set = (outer_value: O) => set(
+                isDraft(outer_value)
+                ? current(outer_value)
+                : outer_value
+            );
+
             if (updater.length <= 1)
-                set((<UpdaterSync<O>>updater)(value))
+                local_set((<UpdaterSync<O>>updater)(value))
             else
-                updater(value, set);
+                updater(value, local_set);
         });
     }
 

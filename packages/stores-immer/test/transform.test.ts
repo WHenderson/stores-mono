@@ -1,6 +1,7 @@
 import {expect, vi, it} from "vitest";
 import {derive, writable, transform} from "../src";
 import {ComplexSet, Set} from "@crikey/stores-base";
+import {createDraft, current, enableES5} from "immer";
 
 it('should transform values (sync read, sync write)', () => {
     const input = writable( 1);
@@ -283,3 +284,12 @@ it('should chain complex immer objects', () => {
         ]
     ]);
 })
+
+it('should immer', () => {
+    const a = createDraft({ array: [] });
+
+    a.
+
+
+    console.log({ a, b, c });
+});
