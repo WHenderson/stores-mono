@@ -1,5 +1,16 @@
 # @crikey/stores-immer
 
+## 0.0.15
+
+### Patch Changes
+
+- 31b9e5d: Adding exports to package.json
+- 0822893: Removing corrupted test
+- 18c1ce8: Fixing incorrect documentation content
+- Updated dependencies [31b9e5d]
+  - @crikey/stores-base@0.0.13
+  - @crikey/stores-strict@0.0.13
+
 ## 0.0.14
 
 ### Patch Changes

@@ -1,5 +1,13 @@
 # @crikey/stores-selectable
 
+## 0.0.14
+
+### Patch Changes
+
+- 31b9e5d: Adding exports to package.json
+- Updated dependencies [31b9e5d]
+  - @crikey/stores-base@0.0.13
+
 ## 0.0.13
 
 ### Patch Changes

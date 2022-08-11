@@ -1,5 +1,11 @@
 # @crikey/stores-base-queue
 
+## 0.0.10
+
+### Patch Changes
+
+- 31b9e5d: Adding exports to package.json
+
 ## 0.0.9
 
 ### Patch Changes

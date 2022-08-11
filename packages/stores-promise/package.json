@@ -1,6 +1,6 @@
 {
   "name": "@crikey/stores-promise",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "description": "",
   "packageManager": "pnpm",
   "engines": {
@@ -36,7 +36,7 @@
     "publish:ifnew": "test \"$(pnpm view $npm_package_name@$npm_package_version version)\" = \"$npm_package_version\" || pnpm publish --access public"
   },
   "dependencies": {
-    "@crikey/stores-base": "workspace:^0.0.12"
+    "@crikey/stores-base": "workspace:^0.0.13"
   },
   "license": "MIT"
 }

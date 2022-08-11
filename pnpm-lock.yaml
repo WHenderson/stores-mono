@@ -54,7 +54,7 @@ importers:
 
   packages/stores-base:
     specifiers:
-      '@crikey/stores-base-queue': workspace:^0.0.9
+      '@crikey/stores-base-queue': workspace:^0.0.10
     devDependencies:
       '@crikey/stores-base-queue': link:../stores-base-queue
 
@@ -63,9 +63,9 @@ importers:
 
   packages/stores-dynamic:
     specifiers:
-      '@crikey/stores-base': workspace:^0.0.12
-      '@crikey/stores-base-queue': workspace:^0.0.9
-      '@crikey/stores-strict': workspace:^0.0.12
+      '@crikey/stores-base': workspace:^0.0.13
+      '@crikey/stores-base-queue': workspace:^0.0.10
+      '@crikey/stores-strict': workspace:^0.0.13
     dependencies:
       '@crikey/stores-base': link:../stores-base
     devDependencies:
@@ -74,8 +74,8 @@ importers:
 
   packages/stores-immer:
     specifiers:
-      '@crikey/stores-base': workspace:^0.0.12
-      '@crikey/stores-strict': workspace:^0.0.12
+      '@crikey/stores-base': workspace:^0.0.13
+      '@crikey/stores-strict': workspace:^0.0.13
       immer: ^9.0.12
     dependencies:
       '@crikey/stores-base': link:../stores-base
@@ -85,13 +85,13 @@ importers:
 
   packages/stores-promise:
     specifiers:
-      '@crikey/stores-base': workspace:^0.0.12
+      '@crikey/stores-base': workspace:^0.0.13
     dependencies:
       '@crikey/stores-base': link:../stores-base
 
   packages/stores-rxjs:
     specifiers:
-      '@crikey/stores-base': workspace:^0.0.12
+      '@crikey/stores-base': workspace:^0.0.13
       rxjs: ^7.5.5
     dependencies:
       '@crikey/stores-base': link:../stores-base
@@ -100,10 +100,10 @@ importers:
 
   packages/stores-selectable:
     specifiers:
-      '@crikey/stores-base': workspace:^0.0.12
-      '@crikey/stores-immer': workspace:^0.0.14
-      '@crikey/stores-strict': workspace:^0.0.12
-      '@crikey/stores-svelte': workspace:^0.0.12
+      '@crikey/stores-base': workspace:^0.0.13
+      '@crikey/stores-immer': workspace:^0.0.15
+      '@crikey/stores-strict': workspace:^0.0.13
+      '@crikey/stores-svelte': workspace:^0.0.13
     dependencies:
       '@crikey/stores-base': link:../stores-base
     devDependencies:
@@ -113,14 +113,14 @@ importers:
 
   packages/stores-strict:
     specifiers:
-      '@crikey/stores-base': workspace:^0.0.12
+      '@crikey/stores-base': workspace:^0.0.13
     dependencies:
       '@crikey/stores-base': link:../stores-base
 
   packages/stores-svelte:
     specifiers:
-      '@crikey/stores-base': workspace:^0.0.12
-      '@crikey/stores-rxjs': workspace:^0.0.12
+      '@crikey/stores-base': workspace:^0.0.13
+      '@crikey/stores-rxjs': workspace:^0.0.13
       rxjs: ^7.5.5
     dependencies:
       '@crikey/stores-base': link:../stores-base
@@ -130,8 +130,8 @@ importers:
 
   packages/stores-temporal:
     specifiers:
-      '@crikey/stores-base': workspace:^0.0.12
-      '@crikey/stores-rxjs': workspace:^0.0.12
+      '@crikey/stores-base': workspace:^0.0.13
+      '@crikey/stores-rxjs': workspace:^0.0.13
     dependencies:
       '@crikey/stores-base': link:../stores-base
     devDependencies:
