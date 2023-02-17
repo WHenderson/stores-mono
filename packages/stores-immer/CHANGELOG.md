@@ -1,5 +1,14 @@
 # @crikey/stores-immer
 
+## 0.0.16
+
+### Patch Changes
+
+- 84093ee: Use relative paths in publishConfig
+- Updated dependencies [84093ee]
+  - @crikey/stores-base@0.0.14
+  - @crikey/stores-strict@0.0.14
+
 ## 0.0.15
 
 ### Patch Changes

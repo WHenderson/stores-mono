@@ -1,5 +1,13 @@
 # @crikey/stores-temporal
 
+## 0.0.14
+
+### Patch Changes
+
+- 84093ee: Use relative paths in publishConfig
+- Updated dependencies [84093ee]
+  - @crikey/stores-base@0.0.14
+
 ## 0.0.13
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @crikey/stores-base-queue
 
+## 0.0.11
+
+### Patch Changes
+
+- 84093ee: Use relative paths in publishConfig
+
 ## 0.0.10
 
 ### Patch Changes

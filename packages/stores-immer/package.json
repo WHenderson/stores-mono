@@ -1,6 +1,6 @@
 {
   "name": "@crikey/stores-immer",
-  "version": "0.0.15",
+  "version": "0.0.16",
   "description": "",
   "packageManager": "pnpm",
   "engines": {
@@ -36,8 +36,8 @@
     "publish:ifnew": "test \"$(pnpm view $npm_package_name@$npm_package_version version)\" = \"$npm_package_version\" || pnpm publish --access public"
   },
   "dependencies": {
-    "@crikey/stores-base": "workspace:^0.0.13",
-    "@crikey/stores-strict": "workspace:^0.0.13"
+    "@crikey/stores-base": "workspace:^0.0.14",
+    "@crikey/stores-strict": "workspace:^0.0.14"
   },
   "devDependencies": {
     "immer": "^9.0.12"
