@@ -15,10 +15,10 @@
   ],
   "typedocMain": "src/index.ts",
   "publishConfig": {
-    "main": "dist/index",
-    "module": "dist/index.mjs",
-    "exports": "dist/index.mjs",
-    "types": "dist/index.d.ts"
+    "main": "./dist/index",
+    "module": "./dist/index.mjs",
+    "exports": "./dist/index.mjs",
+    "types": "./dist/index.d.ts"
   },
   "scripts": {
     "build": "tsc && vite build && rollup --config rollup.config.ts --configPlugin typescript",
