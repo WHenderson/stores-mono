@@ -1,8 +1,8 @@
-import {vi, SpyInstanceFn} from "vitest";
+import {SpyInstance, vi} from 'vitest';
 
 export interface Console {
-    log: SpyInstanceFn<Parameters<typeof console.log>, ReturnType<typeof console.log>>;
-    error: SpyInstanceFn<Parameters<typeof console.error>, ReturnType<typeof console.error>>;
+    log: SpyInstance<Parameters<typeof console.log>, ReturnType<typeof console.log>> & typeof console.log;
+    error: SpyInstance<Parameters<typeof console.error>, ReturnType<typeof console.error>> & typeof console.error;
     debug: typeof console.debug;
 }
 

@@ -1,4 +1,4 @@
-import {vi, SpyInstanceFn} from "vitest";
+import {SpyInstance, vi} from 'vitest';
 
 export function shim_setTimeout() {
     return (callback: Function, ms?: number): number  => setTimeout(callback, (ms ?? 0) / 10);
@@ -9,8 +9,8 @@ export function shim_setInterval() {
 }
 
 export interface Console {
-    log: SpyInstanceFn<Parameters<typeof console.log>, ReturnType<typeof console.log>>;
-    error: SpyInstanceFn<Parameters<typeof console.error>, ReturnType<typeof console.error>>;
+    log: SpyInstance<Parameters<typeof console.log>, ReturnType<typeof console.log>> & typeof console.log;
+    error: SpyInstance<Parameters<typeof console.error>, ReturnType<typeof console.error>> & typeof console.error;
     debug: typeof console.debug;
 }
 
