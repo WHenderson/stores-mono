@@ -1,4 +1,4 @@
-import {Action} from "./types";
+import {Action, StoreRunner} from "./types";
 
 /**
  * Callback used to log errors
@@ -11,7 +11,7 @@ export type Logger = (error: any) => void;
  * @category Predefined Store Runners
  * @param logger function called with the given exception
  */
-export function create_store_runner_log_errors(logger: Logger = console.error): (action: Action) => void {
+export function create_store_runner_log_errors(logger: Logger = console.error): StoreRunner {
     return (action: Action) => {
         try {
             action();
