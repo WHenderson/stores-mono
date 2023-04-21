@@ -4,6 +4,7 @@
   import '@svelteness/kit-docs/client/styles/fonts.css';
   import '@svelteness/kit-docs/client/styles/theme.css';
   import '@svelteness/kit-docs/client/styles/vars.css';
+  import '../app.css';
 
   import { page } from '$app/stores';
   import SvelteLogo from '$img/svelte-horizontal.svg?raw';
@@ -23,7 +24,7 @@
   const { activeCategory } = createSidebarContext(sidebar);
 
   $: category = $activeCategory ? `${$activeCategory}: ` : '';
-  $: title = meta ? `${category}${meta.title} | KitDocs` : null;
+  $: title = meta ? `${category}${meta.title} | @crikey` : null;
   $: description = meta?.description;
 </script>
 
