@@ -26,12 +26,12 @@ a common global queue is shared between packages
 
 ## Queue functions
 
-### `enqueue_store_signals`
+### `enqueue_actions`
 
 ```ts
 type Action = () => void;
 
-enqueue_store_signals(actions: Action[]): void
+enqueue_actions(actions: Action[]): void
 ```
 
 Add actions to the end of the global action FIFO queue.
@@ -44,17 +44,17 @@ If the queue is not empty, the actions are added to the queue and the function r
 
 ## Action running
 
-### `store_runner`
+### `actionRunner`
 
 ```ts
 type StoreRunner = (action: Action) => void;
 
-store_runner : StoreRunner
+actionRunner : StoreRunner
 ```
 
 Current (global) action runner.
 
-When processing store signals, each action is executed via the `store_runner`.   
+When processing store signals, each action is executed via the `actionRunner`.   
 
 ### `set_store_runner`
 
@@ -62,7 +62,7 @@ When processing store signals, each action is executed via the `store_runner`.
 set_store_runner(runner: StoreRunner): StoreRunner
 ```` 
 
-Set current (global) action runner `store_runner` and return the former runner.
+Set current (global) action runner `actionRunner` and return the former runner.
 
 ### `get_store_runner`
 ```ts
