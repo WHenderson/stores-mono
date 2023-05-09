@@ -11,7 +11,7 @@ even as stores and subscriptions are changed.
 
 ### Action running:
 
-* {@link store_runner} - Current (global) action runner
+* {@link actionRunner} - Current (global) action runner
 * {@link set_store_runner} - Set current (global) action runner
 * {@link get_store_runner} - Get current (global) action runner
 
@@ -44,10 +44,10 @@ If the queue is empty, the actions will begin being called immediately until the
 Further actions may be added during execution which will be executed once the preceding actions are exhausted.
 
 _Example:_
-{@codeblock ./examples/store-queue.test.ts#example}
+{@codeblock ./examples/action-queue.test.ts#example}
 
 _Example with nesting:_
-{@codeblock ./examples/store-queue.test.ts#example-nested}
+{@codeblock ./examples/action-queue.test.ts#example-nested}
 
 _Example Exception Handling:_
-{@codeblock ./examples/store-queue.test.ts#example-log-errors}
+{@codeblock ./examples/action-queue.test.ts#example-log-errors}

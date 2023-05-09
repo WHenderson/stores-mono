@@ -1,5 +1,5 @@
 import {StoreRunner} from "./types";
-import {store_runner_throw_errors} from "./store-runner-throw-errors";
+import {action_runner_throw_errors} from "./action-runner-throw-errors";
 
 /**
  *  The active store runner used while executing actions queued with {@link enqueue_store_signals}
@@ -7,30 +7,30 @@ import {store_runner_throw_errors} from "./store-runner-throw-errors";
  *  The store runner is primarily used for handling unhandled exceptions thrown by actions.
  *
  * _Example:_
- * {@codeblock ../stores-base-queue/examples/store-queue.test.ts#example-log-errors}
+ * {@codeblock ../stores-base-queue/examples/action-queue.test.ts#example-log-errors}
  *
  * @category Exception Handling
  */
-export let store_runner: StoreRunner = store_runner_throw_errors;
+export let actionRunner: StoreRunner = action_runner_throw_errors;
 
 /**
- * Sets the active {@link store_runner}
+ * Sets the active {@link actionRunner}
  *
  * @category Exception Handling
- * @param runner new store_runner
- * @returns previous store_runner
+ * @param runner new actionRunner
+ * @returns previous actionRunner
  */
 export function set_store_runner(runner: StoreRunner): StoreRunner {
-    const original = store_runner;
-    store_runner = runner;
+    const original = actionRunner;
+    actionRunner = runner;
     return original;
 }
 
 /**
- * Returns the active store_runner
+ * Returns the active actionRunner
  *
  * @category Exception Handling
  */
 export function get_store_runner(): StoreRunner {
-    return store_runner;
+    return actionRunner;
 }

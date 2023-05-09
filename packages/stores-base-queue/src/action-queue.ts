@@ -1,5 +1,5 @@
 import {Action} from "./types";
-import {store_runner} from "./store_runner";
+import {actionRunner} from "./action-runner";
 
 /**
  * fifo queue of subscription notification actions
@@ -8,20 +8,24 @@ const queued_actions: Action[] = [];
 let queue_aborted = false;
 
 /**
- * Enqueue the provided actions using a FIFO queue.
- * If the queue is empty, the actions will begin being called immediately until the queue is exhausted.
- * Further actions may be added during execution which will be executed once the preceding actions are exhausted.
+ * Add actions to the end of the global action FIFO queue.
+ *
+ * If the queue is empty, the actions are placed on the queue and begin executing immediately.
+ * Execution continues until the queue is exhausted, including any actions added during this process.
+ * Only once the queue is empty does the function return.
+ *
+ * If the queue is not empty, the actions are added to the queue and the function returns immediately.
  *
  * _Example:_
- * {@codeblock ../stores-base-queue/examples/store-queue.test.ts#example}
+ * {@codeblock ../stores-base-queue/examples/action-queue.test.ts#example}
  *
  * _Example with nesting:_
- * {@codeblock ../stores-base-queue/examples/store-queue.test.ts#example-nested}
+ * {@codeblock ../stores-base-queue/examples/action-queue.test.ts#example-nested}
  *
  * @category Core
  * @param actions array of actions to enqueue
  */
-export function enqueue_store_signals(actions: Action[]): void {
+export function enqueue_actions(actions: Action[]): void {
     const run_actions = !queued_actions.length || queue_aborted;
     queue_aborted = false;
     queued_actions.push(...actions);
@@ -32,7 +36,7 @@ export function enqueue_store_signals(actions: Action[]): void {
         let i = 0
         try {
             for (; i !== queued_actions.length; ++i) {
-                store_runner(queued_actions[i]);
+                actionRunner(queued_actions[i]);
             }
             queued_actions.length = 0;
         }

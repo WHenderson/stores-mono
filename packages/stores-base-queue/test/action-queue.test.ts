@@ -1,21 +1,21 @@
 import {describe, expect, it, vi} from 'vitest'
 import {
-    enqueue_store_signals,
+    enqueue_actions,
     get_store_runner,
     set_store_runner,
-    store_runner_hide_errors, create_store_runner_log_errors,
-    store_runner_throw_errors,
+    actionRunnerHideErrors, createActionRunnerLogErrors,
+    action_runner_throw_errors,
     StoreRunner
 } from "../src";
 
 it('should process queue in fifo order', () => {
     const order: number[] = [];
 
-    enqueue_store_signals([
+    enqueue_actions([
         () => order.push(1),
         () => {
             order.push(2);
-            enqueue_store_signals([
+            enqueue_actions([
                 () => order.push(5),
                 () => order.push(6)
             ]);
@@ -26,7 +26,7 @@ it('should process queue in fifo order', () => {
 
     order.push(7);
 
-    enqueue_store_signals([
+    enqueue_actions([
         () => order.push(8)
     ]);
 
@@ -48,9 +48,9 @@ describe('error handling', () => {
     }
 
     it('should hide errors', () => {
-        run(store_runner_hide_errors, () => {
+        run(actionRunnerHideErrors, () => {
             let ran = false;
-            enqueue_store_signals([
+            enqueue_actions([
                 () => { throw new Error('example'); },
                 () => { ran = true; }
             ]);
@@ -60,9 +60,9 @@ describe('error handling', () => {
 
     it('should log errors', () => {
         const errorFn = vi.fn();
-        run(create_store_runner_log_errors(errorFn), () => {
+        run(createActionRunnerLogErrors(errorFn), () => {
             let ran = false;
-            enqueue_store_signals([
+            enqueue_actions([
                 () => { throw new Error('example'); },
                 () => { ran = true; }
             ]);
@@ -72,10 +72,10 @@ describe('error handling', () => {
     });
 
     it('should throw errors', () => {
-        run(store_runner_throw_errors, () => {
+        run(action_runner_throw_errors, () => {
             let ran = false;
             expect(() => {
-                enqueue_store_signals([
+                enqueue_actions([
                     () => { throw new Error('example'); },
                     () => { ran = true; }
                 ]);
@@ -83,7 +83,7 @@ describe('error handling', () => {
             expect(ran).toBeFalsy();
 
             let ranMore = false;
-            enqueue_store_signals([ () => { ranMore = true; } ]); // do nothing, but kick off processing
+            enqueue_actions([ () => { ranMore = true; } ]); // do nothing, but kick off processing
             expect(ran).toBeTruthy();
             expect(ranMore).toBeTruthy();
         });

@@ -15,7 +15,7 @@ See [@crikey/stores-base-queue](https://whenderson.github.io/stores-mono/modules
 
 ### Action running:
 
-* `store_runner` - Current (global) action runner
+* `actionRunner` - Current (global) action runner
 * `set_store_runner` - Set current (global) action runner
 * `get_store_runner` - Get current (global) action runner
 

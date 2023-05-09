@@ -6,7 +6,7 @@ import {Action} from "./types";
  * @category Predefined Store Runners
  * @param action
  */
-export function store_runner_hide_errors(action: Action): void  {
+export function actionRunnerHideErrors(action: Action): void  {
     try {
         action();
     }

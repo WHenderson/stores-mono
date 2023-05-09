@@ -13,7 +13,7 @@ import {
     trigger_strict_not_equal,
     Unsubscriber
 } from "@crikey/stores-base";
-import {get_store_runner, set_store_runner, store_runner_throw_errors, StoreRunner} from "@crikey/stores-base-queue";
+import {get_store_runner, set_store_runner, action_runner_throw_errors, StoreRunner} from "@crikey/stores-base-queue";
 
 type ExactType<A,B> = [A] extends [B]
     ? (
@@ -617,7 +617,7 @@ describe('simulate derive', () => {
     }
 
     it('should perform cleanup even during an unhandled exception', () => {
-        run(store_runner_throw_errors, () => {
+        run(action_runner_throw_errors, () => {
             const a = writable({ value: 1});
             const derived = dynamic(trigger_always, (resolve) => {
                 resolve(a);

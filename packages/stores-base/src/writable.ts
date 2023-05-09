@@ -10,7 +10,7 @@ import {
     Writable
 } from "./types";
 import {noop} from "./noop";
-import {enqueue_store_signals, store_runner} from "@crikey/stores-base-queue";
+import {enqueue_actions, actionRunner} from "@crikey/stores-base-queue";
 import {RecursionError} from "./recursion-error";
 
 type SubscribeInvalidateTuple<T> = [Subscriber<T>, Invalidate, Revalidate];
@@ -135,7 +135,7 @@ export function writable<T>(trigger: Trigger<T>, value?: T, start: StartNotifier
                 local_queue.forEach(([, invalidate]) => invalidate());
 
                 // queue subscription actions
-                enqueue_store_signals(
+                enqueue_actions(
                     local_queue.map(([subscriber]) => () => subscriber(new_value!))
                 );
             }
@@ -181,7 +181,7 @@ export function writable<T>(trigger: Trigger<T>, value?: T, start: StartNotifier
             };
 
             try {
-                store_runner(
+                actionRunner(
                     () => {
                         if (subscribers.size === 1) {
                             stop = start(complexSet) || noop;

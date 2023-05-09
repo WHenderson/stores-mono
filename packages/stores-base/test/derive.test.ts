@@ -13,7 +13,7 @@ import {
     trigger_strict_not_equal,
     writable
 } from "../src";
-import {get_store_runner, set_store_runner, store_runner_throw_errors, StoreRunner} from "@crikey/stores-base-queue";
+import {get_store_runner, set_store_runner, action_runner_throw_errors, StoreRunner} from "@crikey/stores-base-queue";
 
 type ExactType<A,B> = [A] extends [B]
     ? (
@@ -206,7 +206,7 @@ const run = (runner: StoreRunner, action: Action) => {
 }
 
 it('should perform cleanup even during an unhandled exception', () => {
-    run(store_runner_throw_errors, () => {
+    run(action_runner_throw_errors, () => {
         const a = writable(trigger_always, 1);
         const derived = derive(trigger_always, a, () => {
             throw Error('unhandled exception');

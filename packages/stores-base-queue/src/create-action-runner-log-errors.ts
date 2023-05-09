@@ -11,7 +11,7 @@ export type Logger = (error: any) => void;
  * @category Predefined Store Runners
  * @param logger function called with the given exception
  */
-export function create_store_runner_log_errors(logger: Logger = console.error): StoreRunner {
+export function createActionRunnerLogErrors(logger: Logger = console.error): StoreRunner {
     return (action: Action) => {
         try {
             action();
