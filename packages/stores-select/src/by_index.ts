@@ -2,7 +2,7 @@ import {ReadSelector, WriteSelector} from "./types";
 
 export function by_index<T extends Array<E>,I extends keyof T & number, E>(
     index: I,
-    def: () => E
+    def?: () => E
 ) : ReadSelector<T, E> & WriteSelector<T, E> {
     const default_ = def ?? (() => { throw new Error('index not found') });
 

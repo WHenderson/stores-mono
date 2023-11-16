@@ -10,18 +10,18 @@ import {OptionalKeys} from "./util-types";
  */
 export function by_property<I extends object, K extends OptionalKeys<I>>(
     key: K,
-    def: () => I[K]
+    def?: () => I[K]
 ): ReadSelector<I, I[K]> & WriteSelector<I, I[K]> & DeleteSelector<I>;
 
 export function by_property<I extends object, K extends keyof I>(
     key: K,
-    def: () => I[K]
+    def?: () => I[K]
 ): ReadSelector<I, I[K]> & WriteSelector<I, I[K]>;
 
 
 export function by_property<I extends object, K extends keyof I>(
     key: K,
-    def: () => I[K]
+    def?: () => I[K]
 ): ReadSelector<I, I[K]> & WriteSelector<I, I[K]> & DeleteSelector<I> {
     const default_ = def ?? (() => { throw new Error('property not found') });
 

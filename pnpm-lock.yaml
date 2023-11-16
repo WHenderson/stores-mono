@@ -133,6 +133,10 @@ importers:
       '@crikey/stores-base':
         specifier: workspace:^0.0.14
         version: link:../stores-base
+    devDependencies:
+      '@crikey/stores-strict':
+        specifier: workspace:^0.0.14
+        version: link:../stores-strict
 
   packages/stores-selectable:
     dependencies:

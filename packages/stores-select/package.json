@@ -38,5 +38,8 @@
   "dependencies": {
     "@crikey/stores-base": "workspace:^0.0.14"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "@crikey/stores-strict": "workspace:^0.0.14"
+  }
 }
