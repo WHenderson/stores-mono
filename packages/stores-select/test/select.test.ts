@@ -1,6 +1,6 @@
 import {expect, it} from "vitest";
 import {get, writable} from "@crikey/stores-strict";
-import {by_combined, by_property, select} from "../src";
+import {by_combined, by_property, select1} from "../src";
 
 it('should select a child property', () => {
     interface Obj {
@@ -10,8 +10,8 @@ it('should select a child property', () => {
     const original: Obj = { a: 1 };
     const store = writable(original);
 
-    const store_a = select(store, by_property('a'));
-    const store_b = select(store, by_property('b'));
+    const store_a = select1(store, by_property('a'));
+    const store_b = select1(store, by_property('b'));
 
     expect(get(store_a)).toBe(1);
     expect(() => get(store_b)).toThrow('property not found');
@@ -39,7 +39,7 @@ it('should select a child property', () => {
     const original: Obj = {a: {b: { c: { }}}};
     const store = writable(original);
 
-    const store_d = select(store, by_combined(by_property('a'), by_property('b'), by_property('c'), by_property('d', () => -1)));
+    const store_d = select1(store, by_combined(by_property('a'), by_property('b'), by_property('c'), by_property('d', () => -1)));
 
     expect(get(store_d)).toBe(-1);
     store_d.set(1);

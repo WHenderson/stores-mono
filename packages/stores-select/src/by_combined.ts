@@ -93,6 +93,17 @@ export function by_combined<A,B,C,D,E>(
 ): ReadSelector<A, E>;
 
 
+// A ... Z
+// Note: loses type safety
+
+export function by_combined<A,Z>(
+    initial: ReadSelector<A, unknown> & Partial<WriteSelector<A, unknown>> & Partial<DeleteSelector<A>>,
+    ...selectors: [
+        ...(ReadSelector<unknown, unknown> & Partial<WriteSelector<unknown, unknown>>)[],
+        ReadSelector<unknown, Z> & Partial<WriteSelector<unknown, Z>> & Partial<DeleteSelector<Z>>
+    ]
+): ReadSelector<A, Z> & Partial<WriteSelector<A, Z>> & Partial<DeleteSelector<A>>;
+
 export function by_combined(
     initial: ReadSelector<unknown, unknown> & Partial<WriteSelector<unknown, unknown>> & Partial<DeleteSelector<unknown>>,
     ...selectors: (ReadSelector<unknown, unknown> & Partial<WriteSelector<unknown, unknown>> & Partial<DeleteSelector<unknown>>)[]
