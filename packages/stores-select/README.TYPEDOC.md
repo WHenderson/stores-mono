@@ -1,29 +1,59 @@
-# @crikey/stores-rxjs
+# @crikey/stores-select
 
 Elegant methods for deriving sub-stores from existing stores.
+
+Supports deriving {@link Writable} stores.
+
+See [@crikey/stores-select](https://whenderson.github.io/stores-mono/modules/_crikey_select.html) for full documentation.
+
+[![codecov](https://codecov.io/gh/WHenderson/stores-mono/branch/master/graph/badge.svg?token=RD1EUK6Y04&flag=stores-select)](https://codecov.io/gh/WHenderson/stores-mono)
 
 ## API
 
 ### Store creation functions:
 
-* {@link readable} - Create a {@link Readable} store from an [RxJS](https://rxjs.dev/) store without any caching
-* {@link readable_persist} - Create a {@link Readable} store which is updated from an [RxJS](https://rxjs.dev/) store
-* {@link observe_store} - Created a [BehaviorSubject](https://rxjs.dev/api/index/class/BehaviorSubject) style [RxJS](https://rxjs.dev/) store from a [Svelte](https://svelte.dev/) style store
+* {@link select} - Create a sub store from an existing store
 
-## Promise creation functions:
-
-* {@link promise} - Create a `Promise` instance which tracks the state from a readable store containing a promise state
+### Selector functions:
+* {@link by_property} - Utility method used to access object properties by name
+* {@link by_key} - Utility method used to access Map elements by key
+* {@link by_index} - Utility method used to access array elements by index
+* {@link by_set} - Utility method used to add/remove elements from a set
+* {@link by_combine} - Utility method used to chain the above functions
 
 ## Installation
 
 ```bash
 # pnpm
-$ pnpm add @crikey/stores-rxjs
+$ pnpm add @crikey/stores-select
 
 # npm
-$ npm add @crikey/stores-rxjs
+$ npm add @crikey/stores-select
 
 # yarn
-$ yarn add @crikey/stores-rxjs
+$ yarn add @crikey/stores-select
 ```
 
+# Usage
+
+```js
+import { select, by_property, by_combined } from "@crikey/stores-select";
+
+const original = { a: 1, b: { c: { d: 2 }} };
+const store = writable(original);
+
+const a = select(store, by_property('a'));
+const d = select(store, by_combined(by_property('b'), by_property('c'), by_property('d')))
+
+console.log(get(a)); // 1
+console.log(get(d)); // 2
+
+a.set(3);
+d.set(4);
+
+// Mutations through set do not mutate the original value, they clone and replace it
+console.log(original); // { a: 1, b: { c: { d: 2 }} }
+console.log(get(store)); // { a: 3, b: { c: { d: 4 }} }
+
+
+```
