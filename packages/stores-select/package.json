@@ -1,0 +1,42 @@
+{
+  "name": "@crikey/stores-select",
+  "version": "0.0.13",
+  "description": "",
+  "packageManager": "pnpm",
+  "engines": {
+    "node": ">=14.0.0",
+    "pnpm": ">=6.0.0"
+  },
+  "main": "src/index",
+  "files": [
+    "dist",
+    "package.json",
+    "README.md"
+  ],
+  "typedocMain": "src/index.ts",
+  "publishConfig": {
+    "main": "./dist/index",
+    "module": "./dist/index.mjs",
+    "exports": "./dist/index.mjs",
+    "types": "./dist/index.d.ts"
+  },
+  "scripts": {
+    "build": "tsc && vite build && rollup --config rollup.config.ts --configPlugin typescript",
+    "build:docs": "pnpm exec typedoc --out build/docs src/index.ts",
+    "build:docs:watch": "pnpm exec typedoc --watch --out build/docs src/index.ts",
+    "clean": "rimraf dist build",
+    "clean:node_modules": "rimraf node_modules",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:tsc": "tsc --noEmit",
+    "test:tsc:watch": "tsc --noEmit --watch",
+    "debug": "vitest run --no-threads --no-isolate",
+    "coverage": "vitest run --coverage",
+    "coverage:watch": "vitest --coverage",
+    "publish:ifnew": "test \"$(pnpm view $npm_package_name@$npm_package_version version)\" = \"$npm_package_version\" || pnpm publish --access public"
+  },
+  "dependencies": {
+    "@crikey/stores-base": "workspace:^0.0.14"
+  },
+  "license": "MIT"
+}
