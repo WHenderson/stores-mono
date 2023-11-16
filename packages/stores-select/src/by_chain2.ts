@@ -1,22 +1,22 @@
 import {DeleteSelector, ReadSelector, WriteSelector} from "./types";
 
 
-export function by_combined2<A,B,C>(
+export function by_chain2<A,B,C>(
     a: ReadSelector<A, B> & WriteSelector<A, B>,
     b: ReadSelector<B, C> & WriteSelector<B, C> & DeleteSelector<B>
 ): ReadSelector<A, C> & WriteSelector<A, C> & DeleteSelector<B>;
 
-export function by_combined2<A,B,C>(
+export function by_chain2<A,B,C>(
     a: ReadSelector<A, B> & WriteSelector<A, B>,
     b: ReadSelector<B, C> & WriteSelector<B, C>
 ): ReadSelector<A, C> & WriteSelector<A, C>;
 
-export function by_combined2<A,B,C>(
+export function by_chain2<A,B,C>(
     a: ReadSelector<A, B>,
     b: ReadSelector<B, C>
 ): ReadSelector<A, C>;
 
-export function by_combined2<A,B,C>(
+export function by_chain2<A,B,C>(
     a: ReadSelector<A, B> & Partial<WriteSelector<A, B>>,
     b: ReadSelector<B, C> & Partial<WriteSelector<B, C>> & Partial<DeleteSelector<B>>
 ): ReadSelector<A, C> & Partial<WriteSelector<A, C>> & Partial<DeleteSelector<A>> {
