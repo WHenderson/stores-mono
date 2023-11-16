@@ -1,5 +1,6 @@
 import {Readable, Writable} from "@crikey/stores-base";
 import {Deletable, DeleteSelector, ReadSelector, WriteSelector} from "./types";
+import {select1} from "./select1";
 import {by_chain} from "./by_chain";
 
 // 1 selector
@@ -117,5 +118,5 @@ export function select(
     initial: ReadSelector<unknown, unknown> & Partial<WriteSelector<unknown, unknown>> & Partial<DeleteSelector<unknown>>,
     ...next: (ReadSelector<unknown, unknown> & Partial<WriteSelector<unknown, unknown>> & Partial<DeleteSelector<unknown>>)[]
 ) : Partial<Readable<unknown>> & Partial<Writable<unknown>> & Partial<Deletable> {
-    return select(store, by_chain(initial, ...<any>next));
+    return select1(store, by_chain(initial, ...<any>next));
 }
