@@ -21,7 +21,7 @@ export function by_last_index<E>(
             if (Object.hasOwn(parent, lastIndex) && parent[lastIndex] === value)
                 return parent;
 
-            const updated = [...parent];
+            const updated = parent.slice();
             updated[lastIndex] = value;
             return <Array<E>>updated;
         }
