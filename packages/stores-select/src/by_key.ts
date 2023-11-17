@@ -14,11 +14,17 @@ export function by_key<K,V>(
                 return parent.get(key)!;
         },
         update(parent, value) {
+            if (parent.has(key) && parent.get(key) === value)
+                return parent;
+
             const updated = new Map(parent);
             updated.set(key, value);
             return updated;
         },
         delete(parent) {
+            if (!parent.has(key))
+                return parent;
+
             const updated = new Map(parent);
             updated.delete(key);
             return updated;
