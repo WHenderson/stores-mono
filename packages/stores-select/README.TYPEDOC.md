@@ -4,8 +4,6 @@ Elegant methods for deriving sub-stores from existing stores.
 
 Supports deriving {@link Writable} stores.
 
-See [@crikey/stores-select](https://whenderson.github.io/stores-mono/modules/_crikey_select.html) for full documentation.
-
 [![codecov](https://codecov.io/gh/WHenderson/stores-mono/branch/master/graph/badge.svg?token=RD1EUK6Y04&flag=stores-select)](https://codecov.io/gh/WHenderson/stores-mono)
 
 ## API
