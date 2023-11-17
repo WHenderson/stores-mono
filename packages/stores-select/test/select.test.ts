@@ -1,7 +1,7 @@
 import {describe, expect, it} from "vitest";
 import {get, writable} from "@crikey/stores-strict";
 import {
-    by_index,
+    by_sparse_index,
     by_key,
     by_last_index,
     by_length,
@@ -9,7 +9,7 @@ import {
     by_property_get,
     by_set_element,
     by_size,
-    select
+    select, by_index
 } from "../src";
 
 describe('should select child properties', () => {
@@ -122,11 +122,11 @@ describe('should select child properties', () => {
         expect(original).to.deep.equal(new Set(['a']));
     });
 
-    it('by_index', () => {
+    it('by_sparse_index', () => {
         const original = [1,,3]; // sparse array
         const store = writable(original);
 
-        const store_0 = select(store, by_index(0));
+        const store_0 = select(store, by_sparse_index(0));
 
         expect(get(store_0)).toBe(1);
 
@@ -136,7 +136,7 @@ describe('should select child properties', () => {
         store_0.update(a => a!*2);
         expect(get(store)).deep.equal([4,,3]);
 
-        const store_1 = select(store, by_index(1));
+        const store_1 = select(store, by_sparse_index(1));
 
         expect(() => get(store_1)).toThrow('index not found');
 
@@ -146,11 +146,39 @@ describe('should select child properties', () => {
         store_1.delete();
         expect(get(store)).deep.equal([4,,3]);
 
-        const store_1_def = select(store, by_index(1, () => 42));
+        const store_1_def = select(store, by_sparse_index(1, () => 42));
 
         expect(get(store_1_def)).toBe(42);
 
         expect(original).to.deep.equal([1,,3]);
+    });
+
+    it('by_index', () => {
+        const original = [1]; // sparse array
+        const store = writable(original);
+
+        const store_0 = select(store, by_index(0));
+
+        expect(get(store_0)).toBe(1);
+
+        store_0.set(2);
+        expect(get(store)).deep.equal([2]);
+
+        store_0.update(a => a!*2);
+        expect(get(store)).deep.equal([4]);
+
+        const store_1 = select(store, by_index(1));
+
+        expect(() => get(store_1)).toThrow('index not found');
+
+        store_1.set(2);
+        expect(get(store)).deep.equal([4,2]);
+
+        const store_2_def = select(store, by_index(2, () => 42));
+
+        expect(get(store_2_def)).toBe(42);
+
+        expect(original).to.deep.equal([1]);
     });
 
     it('by_last_index', () => {
@@ -223,12 +251,26 @@ describe('should select child properties', () => {
         const store_a = select(store, by_property('a'));
         expect(get(store_a)).toBe(original.a);
 
-        const store_b = select(store, by_property('a'), by_index(0));
+        const store_b = select(store, by_property('a'), by_sparse_index(0));
         expect(get(store_b)).toBe(original.a[0]);
 
-        const store_c = select(store, by_property('a'), by_index(0), by_key('c'));
+        const store_c = select(store, by_property('a'), by_sparse_index(0), by_key('c'));
         expect(get(store_c)).toBe(original.a[0].get('c'));
 
-        //const store_d = select(store, by_property('a'), by_index(0), by_key('c'), by_set_element('d'))
-    })
+        const store_d = select(store, by_property('a'), by_sparse_index(0), by_key('c'), by_set_element('d'));
+        expect(get(store_d)).toBe(original.a[0].get('c')!.has('d'));
+
+        store_d.set(false);
+        expect(get(store)).to.deep.equal({
+            a: [
+                new Map([['c', new Set([])]])
+            ]
+        })
+
+        expect(original).to.deep.equal({
+            a: [
+                new Map([['c', new Set(['d'])]])
+            ]
+        })
+    });
 })
