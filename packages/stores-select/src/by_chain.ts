@@ -4,7 +4,7 @@ import {by_chain2} from "./by_chain2";
 // A -> B
 
 export function by_chain<A,B>(
-    a: ReadSelector<A, B> & WriteSelector<A, B> & DeleteSelector<B>
+    a: ReadSelector<A, B> & WriteSelector<A, B> & DeleteSelector<A>
 ): ReadSelector<A, B> & WriteSelector<A, B> & DeleteSelector<A>;
 
 export function by_chain<A,B>(
@@ -82,7 +82,7 @@ export function by_chain<A,Z>(
     initial: ReadSelector<A, unknown> & Partial<WriteSelector<A, unknown>> & Partial<DeleteSelector<A>>,
     ...selectors: [
         ...(ReadSelector<unknown, unknown> & Partial<WriteSelector<unknown, unknown>>)[],
-        ReadSelector<unknown, Z> & Partial<WriteSelector<unknown, Z>> & Partial<DeleteSelector<Z>>
+        ReadSelector<unknown, Z> & Partial<WriteSelector<unknown, Z>> & Partial<DeleteSelector<unknown>>
     ]
 ): ReadSelector<A, Z> & Partial<WriteSelector<A, Z>> & Partial<DeleteSelector<A>>;
 
