@@ -273,4 +273,30 @@ describe('should select child properties', () => {
             ]
         })
     });
+
+    it('should handle async updates', async () => {
+
+        const original = { a: 1 };
+
+        const store = writable(original);
+
+        const store_a = select(store, by_property('a'));
+
+        let resolve: (value?: unknown) => void;
+        const p = new Promise(r => {
+            resolve = r;
+        });
+
+        store_a.update(async (a, set) => {
+            await p;
+            set(a * 42);
+        });
+
+        expect(get(store_a)).toBe(1);
+
+        resolve!();
+        await p;
+
+        expect(get(store_a)).toBe(42);
+    });
 })
