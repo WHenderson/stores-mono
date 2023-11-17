@@ -3,13 +3,13 @@ import {DeleteSelector, ReadSelector, WriteSelector} from "./types";
 
 export function by_index<T extends Array<E | undefined>,I extends keyof T & number, E>(
     index: I,
-    def?: () => E | undefined
-) : ReadSelector<T, E | undefined> & WriteSelector<T, E | undefined> & DeleteSelector<T>;
+    def?: () => T[0] | undefined
+) : ReadSelector<T, T[0] | undefined> & WriteSelector<T, T[0] | undefined> & DeleteSelector<T>;
 
 export function by_index<T extends Array<E>,I extends keyof T & number, E>(
     index: I,
-    def?: () => E
-) : ReadSelector<T, E> & WriteSelector<T, E>;
+    def?: () => T[0]
+) : ReadSelector<T, T[0]> & WriteSelector<T, T[0]>;
 
 export function by_index<T extends Array<E>,I extends keyof T & number, E>(
     index: I,
