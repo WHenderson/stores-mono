@@ -55,46 +55,89 @@ export function select<I,O>(
  * Create a derived writable/deletable store
  *
  * @param store
- * @param initial
- * @param next
+ * @param a
+ * @param b
  */
-export function select<I,O>(
-    store: Writable<I>,
-    initial: ReadSelector<I, O> & WriteSelector<I, O>,
-    ...next: [
-        ReadSelector<I, O> & WriteSelector<I, O> & DeleteSelector<I>,
-    ]
-) : Writable<O> & Deletable;
+export function select<A,B,C>(
+    store: Writable<A>,
+    a: ReadSelector<A, B> & WriteSelector<A, B>,
+    b: ReadSelector<B, C> & WriteSelector<B, C> & DeleteSelector<B>
+) : Writable<C> & Deletable;
 
 /**
  * Create a derived writable store
  *
  * @param store
- * @param initial
- * @param next
+ * @param a
+ * @param b
  */
-export function select<I,O>(
-    store: Writable<I>,
-    initial: ReadSelector<I, O> & WriteSelector<I, O>,
-    ...next: [
-        ReadSelector<I, O> & WriteSelector<I, O>,
-    ]
-) : Writable<O>;
+export function select<A,B,C>(
+    store: Writable<A>,
+    a: ReadSelector<A, B> & WriteSelector<A, B>,
+    b: ReadSelector<B, C> & WriteSelector<B, C>
+) : Writable<C>;
 
 /**
  * Create a derived readable store
  *
  * @param store
- * @param initial
- * @param next
+ * @param a
+ * @param b
  */
-export function select<I,O>(
-    store: Readable<I>,
-    initial: ReadSelector<I, O>,
-    ...next: [
-        ReadSelector<I, O>,
-    ]
-) : Readable<O>;
+export function select<A,B,C>(
+    store: Readable<A>,
+    a: ReadSelector<A, B>,
+    b: ReadSelector<B, C>
+) : Readable<C>;
+
+// 3 selectors
+
+/**
+ * Create a derived writable/deletable store
+ *
+ * @param store
+ * @param a
+ * @param b
+ * @param c
+ */
+export function select<A,B,C,D>(
+    store: Writable<A>,
+    a: ReadSelector<A, B> & WriteSelector<A, B>,
+    b: ReadSelector<B, C> & WriteSelector<B, C>,
+    c: ReadSelector<C, D> & WriteSelector<C, D> & DeleteSelector<C>
+) : Writable<D> & Deletable;
+
+/**
+ * Create a derived writable store
+ *
+ * @param store
+ * @param a
+ * @param b
+ * @param c
+ */
+export function select<A,B,C,D>(
+    store: Writable<A>,
+    a: ReadSelector<A, B> & WriteSelector<A, B>,
+    b: ReadSelector<B, C> & WriteSelector<B, C>,
+    c: ReadSelector<C, D> & WriteSelector<C, D>
+) : Writable<D>;
+
+/**
+ * Create a derived readable store
+ *
+ * @param store
+ * @param a
+ * @param b
+ * @param c
+ */
+export function select<A,B,C,D>(
+    store: Readable<A>,
+    a: ReadSelector<A, B>,
+    b: ReadSelector<B, C>,
+    c: ReadSelector<C, D>,
+) : Readable<D>;
+
+// ---
 
 /**
  * Create an arbitrarily deep derived child store
@@ -104,6 +147,7 @@ export function select<I,O>(
  * @param initial
  * @param next
  */
+/*
 export function select<I,O>(
     store: Readable<I> | Writable<I>,
     initial: ReadSelector<I, unknown> & Partial<WriteSelector<I, unknown>> & Partial<DeleteSelector<unknown>>,
@@ -112,7 +156,7 @@ export function select<I,O>(
         ReadSelector<unknown, O> & Partial<WriteSelector<unknown, O>> & Partial<DeleteSelector<unknown>>
     ]
 ) : Partial<Readable<O>> & Partial<Writable<O>> & Partial<Deletable>;
-
+*/
 export function select(
     store: Readable<unknown> | Writable<unknown>,
     initial: ReadSelector<unknown, unknown> & Partial<WriteSelector<unknown, unknown>> & Partial<DeleteSelector<unknown>>,

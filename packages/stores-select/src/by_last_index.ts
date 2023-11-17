@@ -1,8 +1,8 @@
 import {ReadSelector, WriteSelector} from "./types";
 
-export function by_last_index<T extends Array<E>, E>(
+export function by_last_index<E>(
     def?: () => E
-) : ReadSelector<T, E> & WriteSelector<T, E> {
+) : ReadSelector<Array<E>, E> & WriteSelector<Array<E>, E> {
     const default_ = def ?? (() => { throw new Error('array is empty') });
 
     return {
@@ -23,7 +23,7 @@ export function by_last_index<T extends Array<E>, E>(
 
             const updated = [...parent];
             updated[lastIndex] = value;
-            return <T>updated;
+            return <Array<E>>updated;
         }
     }
 }
