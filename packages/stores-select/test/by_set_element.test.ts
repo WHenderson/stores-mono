@@ -1,7 +1,7 @@
 import {expect, it} from "vitest";
 import {by_set_element} from "../src";
 
-it('should access child properties', function () {
+it('should test for existence of set elements', function () {
     const original = new Set(['a']);
 
     const selector_a = by_set_element<string>('a');

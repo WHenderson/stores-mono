@@ -1,7 +1,7 @@
 import {expect, it} from "vitest";
 import {by_key} from "../src";
 
-it('should access child properties', function () {
+it('should access map elements via key', function () {
     const original = new Map([['a', 1]]);
 
     const selector_a = by_key<string, number>('a');
@@ -9,7 +9,7 @@ it('should access child properties', function () {
     expect(selector_a.get(original)).toBe(1);
     expect(selector_a.update(original, 2)).to.deep.equal(new Map([['a', 2]]));
     expect(selector_a.update(original, 1)).toBe(original);
- 
+
     const selector_b = by_key<string, number>('b');
 
     expect(() => selector_b.get(original)).toThrow('key not found');

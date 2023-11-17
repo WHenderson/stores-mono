@@ -2,7 +2,7 @@ import {expect, it} from "vitest";
 import {by_property, by_property_get} from "../src";
 import {OptionalKeys} from "../src/util-types";
 
-it('should access child properties', function () {
+it('should access child properties (readonly)', function () {
     interface Obj {
         a: number,
         b?: number
