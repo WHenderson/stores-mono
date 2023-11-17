@@ -28,7 +28,7 @@ export function by_index<T extends Array<E>,I extends keyof T & number, E>(
             if (Object.hasOwn(parent, index) && parent[index] === value)
                 return parent;
 
-            const updated = [...parent];
+            const updated = parent.slice();
             updated[index] = value;
             return <T>updated;
         },
@@ -36,7 +36,7 @@ export function by_index<T extends Array<E>,I extends keyof T & number, E>(
             if (!Object.hasOwn(parent, index))
                 return parent;
 
-            const updated = [...parent];
+            const updated = parent.slice();
             delete updated[index];
             return <T>updated;
         }
