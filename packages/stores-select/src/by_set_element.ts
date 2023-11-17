@@ -1,6 +1,6 @@
 import {DeleteSelector, ReadSelector, WriteSelector} from "./types";
 
-export function by_set<I>(item: I)
+export function by_set_element<I>(item: I)
     : ReadSelector<Set<I>,boolean> & WriteSelector<Set<I>, boolean> & DeleteSelector<Set<I>>
 {
     return {
