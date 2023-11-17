@@ -15,11 +15,14 @@ See [@crikey/stores-select](https://whenderson.github.io/stores-mono/modules/_cr
 * `select` - Create a sub store from an existing store
 
 ### Selector functions:
-* `by_property` - Utility method used to access object properties by name
-* `by_key` - Utility method used to access Map elements by key
-* `by_index` - Utility method used to access array elements by index
-* `by_set` - Utility method used to add/remove elements from a set
-* `by_combine` - Utility method used to chain the above functions 
+* `by_index(index, default?)` - Utility method used to access array elements by index
+* `by_key(key, default?)` - Utility method used to access Map elements by key
+* `by_last_index(default?)` - Utility method used to access the last element in an array
+* `by_property(name, default?)` - Utility method used to access object properties by name
+* `by_property_get(name, default?)` - Utility method used to access object properties by name (read only)
+* `by_set_element(element)` - Utility method used to add/remove elements from a set
+* `by_size(element)` - Utility method getting the size of a Set or Map
+* `by_sparse_index(index, default?)` - Utility method used to access sparse array elements by index
 
 ## Installation
 
@@ -34,26 +37,39 @@ $ npm add @crikey/stores-select
 $ yarn add @crikey/stores-select
 ```
 
-# Usage
+# Example
 
 ```js
-import { select, by_property, by_combined } from "@crikey/stores-select";
+import {by_key, by_property, by_size, select} from "@crikey/stores-select";
 
-const original = { a: 1, b: { c: { d: 2 }} };
-const store = writable(original);
+const state = writable({
+    user: {
+        id: 5,
+        username: 'Joe Blogs'
+    },
+    accounts: new Map([
+        [2, { id: 2, name: 'First National' }],
+        [3, { id: 3, name: 'Bank of mum and dad'}]
+    ])
+});
 
-const a = select(store, by_property('a'));
-const d = select(store, by_combined(by_property('b'), by_property('c'), by_property('d')))
+// Create nested derived stores to access user information
+const user = select(state, by_property('user'));
+const user_id = select(user, by_property('id'));
+const user_username = select(user, by_property('username'));
+console.log(get(user_id)); // 5
+console.log(get(user_username)); // Joe Blogs
 
-console.log(get(a)); // 1
-console.log(get(d)); // 2
+// These are stores, so everything is reactive
+user_username.set('Joe Middlename Blogs');
+console.log(get(user)); // { id: 5, username: 'Joe Middlename Blogs' }
 
-a.set(3);
-d.set(4);
+// Create derived account stores
+const accounts = select(state, by_property('accounts'));
+const n_accounts = select(accounts, by_size());
+console.log(get(n_accounts)); // 2
 
-// Mutations through set do not mutate the original value, they clone and replace it
-console.log(original); // { a: 1, b: { c: { d: 2 }} }
-console.log(get(store)); // { a: 3, b: { c: { d: 4 }} }
-
-
+// Selectors can be chained to access deeply nested values
+const first_national = select(state, by_property('accounts'), by_key(2));
+console.log(get(first_national)); // { id: 2, name: 'First National' }
 ```
