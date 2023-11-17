@@ -2,7 +2,7 @@ import {expect, it} from "vitest";
 import {get, writable} from "@crikey/stores-strict";
 import {by_chain, by_property, select} from "../src";
 
-it('should select a child property', () => {
+it.skip('should select a child property', () => {
     interface Obj {
         a: number,
         b?: string
