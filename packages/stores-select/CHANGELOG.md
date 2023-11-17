@@ -1,5 +1,11 @@
 # @crikey/stores-select
 
+## 0.2.2
+
+### Patch Changes
+
+- 1ca39a3: Updated links in documentation
+
 ## 0.2.1
 
 ### Patch Changes

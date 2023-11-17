@@ -1,6 +1,6 @@
 {
   "name": "@crikey/stores-select",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "",
   "packageManager": "pnpm@8.10.5",
   "engines": {
