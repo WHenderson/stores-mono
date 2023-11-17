@@ -1,5 +1,14 @@
 # @crikey/stores-immer
 
+## 0.0.17
+
+### Patch Changes
+
+- c0650fc: Update package.json to include git repo and updated pnpm/node versions
+- Updated dependencies [c0650fc]
+  - @crikey/stores-base@0.0.15
+  - @crikey/stores-strict@0.0.15
+
 ## 0.0.16
 
 ### Patch Changes

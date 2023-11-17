@@ -1,5 +1,13 @@
 # @crikey/stores-rxjs
 
+## 0.0.15
+
+### Patch Changes
+
+- c0650fc: Update package.json to include git repo and updated pnpm/node versions
+- Updated dependencies [c0650fc]
+  - @crikey/stores-base@0.0.15
+
 ## 0.0.14
 
 ### Patch Changes

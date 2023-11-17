@@ -1,5 +1,11 @@
 # @crikey/stores-base-queue
 
+## 0.0.12
+
+### Patch Changes
+
+- c0650fc: Update package.json to include git repo and updated pnpm/node versions
+
 ## 0.0.11
 
 ### Patch Changes
