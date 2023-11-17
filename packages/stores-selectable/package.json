@@ -2,10 +2,10 @@
   "name": "@crikey/stores-selectable",
   "version": "0.0.15",
   "description": "",
-  "packageManager": "pnpm",
+  "packageManager": "pnpm@8.10.5",
   "engines": {
-    "node": ">=14.0.0",
-    "pnpm": ">=6.0.0"
+    "node": ">=16.0.0",
+    "pnpm": "^8.0.0"
   },
   "main": "src/index",
   "files": [
@@ -19,6 +19,10 @@
     "module": "./dist/index.mjs",
     "exports": "./dist/index.mjs",
     "types": "./dist/index.d.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WHenderson/stores-mono.git"
   },
   "scripts": {
     "build": "tsc && vite build && rollup --config rollup.config.ts --configPlugin typescript",

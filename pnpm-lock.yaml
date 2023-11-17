@@ -32,18 +32,6 @@ importers:
       c8:
         specifier: ^7.14.0
         version: 7.14.0
-      chalk:
-        specifier: ^5.0.0
-        version: 5.0.0
-      foreach-folder:
-        specifier: ^1.1.0
-        version: 1.1.0
-      lodash:
-        specifier: ^4.17.21
-        version: 4.17.21
-      lunr:
-        specifier: ^2.3.9
-        version: 2.3.9
       rimraf:
         specifier: ^3.0.2
         version: 3.0.2
@@ -769,11 +757,6 @@ packages:
       supports-color: 7.2.0
     dev: true
 
-  /chalk@5.0.0:
-    resolution: {integrity: sha512-/duVOqst+luxCQRKEo4bNxinsOQtMP80ZYm7mMqzuh5PociNL0PvmHFvREJ9ueYL2TxlHjBcmLCdmocx9Vg+IQ==}
-    engines: {node: ^12.17.0 || ^14.13 || >=16.0.0}
-    dev: true
-
   /chardet@0.7.0:
     resolution: {integrity: sha512-mT8iDcrh03qDGRRmoA2hmBJnxpllMR+0/0qlzjqZES6NdiWDcZkCNAk4rPFZ9Q85r27unkiNNg8ZOiwZXBHwcA==}
     dev: true
@@ -1235,13 +1218,6 @@ packages:
     dependencies:
       micromatch: 4.0.5
       pkg-dir: 4.2.0
-    dev: true
-
-  /foreach-folder@1.1.0:
-    resolution: {integrity: sha512-j04hAKR4pjUIQq7xh9aDcnenGQmw/O1CNui8GO1KezpA9UTMLa1D1PEaeJyu8xMULCF8GyFCXPkcsVPoPdLo9Q==}
-    hasBin: true
-    dependencies:
-      chalk: 2.4.2
     dev: true
 
   /foreground-child@2.0.0:

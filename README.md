@@ -10,6 +10,7 @@ See [stores-mono](https://whenderson.github.io/stores-mono/) for full documentat
 * [@crikey/stores-svelte](./packages/stores-svelte/README.md)<br> Drop in replacement for [Svelte](https://svelte.dev/) stores
 * [@crikey/stores-promise](./packages/stores-promise/README.md)<br> [Svelte](https://svelte.dev/) compatible stores from promises
 * [@crikey/stores-immer](./packages/stores-immer/README.md)<br> Immutable [Svelte](https://svelte.dev/) compatible stores using the [Immer](https://immerjs.github.io/immer/)
+* [@crikey/stores-select](./packages/stores-select/README.md)<br> Elegant methods for deriving sub-stores from existing stores. Supports deriving `Writable` stores. 
 * [@crikey/stores-selectable](./packages/stores-selectable/README.md)<br> Extend stores with selection semantics, allowing for the easy creation of type safe sub-stores 
 * [@crikey/stores-dynamic](./packages/stores-dynamic/README.md)<br> Derived stores with dynamic dependency support and natural error handling/propagation 
 * [@crikey/stores-temporal](./packages/stores-temporal/README.md)<br> Simple time based higher order svelte stores such as debounce and throttle 

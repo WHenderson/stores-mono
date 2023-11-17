@@ -4,8 +4,8 @@
   "description": "Mono repo for stores libraries",
   "packageManager": "pnpm@6.0.0",
   "engines": {
-    "node": ">=14.0.0",
-    "pnpm": ">=6.0.0"
+    "node": ">=16.0.0",
+    "pnpm": "^8.0.0"
   },
   "devDependencies": {
     "@changesets/cli": "^2.22.0",
@@ -16,10 +16,6 @@
     "@rollup/plugin-typescript": "^8.3.0",
     "@types/node": "^17.0.13",
     "c8": "^7.14.0",
-    "chalk": "^5.0.0",
-    "foreach-folder": "^1.1.0",
-    "lodash": "^4.17.21",
-    "lunr": "^2.3.9",
     "rimraf": "^3.0.2",
     "rollup": "^2.70.2",
     "rollup-plugin-auto-external": "^2.0.0",
@@ -31,6 +27,10 @@
     "typescript": "^4.6.4",
     "vite": "^2.9.16",
     "vitest": "^0.9.4"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WHenderson/stores-mono.git"
   },
   "scripts": {
     "preinstall": "npx only-allow pnpm",
