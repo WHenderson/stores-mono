@@ -1,5 +1,14 @@
 # @crikey/stores-immer
 
+## 0.0.18
+
+### Patch Changes
+
+- 9380f8a: Update package to correctly export types in both cjs and mjs
+- Updated dependencies [9380f8a]
+  - @crikey/stores-base@0.0.16
+  - @crikey/stores-strict@0.0.16
+
 ## 0.0.17
 
 ### Patch Changes

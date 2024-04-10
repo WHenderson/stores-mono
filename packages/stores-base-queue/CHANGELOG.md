@@ -1,5 +1,11 @@
 # @crikey/stores-base-queue
 
+## 0.0.13
+
+### Patch Changes
+
+- 9380f8a: Update package to correctly export types in both cjs and mjs
+
 ## 0.0.12
 
 ### Patch Changes

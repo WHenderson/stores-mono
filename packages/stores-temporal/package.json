@@ -1,6 +1,6 @@
 {
   "name": "@crikey/stores-temporal",
-  "version": "0.0.15",
+  "version": "0.0.16",
   "description": "",
   "packageManager": "pnpm@8.10.5",
   "engines": {
@@ -49,10 +49,10 @@
     "publish:ifnew": "test \"$(pnpm view $npm_package_name@$npm_package_version version)\" = \"$npm_package_version\" || pnpm publish --access public"
   },
   "dependencies": {
-    "@crikey/stores-base": "workspace:^0.0.15"
+    "@crikey/stores-base": "workspace:^0.0.16"
   },
   "devDependencies": {
-    "@crikey/stores-rxjs": "workspace:^0.0.15"
+    "@crikey/stores-rxjs": "workspace:^0.0.16"
   },
   "license": "MIT"
 }
